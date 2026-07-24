@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eMushrif — Technical Architecture · TBox Solutionz</title>
+  <meta name="description" content="Technical deep-dive into eMushrif's architecture: real-time GPS pipeline, MQTT IoT integration, multi-tenant data model, and scaling to 150K+ daily events. Built by TBox Solutionz.">
+  <link rel="canonical" href="https://tboxsolutionz.com/projects/emushrif.html">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/assets/images/favicon-192.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#E01B1B">  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    /* ─── PAGE TOKENS ─────────────────────────────── */
+    :root {
+      --proj-border: var(--border);
+      --proj-surface: var(--bg-alt);
+      --proj-mono-sm: 11px;
+      --proj-mono-md: 13px;
+    }
+
+    /* ─── HERO ────────────────────────────────────── */
+    .ph-hero {
+      background: var(--bg-page);
+      border-bottom: 1px solid var(--border-band);
+      padding: 4.5rem 0 3.5rem;
+    }
+    .ph-back {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: .04em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 1.75rem;
+    }
+    .ph-back:hover { color: var(--text); }
+    .ph-back::before { content: '←'; }
+    .ph-hero-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .ph-icon {
+      width: 68px; height: 68px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .ph-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .ph-title-block { flex: 1; }
+    .ph-eyebrow {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: .5rem;
+    }
+    .ph-title {
+      font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+      letter-spacing: -.03em;
+      margin-bottom: .625rem;
+      line-height: 1.15;
+    }
+    .ph-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 680px;
+    }
+
+    /* tags */
+    .ph-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 1.25rem;
+    }
+
+    /* ─── HERO ACTION BUTTONS ─────────────────────── */
+    .ph-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-top: 1.5rem;
+    }
+    .ph-action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-decoration: none;
+      transition: background .15s, border-color .15s, box-shadow .15s;
+      white-space: nowrap;
+    }
+    .ph-action-btn svg { flex-shrink: 0; }
+    .ph-action-btn.primary {
+      background: var(--text);
+      color: #fff;
+      border: 1px solid var(--text);
+    }
+    .ph-action-btn.primary:hover {
+      background: #2D2B28;
+      box-shadow: 0 2px 10px rgba(0,0,0,.18);
+    }
+    .ph-action-btn.outline {
+      background: var(--bg-page);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .ph-action-btn.outline:hover {
+      border-color: #B0AEA9;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+    .ph-action-btn.red-outline {
+      background: var(--bg-page);
+      color: var(--red);
+      border: 1px solid #F5C2C2;
+    }
+    .ph-action-btn.red-outline:hover {
+      background: #FEF2F2;
+      border-color: var(--red);
+    }
+
+    /* Metrics bar */
+    .ph-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .ph-metric {
+      padding: 1.5rem 1.75rem;
+      border-right: 1px solid var(--border-band);
+      display: flex;
+      flex-direction: column;
+      gap: .3rem;
+    }
+    .ph-metric:first-child { padding-left: 0; }
+    .ph-metric:last-child  { border-right: none; }
+    .ph-metric-val {
+      font-size: clamp(1.2rem, 2vw, 1.8rem);
+      font-weight: 600;
+      letter-spacing: -.03em;
+      color: var(--text);
+      line-height: 1;
+    }
+    .ph-metric-label { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+
+    /* ─── BODY LAYOUT ─────────────────────────────── */
+    .ph-body { padding: 5rem 0 3rem; }
+    .ph-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 4rem;
+      align-items: start;
+    }
+    .ph-main { min-width: 0; }
+
+    /* ─── SECTION ─────────────────────────────────── */
+    .ph-section { margin-bottom: 2rem; }
+    .ph-section.ph-section-highlights { margin-bottom: 2.5rem; }
+    .ph-section-label {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .625rem;
+    }
+    .ph-section h2 {
+      font-size: 1.4rem;
+      letter-spacing: -.02em;
+      margin-bottom: 1rem;
+    }
+    .ph-section p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #4A4845;
+      margin-bottom: .875rem;
+    }
+    .ph-section p:last-child { margin-bottom: 0; }
+
+    /* ─── ARCHITECTURE DIAGRAM ─────────────────────── */
+    .arch-diagram {
+      margin: 2rem 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .arch-diagram-title {
+      background: var(--bg-alt);
+      border-bottom: 1px solid var(--border);
+      padding: .625rem 1rem;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .arch-layers { padding: 1.5rem; display: flex; flex-direction: column; gap: .75rem; }
+    .arch-layer {
+      display: flex;
+      align-items: stretch;
+      gap: .625rem;
+    }
+    .arch-layer-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      flex-shrink: 0;
+      width: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .arch-layer-nodes {
+      flex: 1;
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+    .arch-node {
+      flex: 1;
+      min-width: 80px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .625rem .875rem;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.3;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .arch-node-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+    .arch-node.red    { border-color: #FECACA; background: #FEF2F2; }
+    .arch-node.blue   { border-color: #BFDBFE; background: #EFF6FF; }
+    .arch-node.green  { border-color: #BBF7D0; background: #F0FDF4; }
+    .arch-node.purple { border-color: #DDD6FE; background: #F5F3FF; }
+    .arch-node.amber  { border-color: #FDE68A; background: #FFFBEB; }
+    .arch-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--border);
+      font-size: 18px;
+      margin: -.25rem 0;
+      padding-left: 36px;
+    }
+
+    /* ─── TECH CALLOUT ────────────────────────────── */
+    .ph-callout {
+      background: var(--bg-alt);
+      border: 1px solid var(--border-band);
+      border-left: 3px solid var(--red);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin: 2rem 0;
+    }
+    .ph-callout-label {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: .625rem;
+    }
+    .ph-callout p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 0;
+      font-weight: 450;
+    }
+
+    /* ─── CODE-LIKE BLOCK ─────────────────────────── */
+    .ph-code-block {
+      background: #18181B;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+    }
+    .ph-code-block-header {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: #71717A;
+      margin-bottom: .875rem;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .ph-code-block-header::before {
+      content: '';
+      display: inline-flex;
+      gap: 4px;
+    }
+    .ph-code-block code {
+      font-family: var(--mono);
+      font-size: 13.5px;
+      line-height: 1.85;
+      color: #F4F4F5;
+      display: block;
+    }
+    .ph-code-block .kw  { color: #C084FC; }
+    .ph-code-block .str { color: #86EFAC; }
+    .ph-code-block .num { color: #FCA5A5; }
+    .ph-code-block .cmt { color: #52525B; }
+    .ph-code-block .fn  { color: #7DD3FC; }
+
+    /* ─── CHALLENGE / SOLUTION PAIRS ──────────────── */
+    .ph-challenges { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 1rem; }
+    .ph-challenge {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .ph-challenge-problem {
+      display: flex;
+      gap: .75rem;
+      padding: 1rem 1.25rem;
+      background: #FFFBEB;
+      border-bottom: 1px solid #FDE68A;
+      font-size: 14px;
+      font-weight: 500;
+      color: #78350F;
+      align-items: flex-start;
+    }
+    .ph-challenge-problem::before {
+      content: '⚠';
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .ph-challenge-solution {
+      padding: 1rem 1.25rem;
+      font-size: 14px;
+      line-height: 1.65;
+      color: #4A4845;
+      display: flex;
+      gap: .75rem;
+      align-items: flex-start;
+    }
+    .ph-challenge-solution::before {
+      content: '✓';
+      font-family: var(--mono);
+      font-size: 13px;
+      color: #16A34A;
+      flex-shrink: 0;
+      font-weight: 600;
+      margin-top: 1px;
+    }
+
+    /* ─── SIDEBAR ─────────────────────────────────── */
+    .ph-sidebar { position: sticky; top: 80px; }
+    .ph-sidebar-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .ph-sidebar-title {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .ph-stack-layer { margin-bottom: 1.125rem; }
+    .ph-stack-layer:last-child { margin-bottom: 0; }
+    .ph-stack-layer-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .4rem;
+    }
+    .ph-stack-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+    .ph-chip {
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: var(--white);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .ph-sidebar-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: .5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .ph-sidebar-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .ph-sidebar-row-key { color: var(--text-muted); }
+    .ph-sidebar-row-val { font-weight: 500; color: var(--text); text-align: right; font-size: 13px; }
+
+    /* ─── TABLE ───────────────────────────────────── */
+    .ph-table-wrap { overflow-x: auto; margin: 1.5rem 0; }
+    .ph-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14.5px;
+    }
+    .ph-table th {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: .75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-alt);
+      white-space: nowrap;
+    }
+    .ph-table td {
+      padding: .875rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+      line-height: 1.6;
+      vertical-align: top;
+    }
+    .ph-table tr:last-child td { border-bottom: none; }
+    .ph-table td:first-child { font-weight: 500; color: var(--text); white-space: nowrap; }
+
+    /* ─── CTA ─────────────────────────────────────── */
+    .ph-cta {
+      background: var(--bg-dark);
+      border-radius: 20px;
+      padding: 3.5rem;
+      text-align: center;
+      margin-top: 4rem;
+    }
+    .ph-cta h2 { color: #fff; font-size: clamp(1.4rem, 2.5vw, 2rem); margin-bottom: .75rem; letter-spacing: -.025em; }
+    .ph-cta p  { color: #9A968F; font-size: 15px; margin-bottom: 1.75rem; }
+
+    /* ─── TECH ICON STRIP ─────────────────────────── */
+    .ph-icon-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 1.5rem;
+    }
+    .ph-icon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 14px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .ph-icon-item:hover {
+      border-color: #C0BEBB;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    }
+    .ph-icon-item i { font-size: 26px; line-height: 1; }
+    .ph-icon-item span {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      color: var(--text-muted);
+      letter-spacing: .03em;
+      white-space: nowrap;
+    }
+
+    /* ─── METRICS — constrained to container ──────── */
+    .ph-metrics-outer {
+      border-top: 1px solid var(--border-band);
+      border-bottom: 1px solid var(--border-band);
+    }
+    .ph-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* ─── SCREENSHOT CAROUSEL ────────────────────── */
+    .ph-shots {
+      background: var(--bg-alt);
+      border-top: 1px solid var(--border-band);
+      border-bottom: 1px solid var(--border-band);
+      padding: 1.25rem 0 1rem;
+      overflow: hidden;
+    }
+    .ph-shots-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 max(1.25rem, calc((100vw - 1120px) / 2));
+      margin-bottom: 1rem;
+    }
+    .ph-shots-track-wrap {
+      overflow: hidden;
+      width: 100%;
+    }
+    .ph-shots-track {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      text-align: center;
+    }
+    .ph-shots-track::-webkit-scrollbar { display: none; }
+    .ph-shots-inner {
+      display: inline-flex;
+      gap: 0;
+      vertical-align: top;
+    }
+    .ph-shot {
+      flex: 0 0 auto;
+      width: 300px;
+      scroll-snap-align: start;
+      border-radius: 0;
+      overflow: hidden;
+      border: none;
+      background: #000;
+      box-shadow: none;
+    }
+    .ph-shot img {
+      width: 100%;
+      height: 560px;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+    }
+    .ph-shots-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: .875rem max(1.25rem, calc((100vw - 1120px) / 2)) 0;
+    }
+    .ph-shots-nav {
+      display: flex;
+      gap: .5rem;
+    }
+
+    /* ─── HIGHLIGHTS ─────────────────────────────── */
+    .ph-highlights {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-bottom: 3.5rem;
+    }
+    .ph-highlight {
+      display: grid;
+      grid-template-columns: 3px 1fr;
+      gap: 1.25rem;
+    }
+    .ph-highlight-bar {
+      background: var(--red);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .ph-highlight-content {}
+    .ph-highlight-label {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .4rem;
+    }
+    .ph-highlight-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -.01em;
+      margin-bottom: .5rem;
+    }
+    .ph-highlight .ph-highlight-body {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* ─── STACK GRID ──────────────────────────────── */
+    .ph-stack-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 0;
+    }
+    .ph-stack-col {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .875rem 1rem;
+    }
+    .ph-stack-col-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .5rem;
+    }
+    .ph-stack-col-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+
+    /* ─── ENGAGEMENT STRIP ────────────────────────── */
+    .ph-engage-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 0;
+    }
+    .ph-engage-cell {
+      padding: .75rem 1rem;
+      border-right: 1px solid var(--border);
+    }
+    .ph-engage-cell:last-child { border-right: none; }
+    .ph-engage-key {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .375rem;
+    }
+    .ph-engage-val {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -.01em;
+    }
+    .ph-engage-val.small {
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    /* ─── INVESTORS ROW ───────────────────────────── */
+    .ph-investors {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .625rem;
+      margin-bottom: 0;
+    }
+    .ph-investors-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-right: .5rem;
+    }
+    .ph-inv-chip {
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 4px 12px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--bg-alt);
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 960px) {
+      .ph-metrics { grid-template-columns: 1fr 1fr; }
+      .ph-metric { border-bottom: 1px solid var(--border-band); }
+      .ph-metric:nth-child(2) { border-right: none; }
+      .ph-metric:nth-child(3), .ph-metric:nth-child(4) { border-bottom: none; }
+      .ph-stack-grid { grid-template-columns: 1fr 1fr; }
+      .ph-engage-strip { grid-template-columns: 1fr 1fr; }
+      .ph-engage-cell:nth-child(2n) { border-right: none; }
+      .ph-engage-cell { border-bottom: 1px solid var(--border); }
+      .ph-engage-cell:nth-last-child(-n+2) { border-bottom: none; }
+    }
+    @media (max-width: 600px) {
+      .ph-hero { padding: 3rem 0 2.5rem; }
+      .ph-metrics { grid-template-columns: 1fr 1fr; }
+      .ph-stack-grid { grid-template-columns: 1fr; }
+      .ph-engage-strip { grid-template-columns: 1fr; }
+      .ph-engage-cell { border-right: none; border-bottom: 1px solid var(--border); }
+      .ph-engage-cell:last-child { border-bottom: none; }
+      .ph-cta { padding: 2.5rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="nav-placeholder"></div>
+
+  <!-- ─── HERO ─────────────────────────────────────── -->
+  <section class="ph-hero">
+    <div class="container">
+      <a class="ph-back" href="/projects/">All projects</a>
+
+      <div class="ph-hero-top">
+        <div class="ph-icon">
+          <img src="/assets/emushrif/icon.webp" alt="eMushrif">
+        </div>
+        <div class="ph-title-block">
+          <p class="ph-eyebrow">Technical architecture</p>
+          <h1 class="ph-title">eMushrif</h1>
+          <p class="ph-subtitle">GCC's school transportation platform — real-time GPS tracking, IoT hardware integration, and a cross-platform Flutter application suite serving 150,000+ students across two countries.</p>
+          <!-- Tech icon strip -->
+          <div class="ph-icon-strip">
+            <div class="ph-icon-item"><i class="devicon-nodejs-plain colored"></i><span>Node.js</span></div>
+            <div class="ph-icon-item"><svg width="26" height="26" viewBox="0 0 128 128" fill="none"><path d="M126.67 0H1.33C.6 0 0 .6 0 1.33v125.34C0 127.4.6 128 1.33 128H126.67c.73 0 1.33-.6 1.33-1.33V1.33C128 .6 127.4 0 126.67 0Z" fill="#000"/><path d="M27.83 70.72c.11 11.05 9.08 17.82 19.45 17.82 7.35 0 13.36-2.82 17.54-8.36l7.56 5.45c-6.01 8.25-15.62 13.25-25.54 13.25C30.23 98.88 17 87.61 17 69.57c0-17.31 12.37-29.46 29.14-29.46 16.56 0 27.62 11.28 27.62 28.47 0 .78-.11 2.14-.11 2.14H27.83Zm35.52-9.82C61.5 52.13 55.49 47.1 46.3 47.1c-8.93 0-15.83 5.13-17.97 13.8h34.82Z" fill="#fff"/><path d="M95.28 98.88c-8.46 0-14.69-3.71-18.65-9.49l7.67-6.01c2.91 4.18 6.9 6.56 11.2 6.56 4.62 0 7.67-2.27 7.67-5.67 0-3.71-2.82-5.34-9.6-7.35-9.04-2.6-16.39-6.12-16.39-16.28 0-9.82 7.89-15.72 18.32-15.72 7.24 0 13.25 3.04 17.31 8.46l-7.13 5.89c-2.71-3.71-5.89-5.45-10.07-5.45-4.07 0-6.9 2.04-6.9 5.02 0 3.49 2.71 4.73 9.71 6.79 9.71 2.82 16.61 6.45 16.61 16.72 0 10.49-8.57 16.53-19.75 16.53Z" fill="#fff"/></svg><span>Express</span></div>
+            <div class="ph-icon-item"><i class="devicon-angularjs-plain colored"></i><span>Angular</span></div>
+            <div class="ph-icon-item"><i class="devicon-flutter-plain colored"></i><span>Flutter</span></div>
+            <div class="ph-icon-item"><i class="devicon-dart-plain colored"></i><span>Dart</span></div>
+            <div class="ph-icon-item"><i class="devicon-mongodb-plain colored"></i><span>MongoDB</span></div>
+            <div class="ph-icon-item"><i class="devicon-firebase-plain colored"></i><span>Firebase</span></div>
+            <div class="ph-icon-item"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#34A853"/><circle cx="12" cy="9" r="2.5" fill="#fff"/></svg><span>Maps SDK</span></div>
+          </div>
+          <!-- Text tag row for non-devicon items -->
+          <div class="ph-tags" style="margin-top:.75rem;">
+            <span class="work-tag">WebSocket</span>
+            <span class="work-tag">MQTT</span>
+            <span class="work-tag">EdTech · IoT</span>
+            <span class="work-tag">6+ years</span>
+          </div>
+                    <!-- Hero action buttons -->
+          <div class="ph-actions">
+            <a href="https://apps.apple.com/om/app/saar-by-emushrif/id1453327782" target="_blank" rel="noopener" style="display:inline-block;line-height:0;">
+              <img src="/assets/badges/app-store.svg" alt="Download on the App Store" height="40">
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=com.emushrif.emushrif" target="_blank" rel="noopener" style="display:inline-block;line-height:0;margin-left:-6px;">
+              <img src="/assets/badges/google-play.png" alt="Get it on Google Play" height="60" style="margin-top:-10px;margin-bottom:-10px;">
+            </a>
+            <a href="/work/emushrif.html" class="ph-action-btn red-outline">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Case study
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Metrics bar -->
+  <div class="ph-metrics-outer">
+    <div class="container">
+      <div class="ph-metrics">
+        <div class="ph-metric">
+          <span class="ph-metric-val">150K+</span>
+          <span class="ph-metric-label">Students tracked per day</span>
+        </div>
+        <div class="ph-metric">
+          <span class="ph-metric-val">6+ yrs</span>
+          <span class="ph-metric-label">Active engineering partnership</span>
+        </div>
+        <div class="ph-metric">
+          <span class="ph-metric-val">10</span>
+          <span class="ph-metric-label">TBox engineers at peak</span>
+        </div>
+        <div class="ph-metric">
+          <span class="ph-metric-val">$10.8M</span>
+          <span class="ph-metric-label">Raised across 3 rounds</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SCREENSHOT CAROUSEL ──────────────────────── -->
+  <div class="ph-shots">
+    <div class="ph-shots-header">
+      <p class="ph-section-label" style="margin:0;">Product screenshots</p>
+    </div>
+    <div class="ph-shots-track-wrap">
+      <div class="ph-shots-track" id="shots-track">
+        <div class="ph-shots-inner">
+
+          <div class="ph-shot">
+            <img src="/assets/emushrif/screen1.jpg" alt="Parent app — live bus tracking">
+          </div>
+
+          <div class="ph-shot">
+            <img src="/assets/emushrif/screen2.jpg" alt="Parent app — child status">
+          </div>
+
+          <div class="ph-shot">
+            <img src="/assets/emushrif/screen3.jpg" alt="Parent app — route detail">
+          </div>
+
+          <div class="ph-shot">
+            <img src="/assets/emushrif/screen4.jpg" alt="Trip notifications">
+          </div>
+
+          <div class="ph-shot">
+            <img src="/assets/emushrif/screen5.jpg" alt="Driver app — trip view">
+          </div>
+
+          <div class="ph-shot">
+            <img src="/assets/emushrif/screen6.jpg" alt="App onboarding">
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="ph-shots-footer">
+      <div class="ph-shots-nav">
+        <button class="work-carousel-btn" id="shots-prev" aria-label="Previous">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="work-carousel-btn" id="shots-next" aria-label="Next">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── BODY ──────────────────────────────────────── -->
+  <section class="ph-body">
+    <div class="container">
+
+        <!-- Stack grid -->
+        <div class="ph-section">
+          <p class="ph-section-label">Tech stack</p>
+          <div class="ph-stack-grid">
+
+            <div class="ph-stack-col">
+              <div class="ph-stack-col-name">Mobile (iOS &amp; Android)</div>
+              <div class="ph-stack-col-chips">
+                <span class="ph-chip">Flutter</span>
+                <span class="ph-chip">Dart</span>
+                <span class="ph-chip">Google Maps SDK</span>
+                <span class="ph-chip">FCM / APNs</span>
+              </div>
+            </div>
+
+            <div class="ph-stack-col">
+              <div class="ph-stack-col-name">Admin dashboard</div>
+              <div class="ph-stack-col-chips">
+                <span class="ph-chip">Angular</span>
+                <span class="ph-chip">REST API</span>
+                <span class="ph-chip">Google Maps JS</span>
+              </div>
+            </div>
+
+            <div class="ph-stack-col">
+              <div class="ph-stack-col-name">Backend</div>
+              <div class="ph-stack-col-chips">
+                <span class="ph-chip">Node.js</span>
+                <span class="ph-chip">Express</span>
+                <span class="ph-chip">Socket.io</span>
+                <span class="ph-chip">MQTT</span>
+                <span class="ph-chip">MongoDB</span>
+                <span class="ph-chip">NGINX</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Engagement strip -->
+        <div class="ph-section">
+          <p class="ph-section-label">Engagement</p>
+          <div class="ph-engage-strip">
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Duration</div>
+              <div class="ph-engage-val">2019 – present</div>
+            </div>
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Model</div>
+              <div class="ph-engage-val">Staff augmentation</div>
+            </div>
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Peak team size</div>
+              <div class="ph-engage-val">10 engineers</div>
+            </div>
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Markets</div>
+              <div class="ph-engage-val">Oman · Kuwait</div>
+            </div>
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Stage</div>
+              <div class="ph-engage-val small">Seed → Series A → Growth</div>
+            </div>
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Markets</div>
+              <div class="ph-engage-val">Oman · Kuwait</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Investors -->
+        <div class="ph-section">
+          <p class="ph-section-label">Backed by</p>
+          <div class="ph-investors">
+            <span class="ph-inv-chip">IDO Investment — Lead, Series A</span>
+            <span class="ph-inv-chip">Phaze Ventures</span>
+            <span class="ph-inv-chip">Jasoor Ventures — Lead, 2026</span>
+            <span class="ph-inv-chip">Oman Tech Fund</span>
+          </div>
+        </div>
+
+        <!-- Technical highlights -->
+        <div class="ph-section ph-section-highlights">
+          <p class="ph-section-label">Technical highlights</p>
+          <h2>Three engineering decisions that define the product</h2>
+
+          <div class="ph-highlights">
+
+            <div class="ph-highlight">
+              <div class="ph-highlight-bar"></div>
+              <div class="ph-highlight-content">
+                <div class="ph-highlight-label">Real-time GPS pipeline</div>
+                <div class="ph-highlight-title">MQTT → Node.js → WebSocket in under 2 seconds</div>
+                <p class="ph-highlight-body">Every bus carries a GPS unit publishing its location every 5–10 seconds via MQTT — a protocol designed for constrained hardware, with as little as 2 bytes of overhead per message. The Node.js backend subscribes to the broker, runs geofence checks on each event, and pushes the result over WebSocket only to parents tracking that specific bus. No polling. No broadcast floods. The entire pipeline — device to parent screen — completes in under 2 seconds.</p>
+              </div>
+            </div>
+
+            <div class="ph-highlight">
+              <div class="ph-highlight-bar"></div>
+              <div class="ph-highlight-content">
+                <div class="ph-highlight-label">Multi-tenant data model</div>
+                <div class="ph-highlight-title">Hundreds of schools, zero data leakage</div>
+                <p class="ph-highlight-body">Every document in MongoDB is scoped to a <code style="font-family:var(--mono);font-size:14px;background:#F2F1EF;padding:1px 6px;border-radius:3px;">schoolId</code> at the root level. Isolation is enforced at the API middleware layer — not in individual controllers — so no query can reach another school's students, routes, or trip history. When eMushrif expanded from Oman to Kuwait, it required zero architectural changes: separate MongoDB instances per country, with the API routing requests from each school's country field.</p>
+              </div>
+            </div>
+
+            <div class="ph-highlight">
+              <div class="ph-highlight-bar"></div>
+              <div class="ph-highlight-content">
+                <div class="ph-highlight-label">Cross-platform mobile — Arabic-first</div>
+                <div class="ph-highlight-title">Flutter on iOS + Android, RTL from day one</div>
+                <p class="ph-highlight-body">The parent app started in React Native and was migrated to Flutter — delivering a single codebase across iOS and Android without sacrificing performance for live map rendering or background push alerts. Arabic RTL was a first-class layout direction from the start, not retrofitted: Flutter's bidirectional text and Directionality widget handle RTL natively, with bilingual Arabic/English strings synced to the backend content model. The result: a product that feels at home in its market.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      <!-- CTA -->
+      <div class="ph-cta">
+        <h2>Evaluating our technical capability?</h2>
+        <p>We're happy to go deeper on any architecture decision, share anonymised code samples, or walk through our engineering approach on a call.</p>
+        <a href="/#contact" class="btn btn-primary">Start a conversation &rarr;</a>
+      </div>
+
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <script src="/js/components.js" defer></script>
+  <script>
+    const track = document.getElementById('shots-track');
+    document.getElementById('shots-prev').addEventListener('click', () => {
+      track.scrollBy({ left: -340, behavior: 'smooth' });
+    });
+    document.getElementById('shots-next').addEventListener('click', () => {
+      track.scrollBy({ left: 340, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

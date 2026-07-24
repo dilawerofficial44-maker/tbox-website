@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BetterBack — Technical Architecture · TBox Solutionz</title>
+  <meta name="description" content="Full DTC commerce stack for a $1.65M Kickstarter posture device — custom Shopify theme, Klaviyo lifecycle automation, Recharge subscriptions, and a GA4 + Meta Pixel attribution pipeline.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/assets/images/favicon-192.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#E01B1B">  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    /* ─── PAGE TOKENS ─────────────────────────────── */
+    :root {
+      --proj-border: var(--border);
+      --proj-surface: var(--bg-alt);
+      --proj-mono-sm: 11px;
+      --proj-mono-md: 13px;
+    }
+
+    /* ─── HERO ────────────────────────────────────── */
+    .ph-hero {
+      background: var(--bg-page);
+      border-bottom: 1px solid var(--border-band);
+      padding: 4.5rem 0 3.5rem;
+    }
+    .ph-back {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: .04em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 1.75rem;
+    }
+    .ph-back:hover { color: var(--text); }
+    .ph-back::before { content: '←'; }
+    .ph-hero-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .ph-icon {
+      width: 68px; height: 68px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .ph-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .ph-title-block { flex: 1; }
+    .ph-eyebrow {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: .5rem;
+    }
+    .ph-title {
+      font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+      letter-spacing: -.03em;
+      margin-bottom: .625rem;
+      line-height: 1.15;
+    }
+    .ph-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 680px;
+    }
+
+    /* tags */
+    .ph-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 1.25rem;
+    }
+
+    /* ─── HERO ACTION BUTTONS ─────────────────────── */
+    .ph-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 1.5rem; }
+    .ph-action-btn { display: inline-flex; align-items: center; gap: 7px; padding: 8px 16px; border-radius: 8px; font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: .04em; text-decoration: none; transition: background .15s, border-color .15s, box-shadow .15s; white-space: nowrap; }
+    .ph-action-btn svg { flex-shrink: 0; }
+    .ph-action-btn.primary { background: var(--text); color: #fff; border: 1px solid var(--text); }
+    .ph-action-btn.primary:hover { background: #2D2B28; box-shadow: 0 2px 10px rgba(0,0,0,.18); }
+    .ph-action-btn.outline { background: var(--bg-page); color: var(--text); border: 1px solid var(--border); }
+    .ph-action-btn.outline:hover { border-color: #B0AEA9; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .ph-action-btn.red-outline { background: var(--bg-page); color: var(--red); border: 1px solid #F5C2C2; }
+    .ph-action-btn.red-outline:hover { background: #FEF2F2; border-color: var(--red); }
+
+    /* Metrics bar */
+    .ph-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .ph-metric {
+      padding: 1.5rem 1.75rem;
+      border-right: 1px solid var(--border-band);
+      display: flex;
+      flex-direction: column;
+      gap: .3rem;
+    }
+    .ph-metric:first-child { padding-left: 0; }
+    .ph-metric:last-child  { border-right: none; }
+    .ph-metric-val {
+      font-size: clamp(1.2rem, 2vw, 1.8rem);
+      font-weight: 600;
+      letter-spacing: -.03em;
+      color: var(--text);
+      line-height: 1;
+    }
+    .ph-metric-label { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+
+    /* ─── BODY LAYOUT ─────────────────────────────── */
+    .ph-body { padding: 5rem 0 3rem; }
+    .ph-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 4rem;
+      align-items: start;
+    }
+    .ph-main { min-width: 0; }
+
+    /* ─── SECTION ─────────────────────────────────── */
+    .ph-section { margin-bottom: 2rem; }
+    .ph-section.ph-section-highlights { margin-bottom: 2.5rem; }
+    .ph-section-label {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .625rem;
+    }
+    .ph-section h2 {
+      font-size: 1.4rem;
+      letter-spacing: -.02em;
+      margin-bottom: 1rem;
+    }
+    .ph-section p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #4A4845;
+      margin-bottom: .875rem;
+    }
+    .ph-section p:last-child { margin-bottom: 0; }
+
+    /* ─── ARCHITECTURE DIAGRAM ─────────────────────── */
+    .arch-diagram {
+      margin: 2rem 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .arch-diagram-title {
+      background: var(--bg-alt);
+      border-bottom: 1px solid var(--border);
+      padding: .625rem 1rem;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .arch-layers { padding: 1.5rem; display: flex; flex-direction: column; gap: .75rem; }
+    .arch-layer {
+      display: flex;
+      align-items: stretch;
+      gap: .625rem;
+    }
+    .arch-layer-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      flex-shrink: 0;
+      width: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .arch-layer-nodes {
+      flex: 1;
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+    .arch-node {
+      flex: 1;
+      min-width: 80px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .625rem .875rem;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.3;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .arch-node-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+    .arch-node.red    { border-color: #FECACA; background: #FEF2F2; }
+    .arch-node.blue   { border-color: #BFDBFE; background: #EFF6FF; }
+    .arch-node.green  { border-color: #BBF7D0; background: #F0FDF4; }
+    .arch-node.purple { border-color: #DDD6FE; background: #F5F3FF; }
+    .arch-node.amber  { border-color: #FDE68A; background: #FFFBEB; }
+    .arch-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--border);
+      font-size: 18px;
+      margin: -.25rem 0;
+      padding-left: 36px;
+    }
+
+    /* ─── TECH CALLOUT ────────────────────────────── */
+    .ph-callout {
+      background: var(--bg-alt);
+      border: 1px solid var(--border-band);
+      border-left: 3px solid var(--red);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin: 2rem 0;
+    }
+    .ph-callout-label {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: .625rem;
+    }
+    .ph-callout p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 0;
+      font-weight: 450;
+    }
+
+    /* ─── CODE-LIKE BLOCK ─────────────────────────── */
+    .ph-code-block {
+      background: #18181B;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+    }
+    .ph-code-block-header {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: #71717A;
+      margin-bottom: .875rem;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .ph-code-block-header::before {
+      content: '';
+      display: inline-flex;
+      gap: 4px;
+    }
+    .ph-code-block code {
+      font-family: var(--mono);
+      font-size: 13.5px;
+      line-height: 1.85;
+      color: #F4F4F5;
+      display: block;
+    }
+    .ph-code-block .kw  { color: #C084FC; }
+    .ph-code-block .str { color: #86EFAC; }
+    .ph-code-block .num { color: #FCA5A5; }
+    .ph-code-block .cmt { color: #52525B; }
+    .ph-code-block .fn  { color: #7DD3FC; }
+
+    /* ─── CHALLENGE / SOLUTION PAIRS ──────────────── */
+    .ph-challenges { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 1rem; }
+    .ph-challenge {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .ph-challenge-problem {
+      display: flex;
+      gap: .75rem;
+      padding: 1rem 1.25rem;
+      background: #FFFBEB;
+      border-bottom: 1px solid #FDE68A;
+      font-size: 14px;
+      font-weight: 500;
+      color: #78350F;
+      align-items: flex-start;
+    }
+    .ph-challenge-problem::before {
+      content: '⚠';
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .ph-challenge-solution {
+      padding: 1rem 1.25rem;
+      font-size: 14px;
+      line-height: 1.65;
+      color: #4A4845;
+      display: flex;
+      gap: .75rem;
+      align-items: flex-start;
+    }
+    .ph-challenge-solution::before {
+      content: '✓';
+      font-family: var(--mono);
+      font-size: 13px;
+      color: #16A34A;
+      flex-shrink: 0;
+      font-weight: 600;
+      margin-top: 1px;
+    }
+
+    /* ─── SIDEBAR ─────────────────────────────────── */
+    .ph-sidebar { position: sticky; top: 80px; }
+    .ph-sidebar-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .ph-sidebar-title {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .ph-stack-layer { margin-bottom: 1.125rem; }
+    .ph-stack-layer:last-child { margin-bottom: 0; }
+    .ph-stack-layer-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .4rem;
+    }
+    .ph-stack-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+    .ph-chip {
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: var(--white);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .ph-sidebar-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: .5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .ph-sidebar-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .ph-sidebar-row-key { color: var(--text-muted); }
+    .ph-sidebar-row-val { font-weight: 500; color: var(--text); text-align: right; font-size: 13px; }
+
+    /* ─── TABLE ───────────────────────────────────── */
+    .ph-table-wrap { overflow-x: auto; margin: 1.5rem 0; }
+    .ph-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14.5px;
+    }
+    .ph-table th {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: .75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-alt);
+      white-space: nowrap;
+    }
+    .ph-table td {
+      padding: .875rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+      line-height: 1.6;
+      vertical-align: top;
+    }
+    .ph-table tr:last-child td { border-bottom: none; }
+    .ph-table td:first-child { font-weight: 500; color: var(--text); white-space: nowrap; }
+
+    /* ─── CTA ─────────────────────────────────────── */
+    .ph-cta {
+      background: var(--bg-dark);
+      border-radius: 20px;
+      padding: 3.5rem;
+      text-align: center;
+      margin-top: 4rem;
+    }
+    .ph-cta h2 { color: #fff; font-size: clamp(1.4rem, 2.5vw, 2rem); margin-bottom: .75rem; letter-spacing: -.025em; }
+    .ph-cta p  { color: #9A968F; font-size: 15px; margin-bottom: 1.75rem; }
+
+    /* ─── TECH ICON STRIP ─────────────────────────── */
+    .ph-icon-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 1.5rem;
+    }
+    .ph-icon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 14px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .ph-icon-item:hover {
+      border-color: #C0BEBB;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    }
+    .ph-icon-item i { font-size: 26px; line-height: 1; }
+    .ph-icon-item svg { display: block; }
+    .ph-icon-item span {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      color: var(--text-muted);
+      letter-spacing: .03em;
+      white-space: nowrap;
+    }
+
+    /* ─── METRICS — constrained to container ──────── */
+    .ph-metrics-outer {
+      border-top: 1px solid var(--border-band);
+      border-bottom: 1px solid var(--border-band);
+    }
+    .ph-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* ─── SCREENSHOT CAROUSEL ────────────────────── */
+    .ph-shots {
+      background: var(--bg-alt);
+      border-top: 1px solid var(--border-band);
+      border-bottom: 1px solid var(--border-band);
+      padding: 1.25rem 0 1rem;
+      overflow: hidden;
+    }
+    .ph-shots-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 max(1.25rem, calc((100vw - 1120px) / 2));
+      margin-bottom: 1rem;
+    }
+    .ph-shots-track-wrap {
+      overflow: hidden;
+      width: 100%;
+    }
+    .ph-shots-track {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      text-align: center;
+    }
+    .ph-shots-track::-webkit-scrollbar { display: none; }
+    .ph-shots-inner {
+      display: inline-flex;
+      gap: 3px;
+      vertical-align: top;
+    }
+    .ph-shot {
+      flex: 0 0 auto;
+      width: 700px;
+      scroll-snap-align: start;
+      border-radius: 0;
+      overflow: hidden;
+      border: none;
+      background: #000;
+      box-shadow: none;
+    }
+    .ph-shot img {
+      width: 100%;
+      height: 460px;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+    .ph-shots-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: .875rem max(1.25rem, calc((100vw - 1120px) / 2)) 0;
+    }
+    .ph-shots-nav {
+      display: flex;
+      gap: .5rem;
+    }
+
+    /* ─── HIGHLIGHTS ─────────────────────────────── */
+    .ph-highlights {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-bottom: 3.5rem;
+    }
+    .ph-highlight {
+      display: grid;
+      grid-template-columns: 3px 1fr;
+      gap: 1.25rem;
+    }
+    .ph-highlight-bar {
+      background: var(--red);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .ph-highlight-content {}
+    .ph-highlight-label {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .4rem;
+    }
+    .ph-highlight-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -.01em;
+      margin-bottom: .5rem;
+    }
+    .ph-highlight .ph-highlight-body {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* ─── STACK GRID ──────────────────────────────── */
+    .ph-stack-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 0;
+    }
+    .ph-stack-col {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .875rem 1rem;
+    }
+    .ph-stack-col-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .5rem;
+    }
+    .ph-stack-col-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+
+    /* ─── ENGAGEMENT STRIP ────────────────────────── */
+    .ph-engage-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 0;
+    }
+    .ph-engage-cell {
+      padding: .75rem 1rem;
+      border-right: 1px solid var(--border);
+    }
+    .ph-engage-cell:last-child { border-right: none; }
+    .ph-engage-key {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .375rem;
+    }
+    .ph-engage-val {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -.01em;
+    }
+    .ph-engage-val.small {
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    /* ─── INVESTORS ROW ───────────────────────────── */
+    .ph-investors {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .625rem;
+      margin-bottom: 0;
+    }
+    .ph-investors-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-right: .5rem;
+    }
+    .ph-inv-chip {
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 4px 12px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--bg-alt);
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 960px) {
+      .ph-metrics { grid-template-columns: 1fr 1fr; }
+      .ph-metric { border-bottom: 1px solid var(--border-band); }
+      .ph-metric:nth-child(2) { border-right: none; }
+      .ph-metric:nth-child(3), .ph-metric:nth-child(4) { border-bottom: none; }
+      .ph-stack-grid { grid-template-columns: 1fr 1fr; }
+      .ph-engage-strip { grid-template-columns: 1fr 1fr; }
+      .ph-engage-cell:nth-child(2n) { border-right: none; }
+      .ph-engage-cell { border-bottom: 1px solid var(--border); }
+      .ph-engage-cell:nth-last-child(-n+2) { border-bottom: none; }
+      .ph-shot { width: 100vw; }
+      .ph-shot img { height: 280px; }
+    }
+    @media (max-width: 600px) {
+      .ph-hero { padding: 3rem 0 2.5rem; }
+      .ph-metrics { grid-template-columns: 1fr 1fr; }
+      .ph-stack-grid { grid-template-columns: 1fr; }
+      .ph-engage-strip { grid-template-columns: 1fr; }
+      .ph-engage-cell { border-right: none; border-bottom: 1px solid var(--border); }
+      .ph-engage-cell:last-child { border-bottom: none; }
+      .ph-cta { padding: 2.5rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="nav-placeholder"></div>
+
+  <!-- ─── HERO ─────────────────────────────────────── -->
+  <section class="ph-hero">
+    <div class="container">
+      <a class="ph-back" href="/projects/">All projects</a>
+
+      <div class="ph-hero-top">
+        <div class="ph-icon">
+          <img src="/assets/betterback/icon.webp" alt="BetterBack">
+        </div>
+        <div class="ph-title-block">
+          <p class="ph-eyebrow">Technical architecture</p>
+          <h1 class="ph-title">BetterBack</h1>
+          <p class="ph-subtitle">Full DTC commerce stack for a $1.65M Kickstarter-funded posture device — featured on Shark Tank, shipped to 125,000+ customers across 115 countries with a custom Shopify theme, Klaviyo lifecycle automation, and a full attribution pipeline.</p>
+          <!-- Tech icon strip -->
+          <div class="ph-icon-strip">
+            <div class="ph-icon-item"><svg width="26" height="26" viewBox="0 0 24 24" fill="#96BF48"><path d="M15.337 23.979l7.216-1.561s-2.604-17.613-2.625-17.73c-.018-.116-.114-.192-.211-.192s-1.929-.136-1.929-.136-1.275-1.274-1.439-1.411c-.045-.037-.075-.057-.121-.074l-.914 21.104h.023zM11.71 11.305s-.81-.424-1.774-.424c-1.447 0-1.504.906-1.504 1.141 0 1.232 3.24 1.715 3.24 4.629 0 2.295-1.44 3.76-3.406 3.76-2.354 0-3.54-1.465-3.54-1.465l.646-2.086s1.245 1.066 2.28 1.066c.675 0 .975-.545.975-.932 0-1.619-2.654-1.694-2.654-4.359-.034-2.237 1.571-4.416 4.827-4.416 1.257 0 1.875.361 1.875.361l-.945 2.715-.02.01zM11.17.83c.136 0 .271.038.405.135-.984.465-2.064 1.639-2.508 3.992-.656.213-1.293.405-1.889.578C7.697 3.75 8.951.84 11.17.84V.83zm1.235 2.949v.135c-.754.232-1.583.484-2.394.736.466-1.777 1.333-2.645 2.085-2.971.193.501.309 1.176.309 2.1zm.539-2.234c.694.074 1.141.867 1.429 1.755-.349.114-.735.231-1.158.366v-.252c0-.752-.096-1.371-.271-1.871v.002zm2.992 1.289c-.02 0-.06.021-.078.021s-.289.075-.714.21c-.423-1.233-1.176-2.37-2.508-2.37h-.115C12.135.209 11.669 0 11.265 0 8.159 0 6.675 3.877 6.21 5.846c-1.194.365-2.063.636-2.16.674-.675.213-.694.232-.772.87-.075.462-1.83 14.063-1.83 14.063L15.009 24l.927-21.166z"/></svg><span>Shopify</span></div>
+            <div class="ph-icon-item"><i class="devicon-javascript-plain colored"></i><span>JavaScript</span></div>
+            <div class="ph-icon-item"><i class="devicon-css3-plain colored"></i><span>Liquid/CSS</span></div>
+            <div class="ph-icon-item">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="1" y="13" width="4" height="9" rx="1" fill="#E8710A"/><rect x="9" y="7" width="4" height="15" rx="1" fill="#E8710A"/><rect x="17" y="3" width="4" height="19" rx="1" fill="#E8710A"/></svg>
+              <span>Analytics 4</span>
+            </div>
+            <div class="ph-icon-item">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="#0081FB"><path d="M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a6.624 6.624 0 0 0 .265.86 5.297 5.297 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.743 3.743 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.93-4.716-2.93-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a44.908 44.908 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.533-1.533a2.264 2.264 0 0 1 1.088-.285z"/></svg>
+              <span>Meta Pixel</span>
+            </div>
+          </div>
+          <div class="ph-tags" style="margin-top:.75rem;">
+            <span class="work-tag">Shopify · DTC</span>
+            <span class="work-tag">Shark Tank</span>
+            <span class="work-tag">115 countries</span>
+            <span class="work-tag">$1.65M Kickstarter</span>
+          </div>
+                    <!-- Hero action buttons -->
+          <div class="ph-actions">
+            <a href="https://getbetterback.com" target="_blank" rel="noopener" class="ph-action-btn primary">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              Visit website
+            </a>
+            <a href="/work/betterback.html" class="ph-action-btn red-outline">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Case study
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Metrics bar -->
+  <div class="ph-metrics-outer">
+    <div class="container">
+      <div class="ph-metrics">
+        <div class="ph-metric">
+          <span class="ph-metric-val">125K+</span>
+          <span class="ph-metric-label">Customers worldwide</span>
+        </div>
+        <div class="ph-metric">
+          <span class="ph-metric-val">115</span>
+          <span class="ph-metric-label">Countries served</span>
+        </div>
+        <div class="ph-metric">
+          <span class="ph-metric-val">$1.65M</span>
+          <span class="ph-metric-label">Kickstarter raised</span>
+        </div>
+        <div class="ph-metric">
+          <span class="ph-metric-val">Shark Tank</span>
+          <span class="ph-metric-label">Featured</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SCREENSHOT CAROUSEL ──────────────────────── -->
+  <div class="ph-shots">
+    <div class="ph-shots-header">
+      <p class="ph-section-label" style="margin:0;">Product screenshots</p>
+    </div>
+    <div class="ph-shots-track-wrap">
+      <div class="ph-shots-track" id="shots-track">
+        <div class="ph-shots-inner">
+
+          <div class="ph-shot">
+            <img src="/assets/betterback/hero-female.jpg" alt="BetterBack lifestyle — ergonomic posture">
+          </div>
+
+          <div class="ph-shot">
+            <img src="/assets/betterback/hero-posture.jpg" alt="Posture correction in use">
+          </div>
+
+          <div class="ph-shot">
+            <img src="/assets/betterback/5-sec-flat.jpg" alt="5-second setup">
+          </div>
+
+          <div class="ph-shot">
+            <img src="/assets/betterback/product-duo.jpg" alt="Product pair view">
+          </div>
+
+          <div class="ph-shot">
+            <img src="/assets/betterback/wfh-setup.jpg" alt="Work from home setup">
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="ph-shots-footer">
+      <div class="ph-shots-nav">
+        <button class="work-carousel-btn" id="shots-prev" aria-label="Previous">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="work-carousel-btn" id="shots-next" aria-label="Next">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── BODY ──────────────────────────────────────── -->
+  <section class="ph-body">
+    <div class="container">
+
+        <!-- Stack grid -->
+        <div class="ph-section">
+          <p class="ph-section-label">Tech stack</p>
+          <div class="ph-stack-grid">
+
+            <div class="ph-stack-col">
+              <div class="ph-stack-col-name">Storefront</div>
+              <div class="ph-stack-col-chips">
+                <span class="ph-chip">Shopify</span>
+                <span class="ph-chip">Liquid</span>
+                <span class="ph-chip">JavaScript</span>
+                <span class="ph-chip">Custom Zest theme</span>
+              </div>
+            </div>
+
+            <div class="ph-stack-col">
+              <div class="ph-stack-col-name">Marketing automation</div>
+              <div class="ph-stack-col-chips">
+                <span class="ph-chip">Klaviyo</span>
+                <span class="ph-chip">Meta Pixel</span>
+                <span class="ph-chip">Google Analytics 4</span>
+              </div>
+            </div>
+
+            <div class="ph-stack-col">
+              <div class="ph-stack-col-name">Commerce ops</div>
+              <div class="ph-stack-col-chips">
+                <span class="ph-chip">Recharge</span>
+                <span class="ph-chip">Shopify CDN</span>
+                <span class="ph-chip">Shopify Payments</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Engagement strip -->
+        <div class="ph-section">
+          <p class="ph-section-label">Engagement</p>
+          <div class="ph-engage-strip">
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Platform</div>
+              <div class="ph-engage-val">Shopify</div>
+            </div>
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Model</div>
+              <div class="ph-engage-val">DTC e-commerce</div>
+            </div>
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Peak</div>
+              <div class="ph-engage-val">125K+ customers</div>
+            </div>
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Markets</div>
+              <div class="ph-engage-val">115 countries</div>
+            </div>
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Stage</div>
+              <div class="ph-engage-val small">Shark Tank → Growth</div>
+            </div>
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Customers</div>
+              <div class="ph-engage-val">125K+</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Technical highlights -->
+        <div class="ph-section ph-section-highlights">
+          <p class="ph-section-label">Technical highlights</p>
+          <h2>Three engineering decisions that define the product</h2>
+
+          <div class="ph-highlights">
+
+            <div class="ph-highlight">
+              <div class="ph-highlight-bar"></div>
+              <div class="ph-highlight-content">
+                <div class="ph-highlight-label">Custom Shopify theme</div>
+                <div class="ph-highlight-title">Zest theme — performance-tuned for DTC conversion</div>
+                <p class="ph-highlight-body">BetterBack's Shopify storefront runs on a custom-built Zest theme — a Liquid-based theme engineered for conversion rather than flexibility. Every section template is built around the product's specific purchase journey: social proof before price, a 5-second setup demo above the fold, and a persistent sticky cart that reduces friction between intent and checkout. Shopify CDN handles asset delivery, with image compression and lazy loading configured at the theme level to keep LCP under 2.5 seconds globally.</p>
+              </div>
+            </div>
+
+            <div class="ph-highlight">
+              <div class="ph-highlight-bar"></div>
+              <div class="ph-highlight-content">
+                <div class="ph-highlight-label">Klaviyo lifecycle automation</div>
+                <div class="ph-highlight-title">Email + SMS flows covering the full customer journey</div>
+                <p class="ph-highlight-body">The marketing automation stack is built on Klaviyo, with flows covering every lifecycle stage: abandoned cart (3-touch email + SMS), post-purchase onboarding (5-email sequence), win-back at 60/90/180 days, and a review request triggered 14 days after delivery confirmation. Segments are built from Shopify purchase data synced via Klaviyo's native integration — no ETL pipeline, no data warehouse. Each flow is A/B tested at the subject line and send-time level with statistical significance thresholds before promotion.</p>
+              </div>
+            </div>
+
+            <div class="ph-highlight">
+              <div class="ph-highlight-bar"></div>
+              <div class="ph-highlight-content">
+                <div class="ph-highlight-label">Attribution pipeline</div>
+                <div class="ph-highlight-title">GA4 + Meta Pixel — full-funnel, server-side</div>
+                <p class="ph-highlight-body">Attribution runs across two channels: Google Analytics 4 for owned analytics and Meta Pixel for paid social. Both are implemented with server-side event tracking via Shopify's Customer Events API, which fires purchase and checkout events from Shopify's servers rather than the browser — surviving iOS privacy restrictions and ad blockers. GA4 events are forwarded to BigQuery for custom cohort analysis. The Meta Pixel integration uses Conversions API in parallel with browser events, deduplicating on the event_id field to avoid double-counting in Meta's reporting.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      <!-- CTA -->
+      <div class="ph-cta">
+        <h2>Scaling a physical product to global DTC?</h2>
+        <p>We've built the commerce stack, the automation flows, and the attribution pipeline. Happy to review your setup or build it from scratch.</p>
+        <a href="/#contact" class="btn btn-primary">Start a conversation &rarr;</a>
+      </div>
+
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <script src="/js/components.js" defer></script>
+  <script>
+    const track = document.getElementById('shots-track');
+    document.getElementById('shots-prev').addEventListener('click', () => {
+      track.scrollBy({ left: -720, behavior: 'smooth' });
+    });
+    document.getElementById('shots-next').addEventListener('click', () => {
+      track.scrollBy({ left: 720, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

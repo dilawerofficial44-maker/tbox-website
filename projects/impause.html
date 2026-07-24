@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impause — Technical Architecture · TBox Solutionz</title>
+  <meta name="description" content="AI-powered behavioral finance app — React Native Expo, Supabase with row-level security, Plaid financial data integration, and an on-device AI engine built on OpenAI.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/assets/images/favicon-192.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#E01B1B">  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    /* ─── PAGE TOKENS ─────────────────────────────── */
+    :root {
+      --proj-border: var(--border);
+      --proj-surface: var(--bg-alt);
+      --proj-mono-sm: 11px;
+      --proj-mono-md: 13px;
+    }
+
+    /* ─── HERO ────────────────────────────────────── */
+    .ph-hero {
+      background: var(--bg-page);
+      border-bottom: 1px solid var(--border-band);
+      padding: 4.5rem 0 3.5rem;
+    }
+    .ph-back {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: .04em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 1.75rem;
+    }
+    .ph-back:hover { color: var(--text); }
+    .ph-back::before { content: '←'; }
+    .ph-hero-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .ph-icon {
+      width: 68px; height: 68px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .ph-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .ph-title-block { flex: 1; }
+    .ph-eyebrow {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: .5rem;
+    }
+    .ph-title {
+      font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+      letter-spacing: -.03em;
+      margin-bottom: .625rem;
+      line-height: 1.15;
+    }
+    .ph-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 680px;
+    }
+
+    /* tags */
+    .ph-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 1.25rem;
+    }
+
+    /* ─── HERO ACTION BUTTONS ─────────────────────── */
+    .ph-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 1.5rem; }
+    .ph-action-btn { display: inline-flex; align-items: center; gap: 7px; padding: 8px 16px; border-radius: 8px; font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: .04em; text-decoration: none; transition: background .15s, border-color .15s, box-shadow .15s; white-space: nowrap; }
+    .ph-action-btn svg { flex-shrink: 0; }
+    .ph-action-btn.primary { background: var(--text); color: #fff; border: 1px solid var(--text); }
+    .ph-action-btn.primary:hover { background: #2D2B28; box-shadow: 0 2px 10px rgba(0,0,0,.18); }
+    .ph-action-btn.outline { background: var(--bg-page); color: var(--text); border: 1px solid var(--border); }
+    .ph-action-btn.outline:hover { border-color: #B0AEA9; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .ph-action-btn.red-outline { background: var(--bg-page); color: var(--red); border: 1px solid #F5C2C2; }
+    .ph-action-btn.red-outline:hover { background: #FEF2F2; border-color: var(--red); }
+
+    /* Metrics bar */
+    .ph-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .ph-metric {
+      padding: 1.5rem 1.75rem;
+      border-right: 1px solid var(--border-band);
+      display: flex;
+      flex-direction: column;
+      gap: .3rem;
+    }
+    .ph-metric:first-child { padding-left: 0; }
+    .ph-metric:last-child  { border-right: none; }
+    .ph-metric-val {
+      font-size: clamp(1.2rem, 2vw, 1.8rem);
+      font-weight: 600;
+      letter-spacing: -.03em;
+      color: var(--text);
+      line-height: 1;
+    }
+    .ph-metric-label { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+
+    /* ─── BODY LAYOUT ─────────────────────────────── */
+    .ph-body { padding: 5rem 0 3rem; }
+    .ph-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 4rem;
+      align-items: start;
+    }
+    .ph-main { min-width: 0; }
+
+    /* ─── SECTION ─────────────────────────────────── */
+    .ph-section { margin-bottom: 2rem; }
+    .ph-section.ph-section-highlights { margin-bottom: 2.5rem; }
+    .ph-section-label {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .625rem;
+    }
+    .ph-section h2 {
+      font-size: 1.4rem;
+      letter-spacing: -.02em;
+      margin-bottom: 1rem;
+    }
+    .ph-section p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #4A4845;
+      margin-bottom: .875rem;
+    }
+    .ph-section p:last-child { margin-bottom: 0; }
+
+    /* ─── ARCHITECTURE DIAGRAM ─────────────────────── */
+    .arch-diagram {
+      margin: 2rem 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .arch-diagram-title {
+      background: var(--bg-alt);
+      border-bottom: 1px solid var(--border);
+      padding: .625rem 1rem;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .arch-layers { padding: 1.5rem; display: flex; flex-direction: column; gap: .75rem; }
+    .arch-layer {
+      display: flex;
+      align-items: stretch;
+      gap: .625rem;
+    }
+    .arch-layer-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      flex-shrink: 0;
+      width: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .arch-layer-nodes {
+      flex: 1;
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+    .arch-node {
+      flex: 1;
+      min-width: 80px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .625rem .875rem;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.3;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .arch-node-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+    .arch-node.red    { border-color: #FECACA; background: #FEF2F2; }
+    .arch-node.blue   { border-color: #BFDBFE; background: #EFF6FF; }
+    .arch-node.green  { border-color: #BBF7D0; background: #F0FDF4; }
+    .arch-node.purple { border-color: #DDD6FE; background: #F5F3FF; }
+    .arch-node.amber  { border-color: #FDE68A; background: #FFFBEB; }
+    .arch-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--border);
+      font-size: 18px;
+      margin: -.25rem 0;
+      padding-left: 36px;
+    }
+
+    /* ─── TECH CALLOUT ────────────────────────────── */
+    .ph-callout {
+      background: var(--bg-alt);
+      border: 1px solid var(--border-band);
+      border-left: 3px solid var(--red);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      margin: 2rem 0;
+    }
+    .ph-callout-label {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: .625rem;
+    }
+    .ph-callout p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 0;
+      font-weight: 450;
+    }
+
+    /* ─── CODE-LIKE BLOCK ─────────────────────────── */
+    .ph-code-block {
+      background: #18181B;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+    }
+    .ph-code-block-header {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: #71717A;
+      margin-bottom: .875rem;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .ph-code-block-header::before {
+      content: '';
+      display: inline-flex;
+      gap: 4px;
+    }
+    .ph-code-block code {
+      font-family: var(--mono);
+      font-size: 13.5px;
+      line-height: 1.85;
+      color: #F4F4F5;
+      display: block;
+    }
+    .ph-code-block .kw  { color: #C084FC; }
+    .ph-code-block .str { color: #86EFAC; }
+    .ph-code-block .num { color: #FCA5A5; }
+    .ph-code-block .cmt { color: #52525B; }
+    .ph-code-block .fn  { color: #7DD3FC; }
+
+    /* ─── CHALLENGE / SOLUTION PAIRS ──────────────── */
+    .ph-challenges { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 1rem; }
+    .ph-challenge {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .ph-challenge-problem {
+      display: flex;
+      gap: .75rem;
+      padding: 1rem 1.25rem;
+      background: #FFFBEB;
+      border-bottom: 1px solid #FDE68A;
+      font-size: 14px;
+      font-weight: 500;
+      color: #78350F;
+      align-items: flex-start;
+    }
+    .ph-challenge-problem::before {
+      content: '⚠';
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .ph-challenge-solution {
+      padding: 1rem 1.25rem;
+      font-size: 14px;
+      line-height: 1.65;
+      color: #4A4845;
+      display: flex;
+      gap: .75rem;
+      align-items: flex-start;
+    }
+    .ph-challenge-solution::before {
+      content: '✓';
+      font-family: var(--mono);
+      font-size: 13px;
+      color: #16A34A;
+      flex-shrink: 0;
+      font-weight: 600;
+      margin-top: 1px;
+    }
+
+    /* ─── SIDEBAR ─────────────────────────────────── */
+    .ph-sidebar { position: sticky; top: 80px; }
+    .ph-sidebar-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .ph-sidebar-title {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .ph-stack-layer { margin-bottom: 1.125rem; }
+    .ph-stack-layer:last-child { margin-bottom: 0; }
+    .ph-stack-layer-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .4rem;
+    }
+    .ph-stack-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+    .ph-chip {
+      font-family: var(--mono);
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: var(--white);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .ph-sidebar-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: .5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .ph-sidebar-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .ph-sidebar-row-key { color: var(--text-muted); }
+    .ph-sidebar-row-val { font-weight: 500; color: var(--text); text-align: right; font-size: 13px; }
+
+    /* ─── TABLE ───────────────────────────────────── */
+    .ph-table-wrap { overflow-x: auto; margin: 1.5rem 0; }
+    .ph-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14.5px;
+    }
+    .ph-table th {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: .75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-alt);
+      white-space: nowrap;
+    }
+    .ph-table td {
+      padding: .875rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+      line-height: 1.6;
+      vertical-align: top;
+    }
+    .ph-table tr:last-child td { border-bottom: none; }
+    .ph-table td:first-child { font-weight: 500; color: var(--text); white-space: nowrap; }
+
+    /* ─── CTA ─────────────────────────────────────── */
+    .ph-cta {
+      background: var(--bg-dark);
+      border-radius: 20px;
+      padding: 3.5rem;
+      text-align: center;
+      margin-top: 4rem;
+    }
+    .ph-cta h2 { color: #fff; font-size: clamp(1.4rem, 2.5vw, 2rem); margin-bottom: .75rem; letter-spacing: -.025em; }
+    .ph-cta p  { color: #9A968F; font-size: 15px; margin-bottom: 1.75rem; }
+
+    /* ─── TECH ICON STRIP ─────────────────────────── */
+    .ph-icon-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 1.5rem;
+    }
+    .ph-icon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 14px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .ph-icon-item:hover {
+      border-color: #C0BEBB;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    }
+    .ph-icon-item i { font-size: 26px; line-height: 1; }
+    .ph-icon-item svg { display: block; }
+    .ph-icon-item span {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      color: var(--text-muted);
+      letter-spacing: .03em;
+      white-space: nowrap;
+    }
+
+    /* ─── METRICS — constrained to container ──────── */
+    .ph-metrics-outer {
+      border-top: 1px solid var(--border-band);
+      border-bottom: 1px solid var(--border-band);
+    }
+    .ph-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* ─── SCREENSHOT CAROUSEL ────────────────────── */
+    .ph-shots {
+      background: var(--bg-alt);
+      border-top: 1px solid var(--border-band);
+      border-bottom: 1px solid var(--border-band);
+      padding: 1.25rem 0 1rem;
+      overflow: hidden;
+    }
+    .ph-shots-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 max(1.25rem, calc((100vw - 1120px) / 2));
+      margin-bottom: 1rem;
+    }
+    .ph-shots-track-wrap {
+      overflow: hidden;
+      width: 100%;
+    }
+    .ph-shots-track {
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      text-align: center;
+    }
+    .ph-shots-track::-webkit-scrollbar { display: none; }
+    .ph-shots-inner {
+      display: inline-flex;
+      gap: 3px;
+      vertical-align: top;
+    }
+    .ph-shot {
+      flex: 0 0 auto;
+      width: 300px;
+      scroll-snap-align: start;
+      border-radius: 0;
+      overflow: hidden;
+      border: none;
+      background: #000;
+      box-shadow: none;
+    }
+    .ph-shot img {
+      width: 100%;
+      height: 560px;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+    }
+    .ph-shots-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: .875rem max(1.25rem, calc((100vw - 1120px) / 2)) 0;
+    }
+    .ph-shots-nav {
+      display: flex;
+      gap: .5rem;
+    }
+
+    /* ─── HIGHLIGHTS ─────────────────────────────── */
+    .ph-highlights {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-bottom: 3.5rem;
+    }
+    .ph-highlight {
+      display: grid;
+      grid-template-columns: 3px 1fr;
+      gap: 1.25rem;
+    }
+    .ph-highlight-bar {
+      background: var(--red);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .ph-highlight-content {}
+    .ph-highlight-label {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .4rem;
+    }
+    .ph-highlight-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -.01em;
+      margin-bottom: .5rem;
+    }
+    .ph-highlight .ph-highlight-body {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* ─── STACK GRID ──────────────────────────────── */
+    .ph-stack-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 0;
+    }
+    .ph-stack-col {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .875rem 1rem;
+    }
+    .ph-stack-col-name {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .5rem;
+    }
+    .ph-stack-col-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+
+    /* ─── ENGAGEMENT STRIP ────────────────────────── */
+    .ph-engage-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 0;
+    }
+    .ph-engage-cell {
+      padding: .75rem 1rem;
+      border-right: 1px solid var(--border);
+    }
+    .ph-engage-cell:last-child { border-right: none; }
+    .ph-engage-key {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: .375rem;
+    }
+    .ph-engage-val {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -.01em;
+    }
+    .ph-engage-val.small {
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    /* ─── INVESTORS ROW ───────────────────────────── */
+    .ph-investors {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .625rem;
+      margin-bottom: 0;
+    }
+    .ph-investors-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-right: .5rem;
+    }
+    .ph-inv-chip {
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 4px 12px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--bg-alt);
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 960px) {
+      .ph-metrics { grid-template-columns: 1fr 1fr; }
+      .ph-metric { border-bottom: 1px solid var(--border-band); }
+      .ph-metric:nth-child(2) { border-right: none; }
+      .ph-metric:nth-child(3), .ph-metric:nth-child(4) { border-bottom: none; }
+      .ph-stack-grid { grid-template-columns: 1fr 1fr; }
+      .ph-engage-strip { grid-template-columns: 1fr 1fr; }
+      .ph-engage-cell:nth-child(2n) { border-right: none; }
+      .ph-engage-cell { border-bottom: 1px solid var(--border); }
+      .ph-engage-cell:nth-last-child(-n+2) { border-bottom: none; }
+    }
+    @media (max-width: 600px) {
+      .ph-hero { padding: 3rem 0 2.5rem; }
+      .ph-metrics { grid-template-columns: 1fr 1fr; }
+      .ph-stack-grid { grid-template-columns: 1fr; }
+      .ph-engage-strip { grid-template-columns: 1fr; }
+      .ph-engage-cell { border-right: none; border-bottom: 1px solid var(--border); }
+      .ph-engage-cell:last-child { border-bottom: none; }
+      .ph-cta { padding: 2.5rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="nav-placeholder"></div>
+
+  <!-- ─── HERO ─────────────────────────────────────── -->
+  <section class="ph-hero">
+    <div class="container">
+      <a class="ph-back" href="/projects/">All projects</a>
+
+      <div class="ph-hero-top">
+        <div class="ph-icon">
+          <img src="/assets/impause/icon.webp" alt="Impause">
+        </div>
+        <div class="ph-title-block">
+          <p class="ph-eyebrow">Technical architecture</p>
+          <h1 class="ph-title">Impause</h1>
+          <p class="ph-subtitle">AI-powered behavioral finance app backed by Harvard &amp; MIT research — React Native Expo frontend, Supabase backend with row-level security, Plaid open banking integration, and a behavioral AI engine that learns individual spending patterns.</p>
+          <!-- Tech icon strip -->
+          <div class="ph-icon-strip">
+            <div class="ph-icon-item"><i class="devicon-react-original colored"></i><span>React Native</span></div>
+            <div class="ph-icon-item"><i class="devicon-typescript-plain colored"></i><span>TypeScript</span></div>
+            <div class="ph-icon-item"><i class="devicon-postgresql-plain colored"></i><span>PostgreSQL</span></div>
+            <div class="ph-icon-item"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/></svg><span>OpenAI</span></div>
+            <div class="ph-icon-item">
+              <svg width="26" height="26" viewBox="0 0 109 113" fill="none"><defs><linearGradient id="sb1" x1="66" y1="0" x2="27" y2="113" gradientUnits="userSpaceOnUse"><stop stop-color="#249361"/><stop offset="1" stop-color="#3ECF8E"/></linearGradient><linearGradient id="sb2" x1="0" y1="0" x2="54" y2="54" gradientUnits="userSpaceOnUse"><stop/><stop offset="1" stop-opacity="0"/></linearGradient></defs><path d="M63 5.24c-3.29-4.99-10.56-4.99-13.85 0L1.13 79.25C-2.41 84.61 1.51 91.5 7.97 91.5h95.06c6.46 0 10.38-6.89 6.84-12.25L63 5.24Z" fill="url(#sb1)"/><path d="M63 5.24c-3.29-4.99-10.56-4.99-13.85 0L1.13 79.25C-2.41 84.61 1.51 91.5 7.97 91.5h95.06c6.46 0 10.38-6.89 6.84-12.25L63 5.24Z" fill="url(#sb2)" fill-opacity=".2"/><path d="M46 108.55c3.29 4.99 10.56 4.99 13.85 0L108 34.5c3.54-5.36-.38-12.25-6.84-12.25H6.1C-.36 22.25-4.28 29.14-.74 34.5L46 108.55Z" fill="#3ECF8E"/></svg>
+              <span>Supabase</span>
+            </div>
+          </div>
+          <div class="ph-tags" style="margin-top:.75rem;">
+            <span class="work-tag">FinTech · AI</span>
+            <span class="work-tag">React Native · Expo</span>
+            <span class="work-tag">Harvard &amp; MIT backed</span>
+            <span class="work-tag">&lt; 6 months</span>
+          </div>
+                    <!-- Hero action buttons -->
+          <div class="ph-actions">
+            <a href="https://apps.apple.com/us/app/impause-stop-impulse-spending/id6746744026" target="_blank" rel="noopener" style="display:inline-block;line-height:0;">
+              <img src="/assets/badges/app-store.svg" alt="Download on the App Store" height="40">
+            </a>
+            <a href="#play-store" target="_blank" rel="noopener" style="display:inline-block;line-height:0;margin-left:-6px;">
+              <img src="/assets/badges/google-play.png" alt="Get it on Google Play" height="60" style="margin-top:-10px;margin-bottom:-10px;">
+            </a>
+            <a href="/work/impause.html" class="ph-action-btn red-outline">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Case study
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Metrics bar -->
+  <div class="ph-metrics-outer">
+    <div class="container">
+      <div class="ph-metrics">
+        <div class="ph-metric">
+          <span class="ph-metric-val">&lt; 6 mo</span>
+          <span class="ph-metric-label">Concept to App Store</span>
+        </div>
+        <div class="ph-metric">
+          <span class="ph-metric-val">1 codebase</span>
+          <span class="ph-metric-label">iOS + Android</span>
+        </div>
+        <div class="ph-metric">
+          <span class="ph-metric-val">100%</span>
+          <span class="ph-metric-label">Stack ownership</span>
+        </div>
+        <div class="ph-metric">
+          <span class="ph-metric-val">RLS</span>
+          <span class="ph-metric-label">Zero data cross-contamination</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SCREENSHOT CAROUSEL ──────────────────────── -->
+  <div class="ph-shots">
+    <div class="ph-shots-header">
+      <p class="ph-section-label" style="margin:0;">Product screenshots</p>
+    </div>
+    <div class="ph-shots-track-wrap">
+      <div class="ph-shots-track" id="shots-track">
+        <div class="ph-shots-inner">
+
+          <div class="ph-shot">
+            <img src="/assets/impause/screen-1.webp" alt="Dashboard overview">
+          </div>
+
+          <div class="ph-shot">
+            <img src="/assets/impause/screen-2.webp" alt="Spending insights">
+          </div>
+
+          <div class="ph-shot">
+            <img src="/assets/impause/screen-3.webp" alt="AI recommendations">
+          </div>
+
+          <div class="ph-shot">
+            <img src="/assets/impause/screen-4.webp" alt="Transaction history">
+          </div>
+
+          <div class="ph-shot">
+            <img src="/assets/impause/screen-5.webp" alt="Budget tracker">
+          </div>
+
+          <div class="ph-shot">
+            <img src="/assets/impause/screen-6.webp" alt="Onboarding">
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="ph-shots-footer">
+      <div class="ph-shots-nav">
+        <button class="work-carousel-btn" id="shots-prev" aria-label="Previous">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="work-carousel-btn" id="shots-next" aria-label="Next">
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── BODY ──────────────────────────────────────── -->
+  <section class="ph-body">
+    <div class="container">
+
+        <!-- Stack grid -->
+        <div class="ph-section">
+          <p class="ph-section-label">Tech stack</p>
+          <div class="ph-stack-grid">
+
+            <div class="ph-stack-col">
+              <div class="ph-stack-col-name">Mobile</div>
+              <div class="ph-stack-col-chips">
+                <span class="ph-chip">React Native</span>
+                <span class="ph-chip">Expo</span>
+                <span class="ph-chip">TypeScript</span>
+                <span class="ph-chip">React Navigation</span>
+              </div>
+            </div>
+
+            <div class="ph-stack-col">
+              <div class="ph-stack-col-name">Backend</div>
+              <div class="ph-stack-col-chips">
+                <span class="ph-chip">Supabase</span>
+                <span class="ph-chip">PostgreSQL</span>
+                <span class="ph-chip">Edge Functions</span>
+                <span class="ph-chip">Row-Level Security</span>
+              </div>
+            </div>
+
+            <div class="ph-stack-col">
+              <div class="ph-stack-col-name">Integrations</div>
+              <div class="ph-stack-col-chips">
+                <span class="ph-chip">Plaid</span>
+                <span class="ph-chip">OpenAI API</span>
+                <span class="ph-chip">Expo Notifications</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Engagement strip -->
+        <div class="ph-section">
+          <p class="ph-section-label">Engagement</p>
+          <div class="ph-engage-strip">
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Duration</div>
+              <div class="ph-engage-val">&lt; 6 months</div>
+            </div>
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Model</div>
+              <div class="ph-engage-val">Full product build</div>
+            </div>
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Platform</div>
+              <div class="ph-engage-val">iOS + Android</div>
+            </div>
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Research</div>
+              <div class="ph-engage-val">Harvard &amp; MIT</div>
+            </div>
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Stage</div>
+              <div class="ph-engage-val small">Live — App Stores</div>
+            </div>
+            <div class="ph-engage-cell">
+              <div class="ph-engage-key">Research</div>
+              <div class="ph-engage-val">Harvard &amp; MIT</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Backed by -->
+        <div class="ph-section">
+          <p class="ph-section-label">Backed by</p>
+          <div class="ph-investors">
+            <span class="ph-inv-chip">Harvard Research</span>
+            <span class="ph-inv-chip">MIT Behavioral Lab</span>
+          </div>
+        </div>
+
+        <!-- Technical highlights -->
+        <div class="ph-section ph-section-highlights">
+          <p class="ph-section-label">Technical highlights</p>
+          <h2>Three engineering decisions that define the product</h2>
+
+          <div class="ph-highlights">
+
+            <div class="ph-highlight">
+              <div class="ph-highlight-bar"></div>
+              <div class="ph-highlight-content">
+                <div class="ph-highlight-label">Behavioral AI engine</div>
+                <div class="ph-highlight-title">OpenAI + pattern learning, not generic advice</div>
+                <p class="ph-highlight-body">Most finance apps tell users they spend too much on coffee. Impause builds an individual behavioral model per user — transaction history from Plaid is analyzed through a chain of OpenAI calls that identify recurring patterns, emotional spending triggers, and category drift over time. Each insight is personalized to that user's actual data, not a demographic average. The AI layer runs on structured prompts with transaction context injected at inference time, with outputs validated against a schema before surfacing to the UI.</p>
+              </div>
+            </div>
+
+            <div class="ph-highlight">
+              <div class="ph-highlight-bar"></div>
+              <div class="ph-highlight-content">
+                <div class="ph-highlight-label">Plaid open banking</div>
+                <div class="ph-highlight-title">Real account data — not manual entry</div>
+                <p class="ph-highlight-body">Impause connects to users' real bank accounts via Plaid Link — the OAuth-style flow that lets users authenticate with their bank without exposing credentials to the app. Plaid returns categorized transaction history, account balances, and institution metadata, which flows into Supabase through an Edge Function that normalizes and deduplicates entries before persistence. The entire ingestion pipeline is serverless: no backend infrastructure to maintain, no database migrations for new bank formats.</p>
+              </div>
+            </div>
+
+            <div class="ph-highlight">
+              <div class="ph-highlight-bar"></div>
+              <div class="ph-highlight-content">
+                <div class="ph-highlight-label">Supabase RLS</div>
+                <div class="ph-highlight-title">Row-level security — no application-layer guards needed</div>
+                <p class="ph-highlight-body">Every table in the Supabase PostgreSQL database has row-level security policies that bind data access to the authenticated user's JWT. A user can never read another user's transactions, budgets, or AI history — the database enforces isolation at the query level, before any application code runs. Edge Functions that process Plaid webhooks use a service-role key scoped to write-only operations, ensuring the ingest path cannot be used to read user data even if the function is compromised.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      <!-- CTA -->
+      <div class="ph-cta">
+        <h2>Building a finance or AI-powered product?</h2>
+        <p>We've shipped Impause end-to-end — from Plaid integration to AI behavioral models — in under six months. We can do the same for your product.</p>
+        <a href="/#contact" class="btn btn-primary">Start a conversation &rarr;</a>
+      </div>
+
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <script src="/js/components.js" defer></script>
+  <script>
+    const track = document.getElementById('shots-track');
+    document.getElementById('shots-prev').addEventListener('click', () => {
+      track.scrollBy({ left: -310, behavior: 'smooth' });
+    });
+    document.getElementById('shots-next').addEventListener('click', () => {
+      track.scrollBy({ left: 310, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
