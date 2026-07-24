@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BetterBack Case Study — TBox Solutionz</title>
+  <meta name="description" content="How TBox Solutionz built BetterBack — an AI-assisted posture-correction platform with wearable hardware integration, real-time feedback, and a companion mobile app.">
+  <link rel="canonical" href="https://tboxsolutionz.com/work/betterback.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tboxsolutionz.com/work/betterback.html">
+  <meta property="og:title" content="BetterBack Case Study — TBox Solutionz">
+  <meta property="og:description" content="How TBox Solutionz built BetterBack — an AI-assisted posture-correction platform with wearable hardware integration, real-time feedback, and a companion mobile app.">
+  <meta property="og:image" content="https://tboxsolutionz.com/assets/betterback/hero-posture.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BetterBack Case Study — TBox Solutionz">
+  <meta name="twitter:description" content="How TBox Solutionz built BetterBack — an AI-assisted posture-correction platform with wearable hardware integration, real-time feedback, and a companion mobile app.">
+  <meta name="twitter:image" content="https://tboxsolutionz.com/assets/betterback/hero-posture.webp">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://tboxsolutionz.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://tboxsolutionz.com/work/" },
+      { "@type": "ListItem", "position": 3, "name": "BetterBack", "item": "https://tboxsolutionz.com/work/betterback.html" }
+    ]
+  }
+  </script>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/assets/images/favicon-192.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#E01B1B">  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    /* ── Hero ── */
+    .cs-hero { background: var(--bg-alt); border-bottom: 1px solid var(--border-band); padding: 2.5rem 0 3rem; }
+    .cs-hero-label { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .cs-back { font-family: var(--mono); font-size: 12px; color: var(--text-muted); text-decoration: none; letter-spacing: 0.04em; }
+    .cs-back:hover { color: var(--text); }
+    .cs-back::before { content: '← '; }
+    .cs-client-badge { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; background: #1a1816; color: #fff; padding: 4px 10px; border-radius: 4px; }
+    .cs-hero-inner { display: grid; grid-template-columns: 1fr auto; gap: 3rem; align-items: center; }
+    .cs-hero h1 { font-size: clamp(2rem, 4vw, 3.25rem); letter-spacing: -0.03em; margin-bottom: 1.25rem; max-width: 720px; }
+    .cs-hero-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .cs-hero-desc { font-size: 18px; line-height: 1.6; color: #5C5A57; max-width: 620px; }
+    /* Browser mockup stack */
+    .cs-browser-stack { position: relative; width: 560px; height: 520px; flex-shrink: 0; }
+    .cs-browser-card { position: absolute; width: 460px; border-radius: 12px; overflow: hidden; border: 1px solid #e0ddd9; background: #f5f3f0; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1), box-shadow 0.6s ease, opacity 0.6s ease, left 0.6s cubic-bezier(0.4,0,0.2,1), top 0.6s cubic-bezier(0.4,0,0.2,1); }
+    .cs-browser-card.pos-front { left: 0; top: 120px; transform: rotate(0deg); z-index: 3; box-shadow: 0 16px 48px rgba(0,0,0,0.18); opacity: 1; }
+    .cs-browser-card.pos-mid  { left: 50px; top: 58px; transform: rotate(3deg); z-index: 2; box-shadow: 0 8px 28px rgba(0,0,0,0.12); opacity: 0.88; }
+    .cs-browser-card.pos-back { left: 100px; top: 0;  transform: rotate(6deg); z-index: 1; box-shadow: 0 4px 16px rgba(0,0,0,0.08); opacity: 0.72; }
+    .cs-browser-bar { background: #f0eeec; padding: 10px 14px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #e0ddd9; }
+    .cs-browser-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .cs-browser-dot:nth-child(1) { background: #ff6058; }
+    .cs-browser-dot:nth-child(2) { background: #ffbd2e; }
+    .cs-browser-dot:nth-child(3) { background: #28c940; }
+    .cs-browser-url { flex: 1; background: #e4e2df; border-radius: 4px; height: 16px; margin-left: 10px; display: flex; align-items: center; padding: 0 10px; }
+    .cs-browser-url span { font-family: var(--mono); font-size: 9px; color: #888; white-space: nowrap; overflow: hidden; }
+    .cs-browser-img { width: 100%; height: 280px; display: block; object-fit: cover; object-position: top center; }
+    .cs-visit-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--text); color: #fff; border-radius: 8px; padding: 10px 18px; font-size: 14px; font-weight: 500; text-decoration: none; transition: opacity 0.2s; margin-top: 1.75rem; }
+    .cs-visit-btn:hover { opacity: 0.8; }
+    .cs-visit-btn svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Stats */
+    .cs-stats { border-bottom: 1px solid var(--border-band); }
+    .cs-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); min-height: 110px; }
+    .cs-stat { padding: 1.75rem 2rem; border-right: 1px solid var(--border-band); display: flex; flex-direction: column; justify-content: center; }
+    .cs-stat:first-child { padding-left: 0; }
+    .cs-stat:last-child { border-right: none; }
+    .cs-stat-value { font-size: clamp(1.3rem, 2.5vw, 2.1rem); font-weight: 600; color: var(--text); letter-spacing: -0.03em; line-height: 1; margin-bottom: 0.35rem; white-space: nowrap; }
+    .cs-stat-label { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+
+    /* Body */
+    .cs-body { padding: 5rem 0; }
+    .cs-layout { display: grid; grid-template-columns: 1fr 320px; gap: 5rem; align-items: start; }
+    .cs-main { min-width: 0; }
+    .cs-sidebar { min-width: 0; }
+
+    .cs-section { margin-bottom: 3.5rem; }
+    .cs-section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.75rem; }
+    .cs-section h2 { font-size: 1.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+    .cs-section p { font-size: 16px; line-height: 1.75; color: #4A4845; margin-bottom: 0.875rem; }
+    .cs-section p:last-child { margin-bottom: 0; }
+
+    /* Phase timeline */
+    .cs-phases { display: flex; flex-direction: column; gap: 0; margin-top: 1.25rem; }
+    .cs-phase { display: flex; gap: 1.25rem; padding: 1.25rem 0; border-bottom: 1px solid var(--border); }
+    .cs-phase:last-child { border-bottom: none; }
+    .cs-phase-num { font-family: var(--mono); font-size: 18px; color: var(--red); font-weight: 600; min-width: 36px; padding-top: 0; line-height: 1.4; }
+    .cs-phase-content { flex: 1; }
+    .cs-phase-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 0.25rem; }
+    .cs-phase-desc { font-size: 14px; color: #4A4845; line-height: 1.55; }
+
+    .cs-highlight { background: var(--bg-alt); border: 1px solid var(--border-band); border-left: 3px solid var(--red); border-radius: 12px; padding: 1.75rem 2rem; margin: 2.5rem 0; }
+    .cs-highlight-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--red); margin-bottom: 0.75rem; }
+    .cs-highlight p { font-size: 17px; line-height: 1.65; color: var(--text); font-weight: 500; margin-bottom: 0; }
+
+    /* Features table */
+    .cs-features-table { width: 100%; border-collapse: collapse; margin-top: 1.25rem; }
+    .cs-features-table th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); text-align: left; padding: 0.625rem 1rem; border: 1px solid var(--border-band); background: var(--bg-alt); font-weight: 500; }
+    .cs-features-table th:first-child { width: 26%; }
+    .cs-features-table td { padding: 0.75rem 1rem; border: 1px solid var(--border-band); vertical-align: top; line-height: 1.55; }
+    .cs-features-table td:first-child { font-weight: 600; color: var(--text); font-size: 13px; }
+    .cs-features-table td:last-child { font-size: 14px; color: #4A4845; }
+    .cs-features-table tr:hover td { background: var(--bg-alt); }
+
+    /* Sidebar */
+    .cs-sidebar-card { background: var(--bg-alt); border: 1px solid var(--border-band); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.25rem; }
+    .cs-sidebar-card-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.875rem; }
+    .cs-sidebar-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .cs-sidebar-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .cs-sidebar-row-key { color: var(--text-muted); }
+    .cs-sidebar-row-val { font-weight: 500; color: var(--text); text-align: right; }
+    .cs-sidebar-investors { display: flex; flex-direction: column; }
+    .cs-sidebar-inv-row { display: flex; flex-direction: column; gap: 2px; padding: 0.625rem 0; border-bottom: 1px solid var(--border); }
+    .cs-sidebar-inv-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .cs-sidebar-investor-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .cs-sidebar-investor-desc { font-size: 12px; color: var(--text-muted); }
+
+    /* Shark Tank callout */
+    .cs-shark-callout { background: #0a0a0a; border-radius: 12px; padding: 2rem 2.25rem; margin: 2rem 0; display: flex; align-items: center; gap: 1.5rem; }
+    .cs-shark-callout-text { flex: 1; }
+    .cs-shark-callout-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #888; margin-bottom: 0.5rem; }
+    .cs-shark-callout-quote { font-size: 16px; font-weight: 500; color: #fff; line-height: 1.55; }
+    .cs-shark-callout-attr { font-size: 13px; color: #666; margin-top: 0.5rem; }
+
+    /* CTA */
+    .cs-cta { background: var(--bg-dark); border-radius: 20px; padding: 3.5rem; text-align: center; margin-top: 5rem; }
+    .cs-cta h2 { color: #fff; font-size: clamp(1.5rem, 3vw, 2.25rem); margin-bottom: 0.875rem; letter-spacing: -0.025em; }
+    .cs-cta p { color: #9A968F; font-size: 16px; margin-bottom: 2rem; }
+
+    @media (max-width: 900px) {
+      .cs-hero-inner { grid-template-columns: 1fr; }
+      .cs-browser-stack { width: 360px; height: 310px; margin-top: 2rem; }
+      .cs-browser-card { width: 290px; }
+      .cs-browser-card.pos-front { left: 0; top: 70px; }
+      .cs-browser-card.pos-mid  { left: 35px; top: 33px; }
+      .cs-browser-card.pos-back { left: 70px; top: 0; }
+      .cs-browser-img { height: 175px; }
+      .cs-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .cs-sidebar { order: -1; }
+      .cs-stats-grid { grid-template-columns: 1fr 1fr; }
+      .cs-stat { border-bottom: 1px solid var(--border-band); }
+      .cs-stat:nth-child(2) { border-right: none; }
+      .cs-stat:nth-child(3), .cs-stat:nth-child(4) { border-bottom: none; }
+      .cs-shark-callout { flex-direction: column; gap: 1rem; }
+    }
+    @media (max-width: 640px) {
+      .cs-hero { padding: 3.5rem 0 2.5rem; }
+      .cs-stats-grid { grid-template-columns: 1fr 1fr; }
+      .cs-cta { padding: 2.5rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="nav-placeholder"></div>
+  <main>
+
+  <!-- ── HERO ── -->
+  <section id="content" class="cs-hero">
+    <div class="container">
+      <div class="cs-hero-label">
+        <a href="/#work" class="cs-back">Selected work</a>
+        <span class="cs-client-badge">Client engagement</span>
+      </div>
+      <div class="cs-hero-inner">
+        <div>
+          <div class="cs-hero-meta">
+            <span class="work-tag">E-commerce</span>
+            <span class="work-tag">Shopify</span>
+            <span class="work-tag">Klaviyo</span>
+            <span class="work-tag">CRO</span>
+            <span class="work-tag">Health &amp; Wellness</span>
+          </div>
+          <h1>BetterBack — Full e-commerce buildout for a Shark Tank–backed product</h1>
+          <p class="cs-hero-desc">BetterBack is a posture correction device that raised $1.65M on Kickstarter and secured a deal on ABC's Shark Tank. TBox built the entire digital commerce layer — Shopify storefront, conversion-focused product pages, email marketing stack, checkout flows, and analytics — powering a product now trusted by 125,000+ customers across 115 countries.</p>
+          <a href="https://www.getbetterback.com" target="_blank" rel="noopener" class="cs-visit-btn">
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Visit getbetterback.com
+          </a>
+        </div>
+        <div class="cs-browser-stack" id="bb-stack">
+          <!-- Card 1 — hero lifestyle -->
+          <div class="cs-browser-card pos-front">
+            <div class="cs-browser-bar">
+              <span class="cs-browser-dot"></span><span class="cs-browser-dot"></span><span class="cs-browser-dot"></span>
+              <div class="cs-browser-url"><span>getbetterback.com</span></div>
+            </div>
+            <img class="cs-browser-img" src="/assets/betterback/hero-posture.webp" alt="BetterBack hero" width="960" height="1200" loading="lazy">
+          </div>
+          <!-- Card 2 — product in use -->
+          <div class="cs-browser-card pos-mid">
+            <div class="cs-browser-bar">
+              <span class="cs-browser-dot"></span><span class="cs-browser-dot"></span><span class="cs-browser-dot"></span>
+              <div class="cs-browser-url"><span>getbetterback.com</span></div>
+            </div>
+            <img class="cs-browser-img" src="/assets/betterback/hero-female.webp" alt="BetterBack in use" width="480" height="600" loading="lazy">
+          </div>
+          <!-- Card 3 — product detail -->
+          <div class="cs-browser-card pos-back">
+            <div class="cs-browser-bar">
+              <span class="cs-browser-dot"></span><span class="cs-browser-dot"></span><span class="cs-browser-dot"></span>
+              <div class="cs-browser-url"><span>getbetterback.com</span></div>
+            </div>
+            <img class="cs-browser-img" src="/assets/betterback/product-duo.jpg" alt="BetterBack product" width="1200" height="920" loading="lazy">
+          </div>
+        </div>
+        <script>
+          (function(){
+            const cards = Array.from(document.querySelectorAll('#bb-stack .cs-browser-card'));
+            const pos = ['pos-front','pos-mid','pos-back'];
+            let state = [0,1,2]; // card[i] is at position state[i]
+            setInterval(function(){
+              state = state.map(function(p){ return (p+2)%3; });
+              cards.forEach(function(card,i){
+                card.className = 'cs-browser-card ' + pos[state[i]];
+              });
+            }, 2000);
+          })();
+        </script>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS BAR ── -->
+  <section class="cs-stats">
+    <div class="container">
+      <div class="cs-stats-grid">
+        <div class="cs-stat">
+          <div class="cs-stat-value">125K+</div>
+          <div class="cs-stat-label">Customers served across 115 countries</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">$1.65M</div>
+          <div class="cs-stat-label">Raised on Kickstarter before launch</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">4.7 / 5</div>
+          <div class="cs-stat-label">Rating across 8,400+ verified reviews</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">Shark Tank</div>
+          <div class="cs-stat-label">Featured on ABC — backed by Barbara Corcoran</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BODY ── -->
+  <section class="cs-body">
+    <div class="container">
+      <div class="cs-layout">
+
+        <div class="cs-main">
+
+          <div class="cs-section">
+            <p class="cs-section-label">The product</p>
+            <h2>A physical product with massive traction — and a digital layer that had to match it.</h2>
+            <p>BetterBack is not a software product. It's a posture correction device — a physical strap that wraps around the lower back and knees, rotating the pelvis into its natural alignment and eliminating the root cause of most sitting-related back pain. It was created by Katherine Krug after a year of debilitating sciatica and herniated disc pain left her unable to sit at all.</p>
+            <p>The device raised $1.65M on Kickstarter from 16,500 backers, appeared on Shark Tank, and secured a deal with Barbara Corcoran. By the time TBox was engaged, BetterBack had extraordinary product-market fit and 4.7-star reviews — but the digital commerce layer needed to be rebuilt to match the credibility and scale of the brand.</p>
+          </div>
+
+          <div class="cs-shark-callout">
+            <div class="cs-shark-callout-text">
+              <p class="cs-shark-callout-label">As seen on Shark Tank · ABC</p>
+              <p class="cs-shark-callout-quote">"I have to admit that after putting it on, it really felt relaxing and great."</p>
+              <p class="cs-shark-callout-attr">— Barbara Corcoran, Entrepreneur & Shark</p>
+            </div>
+          </div>
+
+          <div class="cs-section">
+            <p class="cs-section-label">What TBox built</p>
+            <h2>Every layer of the digital commerce stack — end to end</h2>
+            <p>TBox handled the complete buildout of BetterBack's e-commerce platform, from Shopify theme development to email marketing flows to performance analytics. The goal wasn't just a storefront — it was a conversion engine tuned for a product with a compelling story, strong social proof, and a wide audience.</p>
+            <div class="cs-phases">
+              <div class="cs-phase">
+                <span class="cs-phase-num">01</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Shopify store setup &amp; custom theme development</p>
+                  <p class="cs-phase-desc">Configured the Shopify store from the ground up and customized the Zest theme to match BetterBack's brand voice — clean, clinical, and credible. Every section was tailored: hero layout, feature breakdown, social proof, comparison tables, and checkout flow. No off-the-shelf template dropped in without thought.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">02</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Conversion-focused product page design</p>
+                  <p class="cs-phase-desc">The product page does more than show a product — it walks a skeptical customer through the mechanism, the proof, and the risk reversal. We designed the information hierarchy around how people actually read a landing page: hook, credibility, mechanism, social proof, and offer. The result is a page that converts browsers into buyers without requiring a sales team.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">03</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Bundle pricing &amp; discount logic</p>
+                  <p class="cs-phase-desc">Implemented multi-product bundle options (BetterBack, BetterBack + SuperStraps, 2-pack) with tiered discount logic — up to 47% off on the highest-value bundle. The pricing structure is designed to increase average order value while making the entry price feel accessible.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">04</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Klaviyo email &amp; SMS marketing flows</p>
+                  <p class="cs-phase-desc">Set up the full Klaviyo lifecycle: welcome series for new subscribers, abandoned cart recovery, post-purchase onboarding (how to use BetterBack on day one, week one, month one), re-engagement campaigns, and SMS flows for high-intent buyers. Each flow is built around the specific moments where BetterBack customers need reassurance or a nudge.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">05</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Review system integration (Loox + Stamped.io)</p>
+                  <p class="cs-phase-desc">Integrated Loox for photo reviews — critical for a physical product where customers want to see it in use on real people — and Stamped.io for structured text reviews, star ratings, and aggregate widgets. 8,400+ reviews is a significant asset; the integration makes sure that trust is visible at every decision point in the funnel.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">06</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Checkout optimisation &amp; Shop Pay</p>
+                  <p class="cs-phase-desc">Configured Shop Pay accelerated checkout and the 60-day money-back trial flow — a powerful risk-reversal mechanism that removes the final objection for fence-sitters. The returns/exchange portal (Redo) was also integrated to handle post-purchase without burdening customer support.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">07</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Analytics &amp; ad tracking setup</p>
+                  <p class="cs-phase-desc">Implemented Facebook Pixel for Meta Ads retargeting, Google Analytics for storefront behaviour tracking, and event tagging across the key funnel steps — product view, add to cart, checkout initiation, and purchase. Every dollar spent on ads can be traced to a conversion.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">08</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Landing page copywriting &amp; content strategy</p>
+                  <p class="cs-phase-desc">Wrote the conversion copy for the product page — from the hook ("Your back isn't broken. Your chair is.") to the mechanism explanation, competitor comparison, and call to action. Copywriting for a physical health product requires making a clinical claim feel human. Every word earns its place.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cs-section">
+            <p class="cs-section-label">What we shipped</p>
+            <h2>A complete commerce stack — not a template with a logo swapped in</h2>
+            <table class="cs-features-table">
+              <thead>
+                <tr>
+                  <th>Deliverable</th>
+                  <th>Detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Shopify theme</td>
+                  <td>Custom Zest theme implementation with brand-specific section layouts, mobile-first responsive design, and performance-optimised asset loading.</td>
+                </tr>
+                <tr>
+                  <td>Product page CRO</td>
+                  <td>Conversion-optimised layout with mechanism explainer, pain-point targeting, feature grid, comparison table, and social proof sections.</td>
+                </tr>
+                <tr>
+                  <td>Bundle &amp; discount system</td>
+                  <td>Three-tier bundle logic with automatic discount application, crossed-out pricing, and savings percentage display at each tier.</td>
+                </tr>
+                <tr>
+                  <td>60-day trial flow</td>
+                  <td>Risk-reversal messaging integrated across page copy, checkout, and post-purchase emails — reducing cart abandonment at the offer stage.</td>
+                </tr>
+                <tr>
+                  <td>Klaviyo flows</td>
+                  <td>Welcome, abandoned cart, post-purchase onboarding, winback, and SMS flows — each targeted to a specific moment in the customer journey.</td>
+                </tr>
+                <tr>
+                  <td>Review integrations</td>
+                  <td>Loox photo reviews + Stamped.io text reviews, with widgets placed at key decision points throughout the product page and checkout flow.</td>
+                </tr>
+                <tr>
+                  <td>Shop Pay &amp; returns</td>
+                  <td>Accelerated checkout via Shop Pay, plus Redo returns/exchange portal for self-service post-purchase handling.</td>
+                </tr>
+                <tr>
+                  <td>Ads &amp; analytics</td>
+                  <td>Facebook Pixel, Meta Ads integration, Google Analytics — with event tracking across the full funnel from first visit to purchase.</td>
+                </tr>
+                <tr>
+                  <td>Custom domain &amp; SSL</td>
+                  <td>Domain configuration, DNS setup, and SSL provisioning on getbetterback.com.</td>
+                </tr>
+                <tr>
+                  <td>Page speed optimisation</td>
+                  <td>Asset compression, deferred script loading, and Shopify CDN configuration to keep load times fast on mobile and desktop.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="cs-highlight">
+            <p class="cs-highlight-label">What this engagement represents</p>
+            <p>BetterBack didn't need a team that could follow a Shopify tutorial. It needed a team that understood conversion, storytelling, and the mechanics of selling a physical product online — and could execute at the speed and quality the brand deserved. The 125,000+ customers, $1.65M Kickstarter raise, and Shark Tank appearance were already on the scoreboard. TBox built the digital infrastructure that turned that momentum into a scalable, repeatable commerce operation.</p>
+          </div>
+
+          <div class="cs-section">
+            <p class="cs-section-label">Where the product stands today</p>
+            <h2>A brand with proven demand — and a platform built to handle it</h2>
+            <p>BetterBack has sold to 125,000+ customers across 115+ countries and maintains a 4.7-star rating from over 8,400 verified reviews. It has been featured in HuffPost, Entrepreneur, VentureBeat, and on Amazon — and continues to generate word-of-mouth referrals from customers who felt results on the first sitting.</p>
+            <p>The peer-reviewed clinical study published in the Longdom Journal (2019) confirmed statistically significant pain reduction with 15 minutes of daily use — giving the brand a level of scientific credibility rare in the wellness space. The digital platform TBox built is what enables all of that to convert: browsers into buyers, buyers into repeat customers, and customers into advocates.</p>
+          </div>
+
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="cs-sidebar">
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Engagement details</p>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Type</span>
+              <span class="cs-sidebar-row-val">Client project</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Category</span>
+              <span class="cs-sidebar-row-val">E-commerce / DTC</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Industry</span>
+              <span class="cs-sidebar-row-val">Health &amp; Wellness</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Platform</span>
+              <span class="cs-sidebar-row-val">Shopify</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Scope</span>
+              <span class="cs-sidebar-row-val">Full stack DTC buildout</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Status</span>
+              <span class="cs-sidebar-row-val">Live · getbetterback.com</span>
+            </div>
+          </div>
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Tech stack</p>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">E-commerce</span>
+              <span class="cs-sidebar-row-val">Shopify</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Theme</span>
+              <span class="cs-sidebar-row-val">Zest (custom)</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Email / SMS</span>
+              <span class="cs-sidebar-row-val">Klaviyo</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Reviews</span>
+              <span class="cs-sidebar-row-val">Loox · Stamped.io</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Checkout</span>
+              <span class="cs-sidebar-row-val">Shop Pay · Redo</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Ads / Analytics</span>
+              <span class="cs-sidebar-row-val">Meta Pixel · GA</span>
+            </div>
+          </div>
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Brand milestones</p>
+            <div class="cs-sidebar-investors">
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">$1.65M on Kickstarter</span>
+                <p class="cs-sidebar-investor-desc">First solo female founder to reach that milestone on the platform</p>
+              </div>
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">ABC Shark Tank</span>
+                <p class="cs-sidebar-investor-desc">Deal secured with Barbara Corcoran on national television</p>
+              </div>
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">125,000+ customers</span>
+                <p class="cs-sidebar-investor-desc">Active users across 115+ countries worldwide</p>
+              </div>
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">Clinical study</span>
+                <p class="cs-sidebar-investor-desc">Peer-reviewed, published in Longdom Journal, 2019</p>
+              </div>
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">4.7 / 5 · 8,400+ reviews</span>
+                <p class="cs-sidebar-investor-desc">Sustained across years of real customer purchases</p>
+              </div>
+            </div>
+          </div>
+
+        </aside>
+      </div>
+
+      <!-- CTA -->
+      <div class="cs-cta">
+        <h2>Selling a physical product and need a commerce stack that converts?</h2>
+        <p>We've done the full buildout — storefront, email, checkout, analytics, and everything in between. Let's talk about your product.</p>
+        <a href="/#contact" class="btn btn-primary">Start a conversation &rarr;</a>
+      </div>
+
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <script src="/js/components.js" defer></script>
+</body>
+</html>

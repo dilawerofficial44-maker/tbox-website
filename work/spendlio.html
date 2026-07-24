@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spendlio Case Study — TBox Solutionz</title>
+  <meta name="description" content="How TBox Solutionz built Spendlio — a personal finance and expense-tracking app that uses smart categorization to give users instant clarity on where their money goes.">
+  <link rel="canonical" href="https://tboxsolutionz.com/work/spendlio.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tboxsolutionz.com/work/spendlio.html">
+  <meta property="og:title" content="Spendlio Case Study — TBox Solutionz">
+  <meta property="og:description" content="How TBox Solutionz built Spendlio — a personal finance and expense-tracking app that uses smart categorization to give users instant clarity on where their money goes.">
+  <meta property="og:image" content="https://tboxsolutionz.com/assets/spendlio/screen-1.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Spendlio Case Study — TBox Solutionz">
+  <meta name="twitter:description" content="How TBox Solutionz built Spendlio — a personal finance and expense-tracking app that uses smart categorization to give users instant clarity on where their money goes.">
+  <meta name="twitter:image" content="https://tboxsolutionz.com/assets/spendlio/screen-1.webp">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://tboxsolutionz.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://tboxsolutionz.com/work/" },
+      { "@type": "ListItem", "position": 3, "name": "Spendlio", "item": "https://tboxsolutionz.com/work/spendlio.html" }
+    ]
+  }
+  </script>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/assets/images/favicon-192.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#E01B1B">  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    /* ── Hero — own-product variant ── */
+    .cs-hero { background: var(--bg-alt); border-bottom: 1px solid var(--border-band); padding: 2.5rem 0 3rem; }
+    .cs-hero-label { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .cs-back { font-family: var(--mono); font-size: 12px; color: var(--text-muted); text-decoration: none; letter-spacing: 0.04em; }
+    .cs-back:hover { color: var(--text); }
+    .cs-back::before { content: '← '; }
+    .cs-own-badge { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; background: var(--red); color: #fff; padding: 4px 10px; border-radius: 4px; }
+    .cs-hero-inner { display: grid; grid-template-columns: 1fr auto; gap: 3rem; align-items: center; }
+    .cs-hero h1 { font-size: clamp(2rem, 4vw, 3.25rem); letter-spacing: -0.03em; margin-bottom: 1.25rem; max-width: 720px; }
+    .cs-hero-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .cs-hero-desc { font-size: 18px; line-height: 1.6; color: #5C5A57; max-width: 620px; }
+    .cs-appicon { width: 96px; height: 96px; border-radius: 22px; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
+    .cs-appicon img { width: 100%; height: 100%; object-fit: cover; }
+    /* Phone screenshot stack */
+    .cs-phone-stack { position: relative; width: 310px; height: 480px; flex-shrink: 0; }
+    .cs-phone-card { position: absolute; width: 175px; border-radius: 22px; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); transition: transform 0.6s cubic-bezier(0.4,0,0.2,1), box-shadow 0.6s ease, opacity 0.6s ease, left 0.6s cubic-bezier(0.4,0,0.2,1), top 0.6s cubic-bezier(0.4,0,0.2,1); }
+    .cs-phone-card img { width: 100%; height: auto; display: block; }
+    .cs-phone-card.pos-front { left: 0;    top: 110px; transform: rotate(0deg); z-index: 3; opacity: 1;    box-shadow: 0 16px 44px rgba(0,0,0,0.18); }
+    .cs-phone-card.pos-mid   { left: 65px; top: 52px;  transform: rotate(4deg); z-index: 2; opacity: 0.88; box-shadow: 0 8px 28px rgba(0,0,0,0.12); }
+    .cs-phone-card.pos-back  { left: 130px; top: 0;    transform: rotate(8deg); z-index: 1; opacity: 0.72; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .cs-store-row { display: flex; align-items: center; gap: 1rem; margin-top: 1.75rem; flex-wrap: wrap; }
+
+    /* Stats */
+    .cs-stats { border-bottom: 1px solid var(--border-band); }
+    .cs-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); min-height: 110px; }
+    .cs-stat { padding: 1.75rem 2rem; border-right: 1px solid var(--border-band); display: flex; flex-direction: column; justify-content: center; }
+    .cs-stat:first-child { padding-left: 0; }
+    .cs-stat:last-child { border-right: none; }
+    .cs-stat-value { font-size: clamp(1.3rem, 2.5vw, 2.1rem); font-weight: 600; color: var(--text); letter-spacing: -0.03em; line-height: 1; margin-bottom: 0.35rem; white-space: nowrap; }
+    .cs-stat-label { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+
+    /* Screenshots strip */
+    .cs-screenshots { padding: 3.5rem 0; border-bottom: 1px solid var(--border-band); background: var(--bg-alt); }
+    .cs-screenshots-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 1.5rem; }
+    .cs-screenshots-track { display: flex; gap: 1rem; overflow-x: auto; scrollbar-width: none; padding-bottom: 0.5rem; }
+    .cs-screenshots-track::-webkit-scrollbar { display: none; }
+    .cs-screenshot-item { flex-shrink: 0; width: 180px; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.10); border: 1px solid var(--border-band); }
+    .cs-screenshot-item img { width: 100%; height: auto; display: block; }
+
+    /* Body */
+    .cs-body { padding: 5rem 0; }
+    .cs-layout { display: grid; grid-template-columns: 1fr 320px; gap: 5rem; align-items: start; }
+    .cs-main { min-width: 0; }
+    .cs-sidebar { min-width: 0; }
+
+    .cs-section { margin-bottom: 3.5rem; }
+    .cs-section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.75rem; }
+    .cs-section h2 { font-size: 1.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+    .cs-section p { font-size: 16px; line-height: 1.75; color: #4A4845; margin-bottom: 0.875rem; }
+    .cs-section p:last-child { margin-bottom: 0; }
+
+    /* Phase timeline */
+    .cs-phases { display: flex; flex-direction: column; gap: 0; margin-top: 1.25rem; }
+    .cs-phase { display: flex; gap: 1.25rem; padding: 1.25rem 0; border-bottom: 1px solid var(--border); }
+    .cs-phase:last-child { border-bottom: none; }
+    .cs-phase-num { font-family: var(--mono); font-size: 18px; color: var(--red); font-weight: 600; min-width: 36px; padding-top: 0; line-height: 1.4; }
+    .cs-phase-content { flex: 1; }
+    .cs-phase-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 0.25rem; }
+    .cs-phase-desc { font-size: 14px; color: #4A4845; line-height: 1.55; }
+
+    .cs-highlight { background: var(--bg-alt); border: 1px solid var(--border-band); border-left: 3px solid var(--red); border-radius: 12px; padding: 1.75rem 2rem; margin: 2.5rem 0; }
+    .cs-highlight-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--red); margin-bottom: 0.75rem; }
+    .cs-highlight p { font-size: 17px; line-height: 1.65; color: var(--text); font-weight: 500; margin-bottom: 0; }
+
+    /* Features table */
+    .cs-features-table { width: 100%; border-collapse: collapse; margin-top: 1.25rem; }
+    .cs-features-table th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); text-align: left; padding: 0.625rem 1rem; border: 1px solid var(--border-band); background: var(--bg-alt); font-weight: 500; }
+    .cs-features-table th:first-child { width: 26%; }
+    .cs-features-table td { padding: 0.75rem 1rem; border: 1px solid var(--border-band); vertical-align: top; line-height: 1.55; }
+    .cs-features-table td:first-child { font-weight: 600; color: var(--text); font-size: 13px; }
+    .cs-features-table td:last-child { font-size: 14px; color: #4A4845; }
+    .cs-features-table tr:hover td { background: var(--bg-alt); }
+
+    /* Sidebar */
+    .cs-sidebar-card { background: var(--bg-alt); border: 1px solid var(--border-band); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.25rem; }
+    .cs-sidebar-card-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.875rem; }
+    .cs-sidebar-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .cs-sidebar-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .cs-sidebar-row-key { color: var(--text-muted); }
+    .cs-sidebar-row-val { font-weight: 500; color: var(--text); text-align: right; }
+    .cs-sidebar-investors { display: flex; flex-direction: column; }
+    .cs-sidebar-inv-row { display: flex; flex-direction: column; gap: 2px; padding: 0.625rem 0; border-bottom: 1px solid var(--border); }
+    .cs-sidebar-inv-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .cs-sidebar-investor-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .cs-sidebar-investor-desc { font-size: 12px; color: var(--text-muted); }
+
+    /* CTA */
+    .cs-cta { background: var(--bg-dark); border-radius: 20px; padding: 3.5rem; text-align: center; margin-top: 5rem; }
+    .cs-cta h2 { color: #fff; font-size: clamp(1.5rem, 3vw, 2.25rem); margin-bottom: 0.875rem; letter-spacing: -0.025em; }
+    .cs-cta p { color: #9A968F; font-size: 16px; margin-bottom: 2rem; }
+
+    @media (max-width: 900px) {
+      .cs-hero-inner { grid-template-columns: 1fr; }
+      .cs-appicon { width: 72px; height: 72px; }
+      .cs-phone-stack { width: 240px; height: 370px; margin-top: 1.5rem; }
+      .cs-phone-card { width: 135px; }
+      .cs-phone-card.pos-front { left: 0;   top: 85px; }
+      .cs-phone-card.pos-mid   { left: 50px; top: 40px; }
+      .cs-phone-card.pos-back  { left: 100px; top: 0; }
+      .cs-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .cs-sidebar { order: -1; }
+      .cs-stats-grid { grid-template-columns: 1fr 1fr; }
+      .cs-stat { border-bottom: 1px solid var(--border-band); }
+      .cs-stat:nth-child(2) { border-right: none; }
+      .cs-stat:nth-child(3), .cs-stat:nth-child(4) { border-bottom: none; }
+    }
+    @media (max-width: 640px) {
+      .cs-hero { padding: 3.5rem 0 2.5rem; }
+      .cs-stats-grid { grid-template-columns: 1fr 1fr; }
+      .cs-cta { padding: 2.5rem 1.5rem; }
+      .cs-screenshot-item { width: 140px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="nav-placeholder"></div>
+  <main>
+
+  <!-- ── HERO ── -->
+  <section id="content" class="cs-hero">
+    <div class="container">
+      <div class="cs-hero-label">
+        <a href="/#work" class="cs-back">Selected work</a>
+        <span class="cs-own-badge">Built in-house by TBox</span>
+      </div>
+      <div class="cs-hero-inner">
+        <div>
+          <div class="cs-hero-meta">
+            <span class="work-tag">Consumer Finance</span>
+            <span class="work-tag">iOS</span>
+            <span class="work-tag">Swift / Core Data</span>
+            <span class="work-tag">AI · Voice · OCR</span>
+            <span class="work-tag">Freemium</span>
+          </div>
+          <h1>Spendlio — Smart expense tracking built around how people actually think</h1>
+          <p class="cs-hero-desc">Spendlio is TBox's own product — conceived, designed, engineered, and shipped entirely in-house. From initial idea to App Store launch, every decision was ours: the vision, the UX, the feature roadmap, the tech stack, and the go-to-market. This is what TBox looks like when it owns the entire product loop.</p>
+          <div class="cs-store-row">
+            <a href="https://apps.apple.com/us/app/spendlio-expense-tracker/id6761980234" target="_blank" rel="noopener" style="display:inline-block;line-height:0;">
+              <img src="/assets/badges/app-store.svg" alt="Download on the App Store" height="40" style="height:40px;width:auto;">
+            </a>
+          </div>
+        </div>
+        <div class="cs-phone-stack" id="spendlio-stack">
+          <div class="cs-phone-card pos-back">
+            <img src="/assets/spendlio/screen-4.webp" alt="Spendlio screen 4" width="460" height="995" loading="lazy">
+          </div>
+          <div class="cs-phone-card pos-mid">
+            <img src="/assets/spendlio/screen-2.webp" alt="Spendlio screen 2" width="460" height="995" loading="lazy">
+          </div>
+          <div class="cs-phone-card pos-front">
+            <img src="/assets/spendlio/screen-1.webp" alt="Spendlio screen 1" width="460" height="995" loading="lazy">
+          </div>
+        </div>
+        <script>
+          (function(){
+            const cards = Array.from(document.querySelectorAll('#spendlio-stack .cs-phone-card'));
+            const pos = ['pos-front','pos-mid','pos-back'];
+            let state = [2,1,0];
+            setInterval(function(){
+              state = state.map(function(p){ return (p+2)%3; });
+              cards.forEach(function(card,i){
+                card.className = 'cs-phone-card ' + pos[state[i]];
+              });
+            }, 2000);
+          })();
+        </script>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SCREENSHOTS ── -->
+  <section class="cs-screenshots">
+    <div class="container">
+      <p class="cs-screenshots-label">App screenshots</p>
+      <div class="cs-screenshots-track">
+        <div class="cs-screenshot-item">
+          <img src="/assets/spendlio/screen-1.webp" alt="Spendlio screenshot 1" width="460" height="995" loading="lazy">
+        </div>
+        <div class="cs-screenshot-item">
+          <img src="/assets/spendlio/screen-2.webp" alt="Spendlio screenshot 2" width="460" height="995" loading="lazy">
+        </div>
+        <div class="cs-screenshot-item">
+          <img src="/assets/spendlio/screen-3.webp" alt="Spendlio screenshot 3" width="460" height="995" loading="lazy">
+        </div>
+        <div class="cs-screenshot-item">
+          <img src="/assets/spendlio/screen-4.webp" alt="Spendlio screenshot 4" width="460" height="995" loading="lazy">
+        </div>
+        <div class="cs-screenshot-item">
+          <img src="/assets/spendlio/screen-5.webp" alt="Spendlio screenshot 5" width="460" height="995" loading="lazy">
+        </div>
+        <div class="cs-screenshot-item">
+          <img src="/assets/spendlio/screen-6.webp" alt="Spendlio screenshot 6" width="460" height="995" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS BAR ── -->
+  <section class="cs-stats">
+    <div class="container">
+      <div class="cs-stats-grid">
+        <div class="cs-stat">
+          <div class="cs-stat-value">0 → 1</div>
+          <div class="cs-stat-label">Idea to App Store, end to end</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">6</div>
+          <div class="cs-stat-label">Core feature modules shipped at launch</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">100%</div>
+          <div class="cs-stat-label">Offline — no backend dependency</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">Live</div>
+          <div class="cs-stat-label">App Store · active iteration ongoing</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BODY ── -->
+  <section class="cs-body">
+    <div class="container">
+      <div class="cs-layout">
+
+        <div class="cs-main">
+
+          <div class="cs-section">
+            <p class="cs-section-label">The idea</p>
+            <h2>Most expense apps track where money went. Spendlio helps you understand where it's going.</h2>
+            <p>The problem with most personal finance tools is that they're retrospective — they show you what you already spent. By the time you open the app, the decision is made. Spendlio was conceived around a different idea: give people enough visibility into their financial patterns, planned transactions, and projected balances that they can make better decisions before they spend, not after.</p>
+            <p>The app is built for people who manage multiple accounts, want to plan income and expenses in advance, and need to understand cash flow at a glance — not just a transaction list. Professionals, freelancers, small business owners, and anyone who wants a smarter grip on their money without connecting their bank account to a third-party service.</p>
+          </div>
+
+          <div class="cs-section">
+            <p class="cs-section-label">How we built it</p>
+            <h2>Every stage owned by TBox — from whiteboard to App Store</h2>
+            <p>Spendlio is the clearest demonstration of how TBox operates as a product team, not just a development team. We ran every phase of the product lifecycle ourselves.</p>
+            <div class="cs-phases">
+              <div class="cs-phase">
+                <span class="cs-phase-num">01</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Vision &amp; product strategy</p>
+                  <p class="cs-phase-desc">Defined the problem space, target user, core differentiators, and business model (freemium with $4.99/mo or $44.99/yr premium). Validated the idea against the market before writing a line of code.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">02</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">UI/UX design &amp; wireframing</p>
+                  <p class="cs-phase-desc">Designed every screen from scratch — clean, modern, and sophisticated. Custom UI components including a carousel, rich dashboard layouts, and a visual projection system. No templates, no off-the-shelf design kits.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">03</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Feature scoping &amp; roadmap</p>
+                  <p class="cs-phase-desc">Converted the product vision into a prioritized feature roadmap, breaking it into sprint-ready deliverables with clear value rankings for users. Decided what to ship at launch vs. what to hold for iteration.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">04</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Engineering &amp; technical architecture</p>
+                  <p class="cs-phase-desc">Built natively in Swift with Core Data for a fully offline local database. Implemented StoreKit for in-app purchases, voice input, OCR receipt scanning, push notification infrastructure, and all feature modules. No internet connection required to use the app.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">05</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">App Store launch &amp; ASO</p>
+                  <p class="cs-phase-desc">Managed the full submission process — App Store screenshots, metadata, keyword research and ASO, Apple review team communication, and launch coordination. Everything required to get an app discovered and approved.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">06</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Ongoing iteration based on user behavior</p>
+                  <p class="cs-phase-desc">Post-launch, monitoring real usage patterns to validate assumptions, identify friction points, and prioritize the next features. The roadmap is driven by what users actually do, not what we assumed they would.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cs-section">
+            <p class="cs-section-label">What we shipped</p>
+            <h2>A genuinely deep feature set at launch — not an MVP</h2>
+            <table class="cs-features-table">
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Multi-account management</td>
+                  <td>Track multiple accounts and wallets simultaneously, with per-account cashflow and balance visibility.</td>
+                </tr>
+                <tr>
+                  <td>Full transaction suite</td>
+                  <td>Income, expenses, and account-to-account transfers in one place, with customizable categories, icons, and colors.</td>
+                </tr>
+                <tr>
+                  <td>Planned income &amp; expenses</td>
+                  <td>Log transactions in advance, not just after the fact. Budget by intent, not just by history.</td>
+                </tr>
+                <tr>
+                  <td>Rich dashboard</td>
+                  <td>Recent transactions, category breakdowns, spending patterns, and cash flow by month, quarter, and year — all on one screen.</td>
+                </tr>
+                <tr>
+                  <td>Balance projection engine</td>
+                  <td>Forecasts account balances one month, one quarter, one year, or multiple years ahead based on planned transactions.</td>
+                </tr>
+                <tr>
+                  <td>Cross-dimensional filters</td>
+                  <td>Filter any view — transactions, projections, cash flow, expenses — by account, category, and tag simultaneously.</td>
+                </tr>
+                <tr>
+                  <td>Voice input</td>
+                  <td>Log transactions by speaking naturally: "spent $45 on groceries." No typing required. Premium feature with 7-day trial.</td>
+                </tr>
+                <tr>
+                  <td>OCR receipt scanning</td>
+                  <td>Photograph a receipt and have it parsed automatically into a transaction. No manual data entry.</td>
+                </tr>
+                <tr>
+                  <td>Smart reminders</td>
+                  <td>Push notifications for upcoming planned income and expenses. Configurable per transaction so nothing gets missed.</td>
+                </tr>
+                <tr>
+                  <td>Monthly behavior insights</td>
+                  <td>Post-month summaries surfacing top spend categories, unusual patterns, and week-over-week changes.</td>
+                </tr>
+                <tr>
+                  <td>CSV import / export</td>
+                  <td>Bring in existing data or export for external analysis. Full data portability, no lock-in.</td>
+                </tr>
+                <tr>
+                  <td>Security</td>
+                  <td>PIN and Face ID protection for app access. No data ever leaves the device.</td>
+                </tr>
+                <tr>
+                  <td>100% offline</td>
+                  <td>All data stored locally via Core Data. No account required, no backend dependency, no internet needed.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="cs-highlight">
+            <p class="cs-highlight-label">Why this matters for clients</p>
+            <p>Every agency says they think like a product team. Spendlio is the proof. We didn't have a client to tell us what to build, a PM to manage the sprints, or a design team to hand us mockups. We started with a blank page — defined the problem, designed the solution, scoped the features, built the product, managed App Store approval, handled ASO, and shipped. Then we stayed, iterating on real user behavior. That's the full product loop. That's what we bring to every client engagement too.</p>
+          </div>
+
+          <div class="cs-section">
+            <p class="cs-section-label">What's next</p>
+            <h2>A product in active evolution — not a shipped-and-done build</h2>
+            <p>Spendlio is in ongoing development, with a roadmap shaped by real user behavior rather than assumptions. The next major milestone is optional backend sync — allowing data to remain mobile-first and fully offline while enabling cloud backup and multi-device access for users who want it.</p>
+            <p>More advanced AI-driven insights, expanded projection models, and deeper behavioral analysis are on the roadmap. Each release is informed by how existing users actually interact with the app — what they use, what they ignore, and where they drop off.</p>
+          </div>
+
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="cs-sidebar">
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Product details</p>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Type</span>
+              <span class="cs-sidebar-row-val">In-house product</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Category</span>
+              <span class="cs-sidebar-row-val">Consumer Finance</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Platform</span>
+              <span class="cs-sidebar-row-val">iOS (iPhone)</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Model</span>
+              <span class="cs-sidebar-row-val">Freemium · $4.99/mo</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Requires iOS</span>
+              <span class="cs-sidebar-row-val">16.4 or later</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Status</span>
+              <span class="cs-sidebar-row-val">Live · active iteration</span>
+            </div>
+          </div>
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Tech stack</p>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Language</span>
+              <span class="cs-sidebar-row-val">Swift (native iOS)</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Database</span>
+              <span class="cs-sidebar-row-val">Core Data (offline)</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Payments</span>
+              <span class="cs-sidebar-row-val">StoreKit</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Input</span>
+              <span class="cs-sidebar-row-val">Voice · OCR</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Notifications</span>
+              <span class="cs-sidebar-row-val">Push (APNs)</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Security</span>
+              <span class="cs-sidebar-row-val">Face ID · PIN</span>
+            </div>
+          </div>
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">TBox owned every layer</p>
+            <div class="cs-sidebar-investors">
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">Product vision</span>
+                <p class="cs-sidebar-investor-desc">Problem definition, market positioning, business model</p>
+              </div>
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">Design</span>
+                <p class="cs-sidebar-investor-desc">UI/UX, wireframes, custom components</p>
+              </div>
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">Engineering</span>
+                <p class="cs-sidebar-investor-desc">Swift, Core Data, StoreKit, voice, OCR, notifications</p>
+              </div>
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">Launch</span>
+                <p class="cs-sidebar-investor-desc">ASO, App Store screenshots, metadata, Apple review</p>
+              </div>
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">Growth</span>
+                <p class="cs-sidebar-investor-desc">User behavior analysis, ongoing iteration</p>
+              </div>
+            </div>
+          </div>
+
+        </aside>
+      </div>
+
+      <!-- CTA -->
+      <div class="cs-cta">
+        <h2>Want a team that thinks like a product owner?</h2>
+        <p>We've done the full loop ourselves. We know what it takes to go from zero to a live product — and we bring that thinking to every client engagement.</p>
+        <a href="/#contact" class="btn btn-primary">Start a conversation &rarr;</a>
+      </div>
+
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <script src="/js/components.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eMushrif Case Study — TBox Solutionz</title>
+  <meta name="description" content="How TBox Solutionz designed and engineered eMushrif — a comprehensive Arabic-language school management platform serving administrators, teachers, and parents across the Middle East.">
+  <link rel="canonical" href="https://tboxsolutionz.com/work/emushrif.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tboxsolutionz.com/work/emushrif.html">
+  <meta property="og:title" content="eMushrif Case Study — TBox Solutionz">
+  <meta property="og:description" content="How TBox Solutionz designed and engineered eMushrif — a comprehensive Arabic-language school management platform serving administrators, teachers, and parents across the Middle East.">
+  <meta property="og:image" content="https://tboxsolutionz.com/assets/images/emushrif.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="eMushrif Case Study — TBox Solutionz">
+  <meta name="twitter:description" content="How TBox Solutionz designed and engineered eMushrif — a comprehensive Arabic-language school management platform serving administrators, teachers, and parents across the Middle East.">
+  <meta name="twitter:image" content="https://tboxsolutionz.com/assets/images/emushrif.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://tboxsolutionz.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://tboxsolutionz.com/work/" },
+      { "@type": "ListItem", "position": 3, "name": "eMushrif", "item": "https://tboxsolutionz.com/work/emushrif.html" }
+    ]
+  }
+  </script>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/assets/images/favicon-192.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#E01B1B">  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    /* ── Case study detail page ── */
+    .cs-hero { background: var(--bg-alt); border-bottom: 1px solid var(--border-band); padding: 2.5rem 0 3rem; }
+    .cs-hero-label { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .cs-back { font-family: var(--mono); font-size: 12px; color: var(--text-muted); text-decoration: none; letter-spacing: 0.04em; }
+    .cs-back:hover { color: var(--text); }
+    .cs-back::before { content: '← '; }
+    .cs-hero h1 { font-size: clamp(2rem, 4vw, 3.25rem); letter-spacing: -0.03em; margin-bottom: 1.25rem; max-width: 780px; }
+    .cs-hero-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .cs-hero-desc { font-size: 18px; line-height: 1.6; color: #5C5A57; max-width: 640px; }
+    .cs-investor-row { display: flex; align-items: center; gap: 1rem; margin-top: 1.75rem; flex-wrap: wrap; }
+    .cs-investor-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-light); }
+    .cs-investor-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    /* Stats bar */
+    .cs-stats { border-bottom: 1px solid var(--border-band); }
+    .cs-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); min-height: 110px; }
+    .cs-stat { padding: 1.75rem 2rem; border-right: 1px solid var(--border-band); display: flex; flex-direction: column; justify-content: center; }
+    .cs-stat:first-child { padding-left: 0; }
+    .cs-stat:last-child { border-right: none; }
+    .cs-stat-value { font-size: clamp(1.3rem, 2.5vw, 2.1rem); font-weight: 600; color: var(--text); letter-spacing: -0.03em; line-height: 1; margin-bottom: 0.35rem; white-space: nowrap; }
+    .cs-stat-label { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+
+    /* Content sections */
+    .cs-body { padding: 5rem 0; }
+    .cs-layout { display: grid; grid-template-columns: 1fr 320px; gap: 5rem; align-items: start; }
+    .cs-main { min-width: 0; }
+    .cs-sidebar { min-width: 0; }
+
+    .cs-section { margin-bottom: 3.5rem; }
+    .cs-section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.75rem; }
+    .cs-section h2 { font-size: 1.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+    .cs-section p { font-size: 16px; line-height: 1.75; color: #4A4845; margin-bottom: 0.875rem; }
+    .cs-section p:last-child { margin-bottom: 0; }
+
+    /* Highlight block — the defining moment */
+    .cs-highlight { background: var(--bg-alt); border: 1px solid var(--border-band); border-left: 3px solid var(--red); border-radius: 12px; padding: 1.75rem 2rem; margin: 2.5rem 0; }
+    .cs-highlight-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--red); margin-bottom: 0.75rem; }
+    .cs-highlight p { font-size: 17px; line-height: 1.65; color: var(--text); font-weight: 500; margin-bottom: 0; }
+
+    /* What TBox did — checklist */
+    .cs-deliverables { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+    .cs-deliverables li { display: flex; align-items: flex-start; gap: 0.75rem; font-size: 15px; color: #4A4845; line-height: 1.5; }
+    .cs-deliverables li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--red); flex-shrink: 0; margin-top: 0.5rem; }
+
+    /* Sidebar cards */
+    .cs-sidebar-card { background: var(--bg-alt); border: 1px solid var(--border-band); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.25rem; }
+    .cs-sidebar-card-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.875rem; }
+    .cs-sidebar-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .cs-sidebar-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .cs-sidebar-row-key { color: var(--text-muted); }
+    .cs-sidebar-row-val { font-weight: 500; color: var(--text); text-align: right; }
+
+    /* Investor block in sidebar */
+    .cs-sidebar-investors { display: flex; flex-direction: column; gap: 0.625rem; }
+    .cs-sidebar-investor { display: flex; align-items: center; gap: 0.75rem; }
+    .cs-sidebar-inv-row { display: flex; flex-direction: column; gap: 2px; padding: 0.625rem 0; border-bottom: 1px solid var(--border); }
+    .cs-sidebar-inv-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .cs-sidebar-investor-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .cs-sidebar-investor-desc { font-size: 12px; color: var(--text-muted); }
+
+    /* Hero inner grid */
+    .cs-hero-inner { display: grid; grid-template-columns: 1fr auto; gap: 3rem; align-items: center; }
+    .cs-appicon { width: 72px; height: 72px; border-radius: 18px; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.12); margin-bottom: 1.5rem; }
+    .cs-appicon img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Store buttons */
+    .cs-store-row { display: flex; align-items: center; gap: 0.75rem; margin-top: 1.75rem; flex-wrap: wrap; }
+
+    /* Phone stack animation */
+    .cs-phone-stack { position: relative; width: 310px; height: 480px; flex-shrink: 0; }
+    .cs-phone-card { position: absolute; width: 175px; border-radius: 22px; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); transition: transform 0.6s cubic-bezier(0.4,0,0.2,1), box-shadow 0.6s ease, opacity 0.6s ease, left 0.6s cubic-bezier(0.4,0,0.2,1), top 0.6s cubic-bezier(0.4,0,0.2,1); }
+    .cs-phone-card img { width: 100%; display: block; }
+    .cs-phone-card.pos-front { left: 0;    top: 110px; transform: rotate(0deg); z-index: 3; opacity: 1;    box-shadow: 0 16px 44px rgba(0,0,0,0.18); }
+    .cs-phone-card.pos-mid   { left: 65px; top: 52px;  transform: rotate(4deg); z-index: 2; opacity: 0.88; box-shadow: 0 8px 28px rgba(0,0,0,0.12); }
+    .cs-phone-card.pos-back  { left: 130px; top: 0;    transform: rotate(8deg); z-index: 1; opacity: 0.72; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+
+    /* Screenshots strip */
+    .cs-screenshots { padding: 3.5rem 0; border-bottom: 1px solid var(--border-band); background: var(--bg-alt); }
+    .cs-screenshots-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 1.5rem; }
+    .cs-screenshots-track { display: flex; gap: 1rem; overflow-x: auto; scrollbar-width: none; padding-bottom: 0.5rem; }
+    .cs-screenshots-track::-webkit-scrollbar { display: none; }
+    .cs-screenshot-item { flex-shrink: 0; width: 180px; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.10); border: 1px solid var(--border-band); }
+    .cs-screenshot-item img { width: 100%; height: auto; display: block; }
+
+    /* CTA */
+    .cs-cta { background: var(--bg-dark); border-radius: 20px; padding: 3.5rem; text-align: center; margin-top: 5rem; }
+    .cs-cta h2 { color: #fff; font-size: clamp(1.5rem, 3vw, 2.25rem); margin-bottom: 0.875rem; letter-spacing: -0.025em; }
+    .cs-cta p { color: #9A968F; font-size: 16px; margin-bottom: 2rem; }
+
+    @media (max-width: 900px) {
+      .cs-hero-inner { grid-template-columns: 1fr; }
+      .cs-phone-stack { width: 240px; height: 370px; margin-top: 1.5rem; }
+      .cs-phone-card { width: 135px; }
+      .cs-phone-card.pos-front { left: 0;    top: 85px; }
+      .cs-phone-card.pos-mid   { left: 50px; top: 40px; }
+      .cs-phone-card.pos-back  { left: 100px; top: 0; }
+      .cs-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .cs-sidebar { order: -1; }
+      .cs-stats-grid { grid-template-columns: 1fr 1fr; }
+      .cs-stat { border-bottom: 1px solid var(--border-band); }
+      .cs-stat:nth-child(2) { border-right: none; }
+      .cs-stat:nth-child(3), .cs-stat:nth-child(4) { border-bottom: none; }
+    }
+    @media (max-width: 640px) {
+      .cs-hero { padding: 3.5rem 0 2.5rem; }
+      .cs-stats-grid { grid-template-columns: 1fr 1fr; }
+      .cs-cta { padding: 2.5rem 1.5rem; }
+      .cs-screenshot-item { width: 140px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV — injected by components.js -->
+  <div id="nav-placeholder"></div>
+  <main>
+
+  <!-- ── HERO ── -->
+  <section id="content" class="cs-hero">
+    <div class="container">
+      <div class="cs-hero-label">
+        <a href="/#work" class="cs-back">Selected work</a>
+      </div>
+      <div class="cs-hero-inner">
+        <div>
+          <div class="cs-hero-meta">
+            <span class="work-tag">EdTech</span>
+            <span class="work-tag">iOS</span>
+            <span class="work-tag">Android</span>
+            <span class="work-tag">Backend</span>
+            <span class="work-tag">6+ Years</span>
+            <span class="work-tag">Staff Augmentation</span>
+          </div>
+          <h1>eMushrif — GCC's Leading Smart School Transportation Platform</h1>
+          <p class="cs-hero-desc">When eMushrif set out to transform school bus safety across Oman and Kuwait, they needed a deeply reliable engineering team — not a vendor. TBox became that team, embedded from day one and still going.</p>
+          <div class="cs-investor-row">
+            <span class="cs-investor-label">Backed by</span>
+            <div class="cs-investor-chips">
+              <span class="cs-investor-chip">IDO Investment</span>
+              <span class="cs-investor-chip">Phaze Ventures</span>
+              <span class="cs-investor-chip">Jasoor Ventures</span>
+              <span class="cs-investor-chip">Oman Tech Fund</span>
+              <span class="cs-investor-chip">Annex Investment</span>
+              <span class="cs-investor-chip">Ithca Group</span>
+            </div>
+          </div>
+          <div class="cs-store-row">
+            <a href="https://apps.apple.com/om/app/saar-by-emushrif/id1453327782" target="_blank" rel="noopener" style="display:inline-block;line-height:0;">
+              <img src="/assets/badges/app-store.svg" alt="Download on the App Store" height="40" style="height:40px;width:auto;">
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=com.emushrif.emushrif" target="_blank" rel="noopener" style="display:inline-block;line-height:0;">
+              <img src="/assets/badges/google-play.png" alt="Get it on Google Play" height="60" style="height:60px;width:auto;margin-top:-10px;margin-bottom:-10px;">
+            </a>
+          </div>
+        </div>
+        <div class="cs-phone-stack" id="emushrif-stack">
+          <div class="cs-phone-card pos-back">
+            <img src="/assets/emushrif/screen3.jpg" alt="eMushrif screen 3" loading="lazy">
+          </div>
+          <div class="cs-phone-card pos-mid">
+            <img src="/assets/emushrif/screen2.jpg" alt="eMushrif screen 2" loading="lazy">
+          </div>
+          <div class="cs-phone-card pos-front">
+            <img src="/assets/emushrif/screen1.jpg" alt="eMushrif screen 1" loading="lazy">
+          </div>
+        </div>
+        <script>
+          (function(){
+            const cards = Array.from(document.querySelectorAll('#emushrif-stack .cs-phone-card'));
+            const pos = ['pos-front','pos-mid','pos-back'];
+            let state = [2,1,0];
+            setInterval(function(){
+              state = state.map(function(p){ return (p+2)%3; });
+              cards.forEach(function(card,i){
+                card.className = 'cs-phone-card ' + pos[state[i]];
+              });
+            }, 2000);
+          })();
+        </script>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SCREENSHOTS ── -->
+  <section class="cs-screenshots">
+    <div class="container">
+      <p class="cs-screenshots-label">App screenshots</p>
+      <div class="cs-screenshots-track">
+        <div class="cs-screenshot-item"><img src="/assets/emushrif/screen1.jpg" alt="eMushrif screenshot 1" loading="lazy"></div>
+        <div class="cs-screenshot-item"><img src="/assets/emushrif/screen2.jpg" alt="eMushrif screenshot 2" loading="lazy"></div>
+        <div class="cs-screenshot-item"><img src="/assets/emushrif/screen3.jpg" alt="eMushrif screenshot 3" loading="lazy"></div>
+        <div class="cs-screenshot-item"><img src="/assets/emushrif/screen4.jpg" alt="eMushrif screenshot 4" loading="lazy"></div>
+        <div class="cs-screenshot-item"><img src="/assets/emushrif/screen5.jpg" alt="eMushrif screenshot 5" loading="lazy"></div>
+        <div class="cs-screenshot-item"><img src="/assets/emushrif/screen6.jpg" alt="eMushrif screenshot 6" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS BAR ── -->
+  <section class="cs-stats">
+    <div class="container">
+      <div class="cs-stats-grid">
+        <div class="cs-stat">
+          <div class="cs-stat-value">$10.8M</div>
+          <div class="cs-stat-label">Total raised across 3 rounds</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">150K+</div>
+          <div class="cs-stat-label">Students tracked daily</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">6+ yrs</div>
+          <div class="cs-stat-label">Ongoing partnership since 2019</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">10</div>
+          <div class="cs-stat-label">TBox engineers at peak deployment</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BODY ── -->
+  <section class="cs-body">
+    <div class="container">
+      <div class="cs-layout">
+
+        <!-- Main content -->
+        <div class="cs-main">
+
+          <div class="cs-section">
+            <p class="cs-section-label">The brief</p>
+            <h2>Keeping 150,000 students safe — one bus at a time</h2>
+            <p>School transportation in the GCC is a high-stakes operation: parents need live visibility, schools need accountability, and governments need traceability. eMushrif was building the platform to deliver all three — a GPS-enabled, IoT-integrated system tracking every bus, every trip, in real time.</p>
+            <p>They weren't looking for a software agency to hand requirements to. They needed an engineering team who would own the build alongside them — people who would show up in the product, raise concerns early, and stay long enough to see the platform through multiple markets and funding rounds.</p>
+          </div>
+
+          <div class="cs-section">
+            <p class="cs-section-label">What TBox did</p>
+            <h2>Embedded engineering across every layer of the product</h2>
+            <ul class="cs-deliverables">
+              <li>Built and maintained the iOS and Android mobile apps — including "Saar by eMushrif," the parent-facing app for live bus tracking, arrival alerts, and student status updates.</li>
+              <li>Developed the full backend infrastructure using Node.js and Express.js, handling real-time GPS data, IoT device communication, and school-bus fleet management at scale.</li>
+              <li>Built the Angular.js-based frontend dashboard used by school administrators to manage routes, buses, drivers, and student assignments.</li>
+              <li>Scaled the engineering team dynamically with eMushrif's growth — from initial build to a peak of 10 TBox engineers embedded across the product simultaneously.</li>
+              <li>Supported the platform through two market expansions (Oman → Kuwait) and three funding rounds without service disruption or architectural rework.</li>
+              <li>Integrated IoT hardware systems for real-time bus location tracking and onboard device management.</li>
+            </ul>
+          </div>
+
+          <div class="cs-highlight">
+            <p class="cs-highlight-label">The defining moment</p>
+            <p>By the time eMushrif raised their Series A, the product was live in two GCC markets with government contracts in hand. That didn't happen by luck — it happened because the engineering team scaled in lockstep with the business. At peak, TBox had 10 engineers embedded across iOS, Android, backend, and frontend simultaneously. eMushrif's founders focused on market expansion. We made sure the product kept up.</p>
+          </div>
+
+          <div class="cs-section">
+            <p class="cs-section-label">What this demonstrates</p>
+            <h2>Long-term trust, not short-term delivery</h2>
+            <p>Most agencies measure success in sprints. This engagement is now in its sixth year — spanning three funding rounds, two market launches, and one acquisition (MyRoute in Kuwait). That kind of continuity isn't accidental: it requires genuine alignment between how a client thinks about their product and how their engineering team shows up.</p>
+            <p>TBox didn't own eMushrif's product. We supported the team who did. The distinction matters — it means we built to their standards, escalated what needed escalating, and adapted as the business evolved. The platform's growth and investor confidence are a reflection of the product; TBox's six-year tenure is a reflection of how we work.</p>
+          </div>
+
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="cs-sidebar">
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Engagement details</p>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Industry</span>
+              <span class="cs-sidebar-row-val">EdTech / Smart Transport</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Region</span>
+              <span class="cs-sidebar-row-val">Oman · Kuwait · GCC</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Duration</span>
+              <span class="cs-sidebar-row-val">2019 – present</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Model</span>
+              <span class="cs-sidebar-row-val">Staff Augmentation</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Peak team size</span>
+              <span class="cs-sidebar-row-val">10 engineers</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Stage</span>
+              <span class="cs-sidebar-row-val">Seed → Series A → Growth</span>
+            </div>
+          </div>
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Tech &amp; integrations</p>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Mobile</span>
+              <span class="cs-sidebar-row-val">iOS · Android</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Backend</span>
+              <span class="cs-sidebar-row-val">Node.js · Express.js</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Frontend</span>
+              <span class="cs-sidebar-row-val">Angular.js</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Hardware</span>
+              <span class="cs-sidebar-row-val">IoT / GPS devices</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Markets</span>
+              <span class="cs-sidebar-row-val">Oman · Kuwait</span>
+            </div>
+          </div>
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Backed by</p>
+            <div class="cs-sidebar-investors">
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">IDO Investment</span>
+                <p class="cs-sidebar-investor-desc">Lead investor, Series A (2020)</p>
+              </div>
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">Phaze Ventures</span>
+                <p class="cs-sidebar-investor-desc">MENA-focused venture capital</p>
+              </div>
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">Jasoor Ventures</span>
+                <p class="cs-sidebar-investor-desc">Lead investor, 2026 growth round</p>
+              </div>
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">Oman Tech Fund</span>
+                <p class="cs-sidebar-investor-desc">Government-backed tech investor</p>
+              </div>
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">Annex Investment</span>
+                <p class="cs-sidebar-investor-desc">GCC growth investor</p>
+              </div>
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">Ithca Group</span>
+                <p class="cs-sidebar-investor-desc">Strategic regional investor</p>
+              </div>
+            </div>
+          </div>
+
+        </aside>
+      </div>
+
+      <!-- CTA -->
+      <div class="cs-cta">
+        <h2>Need an engineering team that stays?</h2>
+        <p>We build for the long haul — embedded, accountable, and aligned with how your product actually grows.</p>
+        <a href="/#contact" class="btn btn-primary">Start a conversation &rarr;</a>
+      </div>
+
+    </div>
+  </section>
+
+  </main>
+  <!-- FOOTER — injected by components.js -->
+  <div id="footer-placeholder"></div>
+  <script src="/js/components.js" defer></script>
+</body>
+</html>

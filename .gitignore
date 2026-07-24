@@ -10,7 +10,11 @@ __v0_jsx-dev-runtime.ts
 .env*.local
 
 # Common ignores
-node_modules
-dist
+node_modules/
+dist/
 .next/
 .DS_Store
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+.claude/

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impause Case Study — TBox Solutionz</title>
+  <meta name="description" content="How TBox Solutionz built Impause — a community platform connecting content creators, fans, and brands around real-time events and shared digital experiences.">
+  <link rel="canonical" href="https://tboxsolutionz.com/work/impause.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tboxsolutionz.com/work/impause.html">
+  <meta property="og:title" content="Impause Case Study — TBox Solutionz">
+  <meta property="og:description" content="How TBox Solutionz built Impause — a community platform connecting content creators, fans, and brands around real-time events and shared digital experiences.">
+  <meta property="og:image" content="https://tboxsolutionz.com/assets/impause/screen-1.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Impause Case Study — TBox Solutionz">
+  <meta name="twitter:description" content="How TBox Solutionz built Impause — a community platform connecting content creators, fans, and brands around real-time events and shared digital experiences.">
+  <meta name="twitter:image" content="https://tboxsolutionz.com/assets/impause/screen-1.webp">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://tboxsolutionz.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://tboxsolutionz.com/work/" },
+      { "@type": "ListItem", "position": 3, "name": "Impause", "item": "https://tboxsolutionz.com/work/impause.html" }
+    ]
+  }
+  </script>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/assets/images/favicon-192.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#E01B1B">  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .cs-hero { background: var(--bg-alt); border-bottom: 1px solid var(--border-band); padding: 2.5rem 0 3rem; }
+    .cs-hero-label { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .cs-back { font-family: var(--mono); font-size: 12px; color: var(--text-muted); text-decoration: none; letter-spacing: 0.04em; }
+    .cs-back:hover { color: var(--text); }
+    .cs-back::before { content: '← '; }
+    .cs-hero h1 { font-size: clamp(2rem, 4vw, 3.25rem); letter-spacing: -0.03em; margin-bottom: 1.25rem; max-width: 780px; }
+    .cs-hero-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .cs-hero-desc { font-size: 18px; line-height: 1.6; color: #5C5A57; max-width: 640px; }
+    .cs-hero-inner { display: grid; grid-template-columns: 1fr auto; gap: 3rem; align-items: center; }
+    .cs-appicon { width: 96px; height: 96px; border-radius: 22px; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
+    .cs-appicon img { width: 100%; height: 100%; object-fit: cover; }
+    /* Phone screenshot stack */
+    .cs-phone-stack { position: relative; width: 310px; height: 480px; flex-shrink: 0; }
+    .cs-phone-card { position: absolute; width: 175px; border-radius: 22px; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); transition: transform 0.6s cubic-bezier(0.4,0,0.2,1), box-shadow 0.6s ease, opacity 0.6s ease, left 0.6s cubic-bezier(0.4,0,0.2,1), top 0.6s cubic-bezier(0.4,0,0.2,1); }
+    .cs-phone-card img { width: 100%; height: auto; display: block; }
+    .cs-phone-card.pos-front { left: 0;     top: 110px; transform: rotate(0deg); z-index: 3; opacity: 1;    box-shadow: 0 16px 44px rgba(0,0,0,0.18); }
+    .cs-phone-card.pos-mid   { left: 65px;  top: 52px;  transform: rotate(4deg); z-index: 2; opacity: 0.88; box-shadow: 0 8px 28px rgba(0,0,0,0.12); }
+    .cs-phone-card.pos-back  { left: 130px; top: 0;     transform: rotate(8deg); z-index: 1; opacity: 0.72; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .cs-store-row { display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
+    .cs-investor-row { display: flex; align-items: center; gap: 1rem; margin-top: 1.75rem; flex-wrap: wrap; }
+    .cs-screenshots { padding: 3.5rem 0; border-bottom: 1px solid var(--border-band); background: var(--bg-alt); }
+    .cs-screenshots-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 1.5rem; }
+    .cs-screenshots-track { display: flex; gap: 1rem; overflow-x: auto; scrollbar-width: none; padding-bottom: 0.5rem; }
+    .cs-screenshots-track::-webkit-scrollbar { display: none; }
+    .cs-screenshot-item { flex-shrink: 0; width: 180px; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.10); border: 1px solid var(--border-band); }
+    .cs-screenshot-item img { width: 100%; height: auto; display: block; }
+    .cs-investor-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-light); }
+    .cs-investor-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    .cs-stats { border-bottom: 1px solid var(--border-band); }
+    .cs-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); min-height: 110px; }
+    .cs-stat { padding: 1.75rem 2rem; border-right: 1px solid var(--border-band); display: flex; flex-direction: column; justify-content: center; }
+    .cs-stat:first-child { padding-left: 0; }
+    .cs-stat:last-child { border-right: none; }
+    .cs-stat-value { font-size: clamp(1.3rem, 2.5vw, 2.1rem); font-weight: 600; color: var(--text); letter-spacing: -0.03em; line-height: 1; margin-bottom: 0.35rem; white-space: nowrap; }
+    .cs-stat-label { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+
+    .cs-body { padding: 5rem 0; }
+    .cs-layout { display: grid; grid-template-columns: 1fr 320px; gap: 5rem; align-items: start; }
+    .cs-main { min-width: 0; }
+    .cs-sidebar { min-width: 0; }
+
+    .cs-section { margin-bottom: 3.5rem; }
+    .cs-section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.75rem; }
+    .cs-section h2 { font-size: 1.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+    .cs-section p { font-size: 16px; line-height: 1.75; color: #4A4845; margin-bottom: 0.875rem; }
+    .cs-section p:last-child { margin-bottom: 0; }
+
+    .cs-highlight { background: var(--bg-alt); border: 1px solid var(--border-band); border-left: 3px solid var(--red); border-radius: 12px; padding: 1.75rem 2rem; margin: 2.5rem 0; }
+    .cs-highlight-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--red); margin-bottom: 0.75rem; }
+    .cs-highlight p { font-size: 17px; line-height: 1.65; color: var(--text); font-weight: 500; margin-bottom: 0; }
+
+    .cs-deliverables { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+    .cs-deliverables li { display: flex; align-items: flex-start; gap: 0.75rem; font-size: 15px; color: #4A4845; line-height: 1.5; }
+    .cs-deliverables li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--red); flex-shrink: 0; margin-top: 0.5rem; }
+
+    .cs-sidebar-card { background: var(--bg-alt); border: 1px solid var(--border-band); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.25rem; }
+    .cs-sidebar-card-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.875rem; }
+    .cs-sidebar-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .cs-sidebar-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .cs-sidebar-row-key { color: var(--text-muted); }
+    .cs-sidebar-row-val { font-weight: 500; color: var(--text); text-align: right; }
+
+    .cs-sidebar-investors { display: flex; flex-direction: column; }
+    .cs-sidebar-inv-row { display: flex; flex-direction: column; gap: 2px; padding: 0.625rem 0; border-bottom: 1px solid var(--border); }
+    .cs-sidebar-inv-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .cs-sidebar-investor-name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .cs-sidebar-investor-desc { font-size: 12px; color: var(--text-muted); }
+
+    .cs-cta { background: var(--bg-dark); border-radius: 20px; padding: 3.5rem; text-align: center; margin-top: 5rem; }
+    .cs-cta h2 { color: #fff; font-size: clamp(1.5rem, 3vw, 2.25rem); margin-bottom: 0.875rem; letter-spacing: -0.025em; }
+    .cs-cta p { color: #9A968F; font-size: 16px; margin-bottom: 2rem; }
+
+    @media (max-width: 900px) {
+      .cs-hero-inner { grid-template-columns: 1fr; }
+      .cs-phone-stack { width: 240px; height: 370px; margin-top: 1.5rem; }
+      .cs-phone-card { width: 135px; }
+      .cs-phone-card.pos-front { left: 0;    top: 85px; }
+      .cs-phone-card.pos-mid   { left: 50px; top: 40px; }
+      .cs-phone-card.pos-back  { left: 100px; top: 0; }
+      .cs-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .cs-sidebar { order: -1; }
+      .cs-stats-grid { grid-template-columns: 1fr 1fr; }
+      .cs-stat { border-bottom: 1px solid var(--border-band); }
+      .cs-stat:nth-child(2) { border-right: none; }
+      .cs-stat:nth-child(3), .cs-stat:nth-child(4) { border-bottom: none; }
+    }
+    @media (max-width: 640px) {
+      .cs-hero { padding: 3.5rem 0 2.5rem; }
+      .cs-stats-grid { grid-template-columns: 1fr 1fr; }
+      .cs-cta { padding: 2.5rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="nav-placeholder"></div>
+  <main>
+
+  <!-- ── HERO ── -->
+  <section id="content" class="cs-hero">
+    <div class="container">
+      <div class="cs-hero-label">
+        <a href="/#work" class="cs-back">Selected work</a>
+      </div>
+      <div class="cs-hero-inner">
+        <div>
+          <div class="cs-hero-meta">
+            <span class="work-tag">FinTech</span>
+            <span class="work-tag">AI</span>
+            <span class="work-tag">React Native</span>
+            <span class="work-tag">Full-Stack</span>
+            <span class="work-tag">Consumer App</span>
+          </div>
+          <h1>Impause — The AI-powered app that makes budgets obsolete</h1>
+          <p class="cs-hero-desc">Impause is rewriting how people relate to money — not with spreadsheets, but with behavioral science and AI. TBox built the entire product from near-scratch: React Native Expo frontend, Supabase backend, AI behavioral engine, Plaid integration, and all core features — delivered in under six months.</p>
+          <div class="cs-store-row">
+            <a href="https://apps.apple.com/us/app/impause-stop-impulse-spending/id6746744026" target="_blank" rel="noopener" style="display:inline-block;line-height:0;">
+              <img src="/assets/badges/app-store.svg" alt="Download on the App Store" height="40" style="height:40px;width:auto;">
+            </a>
+          </div>
+          <div class="cs-investor-row">
+            <span class="cs-investor-label">Research backed by</span>
+            <div class="cs-investor-chips">
+              <span class="cs-investor-chip">Harvard</span>
+              <span class="cs-investor-chip">MIT</span>
+              <span class="cs-investor-chip">Wharton</span>
+              <span class="cs-investor-chip">UC Berkeley</span>
+              <span class="cs-investor-chip">Duke</span>
+            </div>
+          </div>
+        </div>
+        <div class="cs-phone-stack" id="impause-stack">
+          <div class="cs-phone-card pos-back">
+            <img src="/assets/impause/screen-4.webp" alt="Impause screen 4" width="460" height="995" loading="lazy">
+          </div>
+          <div class="cs-phone-card pos-mid">
+            <img src="/assets/impause/screen-2.webp" alt="Impause screen 2" width="460" height="995" loading="lazy">
+          </div>
+          <div class="cs-phone-card pos-front">
+            <img src="/assets/impause/screen-1.webp" alt="Impause screen 1" width="460" height="995" loading="lazy">
+          </div>
+        </div>
+        <script>
+          (function(){
+            const cards = Array.from(document.querySelectorAll('#impause-stack .cs-phone-card'));
+            const pos = ['pos-front','pos-mid','pos-back'];
+            let state = [2,1,0];
+            setInterval(function(){
+              state = state.map(function(p){ return (p+2)%3; });
+              cards.forEach(function(card,i){
+                card.className = 'cs-phone-card ' + pos[state[i]];
+              });
+            }, 2000);
+          })();
+        </script>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SCREENSHOTS ── -->
+  <section class="cs-screenshots">
+    <div class="container">
+      <p class="cs-screenshots-label">App screenshots</p>
+      <div class="cs-screenshots-track">
+        <div class="cs-screenshot-item"><img src="/assets/impause/screen-1.webp" alt="Impause screen 1" width="460" height="995" loading="lazy"></div>
+        <div class="cs-screenshot-item"><img src="/assets/impause/screen-2.webp" alt="Impause screen 2" width="460" height="995" loading="lazy"></div>
+        <div class="cs-screenshot-item"><img src="/assets/impause/screen-3.webp" alt="Impause screen 3" width="460" height="995" loading="lazy"></div>
+        <div class="cs-screenshot-item"><img src="/assets/impause/screen-4.webp" alt="Impause screen 4" width="460" height="995" loading="lazy"></div>
+        <div class="cs-screenshot-item"><img src="/assets/impause/screen-6.webp" alt="Impause screen 5" width="460" height="995" loading="lazy"></div>
+        <div class="cs-screenshot-item"><img src="/assets/impause/screen-5.webp" alt="Impause screen 6" width="460" height="995" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS BAR ── -->
+  <section class="cs-stats">
+    <div class="container">
+      <div class="cs-stats-grid">
+        <div class="cs-stat">
+          <div class="cs-stat-value">&lt;6 mo</div>
+          <div class="cs-stat-label">Full product delivered from near-scratch</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">2-in-1</div>
+          <div class="cs-stat-label">iOS live · Android-ready from one codebase</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">$250+</div>
+          <div class="cs-stat-label">Average monthly savings per user</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">Full</div>
+          <div class="cs-stat-label">Stack ownership — mobile + backend</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BODY ── -->
+  <section class="cs-body">
+    <div class="container">
+      <div class="cs-layout">
+
+        <div class="cs-main">
+
+          <div class="cs-section">
+            <p class="cs-section-label">The brief</p>
+            <h2>A smarter kind of finance app — one that changes behavior, not just tracks it</h2>
+            <p>Most personal finance apps are built on the same flawed assumption: that people overspend because they don't know how much they're spending. Impause was founded on a different insight — people overspend because of psychological triggers, not ignorance. The fix isn't a better spreadsheet. It's behavioral intervention at the moment a purchase impulse occurs.</p>
+            <p>Backed by peer-reviewed research from Harvard, MIT, Wharton, and Berkeley, Impause needed a technical team who could translate a sophisticated behavioral science framework into a polished, production-grade consumer app. That meant building an AI engine that learns individual spending patterns, a financial data layer via Plaid, a real-time Supabase backend, and a user experience compelling enough to drive daily habit change — all in a single, cross-platform codebase that could ship on iOS immediately and expand to Android without a rebuild.</p>
+            <p>TBox took on the entire technical scope: product architecture, mobile frontend, backend infrastructure, AI feature implementation, and third-party integrations — executing against feature scopes delivered in Jira sprints by the Impause team.</p>
+          </div>
+
+          <div class="cs-section">
+            <p class="cs-section-label">What TBox built</p>
+            <h2>Every layer of the product, owned end to end</h2>
+            <ul class="cs-deliverables">
+              <li>Architected and built the full React Native Expo application — a deliberate cross-platform decision enabling iOS launch with full Android readiness from a single codebase, eliminating the cost and delay of a separate native Android build.</li>
+              <li>Built the AI behavioral engine: the swipe-based purchase pattern recognition system that learns individual spending triggers, mood correlations, and regret patterns — the core differentiator that sets Impause apart from every other budgeting app.</li>
+              <li>Designed and built the psychological expense cards — the in-moment intervention UI that surfaces behavioral insights and science-backed reframing tools at the exact point a purchase impulse occurs.</li>
+              <li>Implemented the Challenges feature: gamified spending goals with streaks, progress tracking, and behavioral reinforcement loops that keep users engaged beyond initial onboarding.</li>
+              <li>Integrated Plaid for financial account connectivity — enabling Impause to surface real transaction data, identify subscription charges, and ground its behavioral analysis in actual spending history.</li>
+              <li>Built the complete Supabase backend: database architecture, edge functions, row-level security rules, and the real-time data layer powering all communication between backend and mobile app.</li>
+              <li>Implemented the full authentication and onboarding system — login, signup, user authorization, session management, and the personalized onboarding flow including the spending personality assessment.</li>
+              <li>Set up push notification infrastructure for timely behavioral nudges, session reminders, and challenge progress alerts — a critical engagement layer for a habit-change product.</li>
+              <li>Built and maintained the complete API integration layer, connecting all third-party services and internal systems into a cohesive, reliable data pipeline.</li>
+            </ul>
+          </div>
+
+          <div class="cs-highlight">
+            <p class="cs-highlight-label">The defining moment</p>
+            <p>Building an AI-powered behavioral finance app isn't a standard mobile project. It required simultaneously holding three complex domains together: consumer UX that had to feel effortless, a financial data layer with Plaid that had to be airtight, and an AI engine that had to learn meaningfully from limited early-user data. TBox architected all three, built them in parallel, and shipped a complete product in under six months. The app launched on iOS with full Android capability already baked into the codebase — ready to expand the moment the business decides to.</p>
+          </div>
+
+          <div class="cs-section">
+            <p class="cs-section-label">What this demonstrates</p>
+            <h2>Technical depth across AI, FinTech, and consumer product — delivered fast</h2>
+            <p>Consumer apps live or die on the quality of their experience. There's no enterprise contract keeping users on the platform — if the app feels slow, confusing, or unconvincing, people leave. Building Impause required holding that consumer product standard while simultaneously managing the technical complexity of AI behavioral modeling, a regulated financial data integration via Plaid, and a scalable serverless backend on Supabase.</p>
+            <p>Most teams would have sequenced these: launch a thin MVP, add AI later, integrate Plaid in phase two. TBox delivered them together — because the product only works if all three layers are present from day one. A spending pattern engine without real financial data is guessing. An intervention tool without a behavioral model is noise. The architecture had to be complete to be credible.</p>
+            <p>The result is a live product on the App Store, backed by research from five of the world's top universities, already delivering measurable savings for users — and built in under half a year by a team that owned the full stack without hand-holding from the client on technical decisions.</p>
+          </div>
+
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="cs-sidebar">
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Engagement details</p>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Industry</span>
+              <span class="cs-sidebar-row-val">FinTech / Consumer</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Region</span>
+              <span class="cs-sidebar-row-val">United States</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Delivery</span>
+              <span class="cs-sidebar-row-val">Under 6 months</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Model</span>
+              <span class="cs-sidebar-row-val">Full technical delivery</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Platform</span>
+              <span class="cs-sidebar-row-val">iOS · Android-ready</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Status</span>
+              <span class="cs-sidebar-row-val">Live + ongoing maintenance</span>
+            </div>
+          </div>
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Tech stack</p>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Mobile</span>
+              <span class="cs-sidebar-row-val">React Native Expo</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Backend</span>
+              <span class="cs-sidebar-row-val">Supabase</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">FinTech API</span>
+              <span class="cs-sidebar-row-val">Plaid</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">AI layer</span>
+              <span class="cs-sidebar-row-val">Behavioral pattern engine</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Notifications</span>
+              <span class="cs-sidebar-row-val">Push infrastructure</span>
+            </div>
+          </div>
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Research credibility</p>
+            <div class="cs-sidebar-investors">
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">Harvard &amp; MIT</span>
+                <p class="cs-sidebar-investor-desc">Behavioral economics and decision science</p>
+              </div>
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">Wharton</span>
+                <p class="cs-sidebar-investor-desc">Consumer finance and spending psychology</p>
+              </div>
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">UC Berkeley &amp; Duke</span>
+                <p class="cs-sidebar-investor-desc">Cognitive behavioral research and habit formation</p>
+              </div>
+              <div class="cs-sidebar-inv-row">
+                <span class="cs-sidebar-investor-name">Noom-inspired model</span>
+                <p class="cs-sidebar-investor-desc">Behavior change over restriction — applied to finance</p>
+              </div>
+            </div>
+          </div>
+
+        </aside>
+      </div>
+
+      <!-- CTA -->
+      <div class="cs-cta">
+        <h2>Building a consumer product that needs to change behavior, not just track it?</h2>
+        <p>AI, FinTech integrations, and a user experience people actually return to — we've built it. Tell us what you're working on.</p>
+        <a href="/#contact" class="btn btn-primary">Start a conversation &rarr;</a>
+      </div>
+
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <script src="/js/components.js" defer></script>
+</body>
+</html>

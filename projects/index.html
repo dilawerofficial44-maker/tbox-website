@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects — TBox Solutionz</title>
+  <meta name="description" content="Technical portfolio of TBox Solutionz — real-time IoT platforms, AI-native mobile apps, and scalable commerce infrastructure. Stack details, architecture decisions, and engineering context.">
+  <link rel="canonical" href="https://tboxsolutionz.com/projects/">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    /* ── Page hero ── */
+    .proj-hero {
+      background: var(--bg-alt);
+      border-bottom: 1px solid var(--border-band);
+      padding: 5rem 0 4rem;
+    }
+    .proj-hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 1rem;
+    }
+    .proj-hero h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: -.03em;
+      margin-bottom: 1rem;
+      max-width: 680px;
+    }
+    .proj-hero-desc {
+      font-size: 20px;
+      line-height: 1.65;
+      color: var(--text-muted);
+      max-width: 560px;
+    }
+
+    /* ── Grid ── */
+    .proj-grid-section { padding: 4rem 0 6rem; }
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    /* ── Card ── */
+    .proj-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      transition: border-color .2s, box-shadow .2s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .proj-card:hover {
+      border-color: #C0BEBB;
+      box-shadow: 0 4px 20px rgba(0,0,0,.07);
+    }
+
+    .proj-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .proj-card-identity { display: flex; align-items: center; gap: .75rem; }
+    .proj-card-icon {
+      width: 56px; height: 56px;
+      border-radius: 13px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg-alt);
+    }
+    .proj-card-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .proj-card-icon-letter {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .proj-card-name { font-size: 20px; font-weight: 600; color: var(--text); letter-spacing: -.01em; }
+    .proj-card-domain {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .proj-card-badge {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: .03em;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid #D0CEC9;
+      color: var(--text);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .proj-card-summary {
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Stack chips */
+    .proj-card-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 1.5rem;
+    }
+    .proj-chip {
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: #F2F1EF;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .proj-chip.lang  { background: #FEF3F2; border-color: #FECACA; color: #B91C1C; }
+    .proj-chip.infra { background: #F0FDF4; border-color: #BBF7D0; color: #166534; }
+    .proj-chip.api   { background: #EFF6FF; border-color: #BFDBFE; color: #1D4ED8; }
+
+    /* Metrics row */
+    .proj-card-metrics {
+      display: flex;
+      gap: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+      flex-wrap: wrap;
+    }
+    .proj-metric { display: flex; flex-direction: column; gap: 2px; }
+    .proj-metric-val { font-size: 18px; font-weight: 600; color: var(--text); letter-spacing: -.02em; }
+    .proj-metric-label { font-size: 15px; color: var(--text-muted); }
+
+    .proj-card-cta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.25rem;
+    }
+    .proj-view-link {
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--red);
+      text-decoration: none;
+      letter-spacing: .02em;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .proj-view-link:hover { text-decoration: underline; }
+
+    /* ── Card icon row ── */
+    .proj-icon-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 1rem;
+    }
+    .proj-icon-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .proj-icon-pill i { font-size: 16px; line-height: 1; }
+
+    @media (max-width: 800px) {
+      .proj-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="nav-placeholder"></div>
+  <main>
+
+  <!-- Hero -->
+  <section class="proj-hero">
+    <div class="container">
+      <p class="proj-hero-eyebrow">Technical portfolio</p>
+      <h1>What we've built — and how.</h1>
+      <p class="proj-hero-desc">Architecture decisions, stack choices, integration layers, and engineering context for the teams who built each product. Written for technical audiences — founders, CTOs, and engineering leads evaluating what we're capable of.</p>
+    </div>
+  </section>
+
+  <!-- Grid -->
+  <section class="proj-grid-section">
+    <div class="container">
+      <div class="proj-grid">
+
+        <!-- eMushrif -->
+        <a class="proj-card" href="/projects/emushrif.html">
+          <div class="proj-card-top">
+            <div class="proj-card-identity">
+              <div class="proj-card-icon">
+                <img src="/assets/emushrif/icon.webp" alt="eMushrif">
+              </div>
+              <div>
+                <div class="proj-card-name">eMushrif</div>
+                <div class="proj-card-domain">EdTech · IoT · Real-time</div>
+              </div>
+            </div>
+            <span class="proj-card-badge">6+ years</span>
+          </div>
+
+          <p class="proj-card-summary">Real-time school bus tracking platform for 150K+ students across Oman and Kuwait. Cross-platform Flutter mobile apps (migrated from React Native), Angular admin dashboard, Node.js backend with WebSocket GPS streaming, and full IoT hardware integration via MQTT.</p>
+
+          <div class="proj-icon-row">
+            <span class="proj-icon-pill"><i class="devicon-nodejs-plain colored"></i>Node.js</span>
+            <span class="proj-icon-pill"><svg width="14" height="14" viewBox="0 0 128 128" fill="none" style="flex-shrink:0"><path d="M126.67 0H1.33C.6 0 0 .6 0 1.33v125.34C0 127.4.6 128 1.33 128H126.67c.73 0 1.33-.6 1.33-1.33V1.33C128 .6 127.4 0 126.67 0Z" fill="#000"/><path d="M27.83 70.72c.11 11.05 9.08 17.82 19.45 17.82 7.35 0 13.36-2.82 17.54-8.36l7.56 5.45c-6.01 8.25-15.62 13.25-25.54 13.25C30.23 98.88 17 87.61 17 69.57c0-17.31 12.37-29.46 29.14-29.46 16.56 0 27.62 11.28 27.62 28.47 0 .78-.11 2.14-.11 2.14H27.83Zm35.52-9.82C61.5 52.13 55.49 47.1 46.3 47.1c-8.93 0-15.83 5.13-17.97 13.8h34.82Z" fill="#fff"/><path d="M95.28 98.88c-8.46 0-14.69-3.71-18.65-9.49l7.67-6.01c2.91 4.18 6.9 6.56 11.2 6.56 4.62 0 7.67-2.27 7.67-5.67 0-3.71-2.82-5.34-9.6-7.35-9.04-2.6-16.39-6.12-16.39-16.28 0-9.82 7.89-15.72 18.32-15.72 7.24 0 13.25 3.04 17.31 8.46l-7.13 5.89c-2.71-3.71-5.89-5.45-10.07-5.45-4.07 0-6.9 2.04-6.9 5.02 0 3.49 2.71 4.73 9.71 6.79 9.71 2.82 16.61 6.45 16.61 16.72 0 10.49-8.57 16.53-19.75 16.53Z" fill="#fff"/></svg>Express</span>
+            <span class="proj-icon-pill"><i class="devicon-angularjs-plain colored"></i>Angular</span>
+            <span class="proj-icon-pill"><i class="devicon-flutter-plain colored"></i>Flutter</span>
+            <span class="proj-icon-pill"><i class="devicon-dart-plain colored"></i>Dart</span>
+            <span class="proj-icon-pill"><i class="devicon-mongodb-plain colored"></i>MongoDB</span>
+            <span class="proj-icon-pill"><i class="devicon-firebase-plain colored"></i>Firebase</span>
+            <span class="proj-icon-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink:0"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#34A853"/><circle cx="12" cy="9" r="2.5" fill="#fff"/></svg>Maps SDK</span>
+          </div>
+
+          <div class="proj-card-metrics">
+            <div class="proj-metric">
+              <span class="proj-metric-val">150K+</span>
+              <span class="proj-metric-label">Students tracked / day</span>
+            </div>
+            <div class="proj-metric">
+              <span class="proj-metric-val">$10.8M</span>
+              <span class="proj-metric-label">Total raised</span>
+            </div>
+            <div class="proj-metric">
+              <span class="proj-metric-val">10</span>
+              <span class="proj-metric-label">TBox engineers (peak)</span>
+            </div>
+          </div>
+
+          <div class="proj-card-cta">
+            <span class="proj-view-link">View architecture &rarr;</span>
+          </div>
+        </a>
+
+        <!-- Impause -->
+        <a class="proj-card" href="/projects/impause.html">
+          <div class="proj-card-top">
+            <div class="proj-card-identity">
+              <div class="proj-card-icon">
+                <img src="/assets/impause/icon.webp" alt="Impause">
+              </div>
+              <div>
+                <div class="proj-card-name">Impause</div>
+                <div class="proj-card-domain">FinTech · AI · Consumer</div>
+              </div>
+            </div>
+            <span class="proj-card-badge">&lt; 6 months</span>
+          </div>
+
+          <p class="proj-card-summary">AI-powered behavioral finance app backed by Harvard &amp; MIT research. Cross-platform React Native Expo frontend, Supabase backend with row-level security and edge functions, Plaid financial data integration, and an AI behavioral engine that learns individual spending patterns.</p>
+
+          <div class="proj-icon-row">
+            <span class="proj-icon-pill"><i class="devicon-react-original colored"></i>React Native</span>
+            <span class="proj-icon-pill"><i class="devicon-typescript-plain colored"></i>TypeScript</span>
+            <span class="proj-icon-pill"><i class="devicon-postgresql-plain colored"></i>PostgreSQL</span>
+            <span class="proj-icon-pill"><i class="devicon-javascript-plain colored"></i>Expo</span>
+            <span class="proj-icon-pill"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/></svg>OpenAI</span>
+          </div>
+
+          <div class="proj-card-metrics">
+            <div class="proj-metric">
+              <span class="proj-metric-val">1 codebase</span>
+              <span class="proj-metric-label">iOS + Android</span>
+            </div>
+            <div class="proj-metric">
+              <span class="proj-metric-val">&lt; 6 mo</span>
+              <span class="proj-metric-label">Concept to App Store</span>
+            </div>
+            <div class="proj-metric">
+              <span class="proj-metric-val">100%</span>
+              <span class="proj-metric-label">Stack ownership</span>
+            </div>
+          </div>
+
+          <div class="proj-card-cta">
+            <span class="proj-view-link">View architecture &rarr;</span>
+          </div>
+        </a>
+
+        <!-- Spendlio -->
+        <a class="proj-card" href="/projects/spendlio.html">
+          <div class="proj-card-top">
+            <div class="proj-card-identity">
+              <div class="proj-card-icon">
+                <img src="/assets/spendlio/icon.webp" alt="Spendlio">
+              </div>
+              <div>
+                <div class="proj-card-name">Spendlio</div>
+                <div class="proj-card-domain">FinTech · Native iOS · Offline-first</div>
+              </div>
+            </div>
+            <span class="proj-card-badge">In-house product</span>
+          </div>
+
+          <p class="proj-card-summary">TBox's own expense-tracking app, built natively in Swift with a fully offline-first architecture. Core Data local persistence, StoreKit 2 for in-app purchases, on-device OCR for receipt scanning, voice input, and zero backend dependency — all data stays on device.</p>
+
+          <div class="proj-icon-row">
+            <span class="proj-icon-pill"><i class="devicon-swift-plain colored"></i>Swift</span>
+            <span class="proj-icon-pill"><i class="devicon-apple-original"></i>SwiftUI</span>
+            <span class="proj-icon-pill"><i class="devicon-apple-original"></i>Core Data</span>
+            <span class="proj-icon-pill"><i class="devicon-apple-original"></i>StoreKit 2</span>
+            <span class="proj-icon-pill"><i class="devicon-apple-original"></i>Vision OCR</span>
+          </div>
+
+          <div class="proj-card-metrics">
+            <div class="proj-metric">
+              <span class="proj-metric-val">0</span>
+              <span class="proj-metric-label">Backend dependencies</span>
+            </div>
+            <div class="proj-metric">
+              <span class="proj-metric-val">100%</span>
+              <span class="proj-metric-label">On-device storage</span>
+            </div>
+            <div class="proj-metric">
+              <span class="proj-metric-val">Live</span>
+              <span class="proj-metric-label">App Store</span>
+            </div>
+          </div>
+
+          <div class="proj-card-cta">
+            <span class="proj-view-link">View architecture &rarr;</span>
+          </div>
+        </a>
+
+        <!-- BetterBack -->
+        <a class="proj-card" href="/projects/betterback.html">
+          <div class="proj-card-top">
+            <div class="proj-card-identity">
+              <div class="proj-card-icon">
+                <img src="/assets/betterback/icon.webp" alt="BetterBack">
+              </div>
+              <div>
+                <div class="proj-card-name">BetterBack</div>
+                <div class="proj-card-domain">HealthTech · DTC E-commerce</div>
+              </div>
+            </div>
+            <span class="proj-card-badge">Shark Tank</span>
+          </div>
+
+          <p class="proj-card-summary">Full DTC commerce stack for a $1.65M Kickstarter-funded posture device. Custom Shopify Zest theme, Klaviyo email &amp; SMS lifecycle automation, Recharge subscriptions, Google Analytics 4 + Meta Pixel attribution pipeline, and performance-optimized asset delivery via Shopify CDN.</p>
+
+          <div class="proj-icon-row">
+            <span class="proj-icon-pill"><svg width="16" height="16" viewBox="0 0 24 24" fill="#96BF48"><path d="M15.337 23.979l7.216-1.561s-2.604-17.613-2.625-17.73c-.018-.116-.114-.192-.211-.192s-1.929-.136-1.929-.136-1.275-1.274-1.439-1.411c-.045-.037-.075-.057-.121-.074l-.914 21.104h.023zM11.71 11.305s-.81-.424-1.774-.424c-1.447 0-1.504.906-1.504 1.141 0 1.232 3.24 1.715 3.24 4.629 0 2.295-1.44 3.76-3.406 3.76-2.354 0-3.54-1.465-3.54-1.465l.646-2.086s1.245 1.066 2.28 1.066c.675 0 .975-.545.975-.932 0-1.619-2.654-1.694-2.654-4.359-.034-2.237 1.571-4.416 4.827-4.416 1.257 0 1.875.361 1.875.361l-.945 2.715-.02.01zM11.17.83c.136 0 .271.038.405.135-.984.465-2.064 1.639-2.508 3.992-.656.213-1.293.405-1.889.578C7.697 3.75 8.951.84 11.17.84V.83zm1.235 2.949v.135c-.754.232-1.583.484-2.394.736.466-1.777 1.333-2.645 2.085-2.971.193.501.309 1.176.309 2.1zm.539-2.234c.694.074 1.141.867 1.429 1.755-.349.114-.735.231-1.158.366v-.252c0-.752-.096-1.371-.271-1.871v.002zm2.992 1.289c-.02 0-.06.021-.078.021s-.289.075-.714.21c-.423-1.233-1.176-2.37-2.508-2.37h-.115C12.135.209 11.669 0 11.265 0 8.159 0 6.675 3.877 6.21 5.846c-1.194.365-2.063.636-2.16.674-.675.213-.694.232-.772.87-.075.462-1.83 14.063-1.83 14.063L15.009 24l.927-21.166z"/></svg>Shopify</span>
+            <span class="proj-icon-pill"><i class="devicon-javascript-plain colored"></i>JavaScript</span>
+            <span class="proj-icon-pill"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color:#E8710A;flex-shrink:0"><rect x="1" y="13" width="4" height="9" rx="1"/><rect x="9" y="7" width="4" height="15" rx="1"/><rect x="17" y="3" width="4" height="19" rx="1"/></svg>Analytics 4</span>
+            <span class="proj-icon-pill"><i class="devicon-css3-plain colored"></i>Liquid</span>
+          </div>
+
+          <div class="proj-card-metrics">
+            <div class="proj-metric">
+              <span class="proj-metric-val">125K+</span>
+              <span class="proj-metric-label">Customers</span>
+            </div>
+            <div class="proj-metric">
+              <span class="proj-metric-val">115</span>
+              <span class="proj-metric-label">Countries served</span>
+            </div>
+            <div class="proj-metric">
+              <span class="proj-metric-val">$1.65M</span>
+              <span class="proj-metric-label">Kickstarter raised</span>
+            </div>
+          </div>
+
+          <div class="proj-card-cta">
+            <span class="proj-view-link">View architecture &rarr;</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+  <script src="/js/components.js" defer></script>
+</body>
+</html>
