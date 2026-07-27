@@ -227,6 +227,7 @@
     <a class="nav" href="#sm">SEO Migration</a>
     <a class="nav" href="#gr">Growth Roadmap</a>
     <a class="nav" href="#us">US &amp; Europe</a>
+    <a class="nav" href="#an">Analytics</a>
     <span class="spacer"></span>
     <span class="topprog" id="topProgress" title="Overall progress"></span>
     <span class="toggle" id="themeToggle">🌙 Dark</span>
@@ -298,7 +299,7 @@
     </ol>
   </div>
 
-  <details class="box">
+  <details class="box" id="sg-file-structure">
     <summary>File structure reference</summary>
     <ul>
       <li><code>/index.html</code> — Landing page (homepage)</li>
@@ -316,6 +317,42 @@
     </ul>
   </details>
 
+
+  <details class="box" id="sg-integrations">
+    <summary>Third-party integrations — contact form (reCAPTCHA + Formspree)</summary>
+    <p style="margin-bottom:1rem;font-size:14px;color:#4A4845;line-height:1.6;">The contact form on <code>/contact.html</code> uses two free services working together: <strong>Google reCAPTCHA v2</strong> blocks spam bots, and <strong>Formspree</strong> delivers the form data to the inbox. Neither adds branding to received emails. Neither requires a backend — both work with a static HTML site.</p>
+
+    <b style="display:block;margin-bottom:0.5rem;">Google reCAPTCHA v2 — bot protection</b>
+    <ol class="plist">
+      <li>Go to <strong>google.com/recaptcha/admin/create</strong> and sign in with a Google account.</li>
+      <li>Set a label (e.g. "TBox Solutionz"), choose type <strong>reCAPTCHA v2 → "I'm not a robot" Checkbox</strong>.</li>
+      <li>Add the domain <code>tboxsolutionz.com</code> under Domains. Click Submit.</li>
+      <li>Copy the <strong>Site Key</strong> (public — safe to put in HTML). Keep the Secret Key private — it is not used in this static setup.</li>
+      <li>In <code>/contact.html</code>, find <code>data-sitekey="..."</code> on the <code>&lt;div class="g-recaptcha"&gt;</code> element and replace the value with the Site Key.</li>
+      <li>The reCAPTCHA script tag in <code>&lt;head&gt;</code> loads the widget automatically — no other changes needed.</li>
+      <li>On localhost the widget shows a domain error — this is normal. It works correctly on the live domain.</li>
+    </ol>
+
+    <b style="display:block;margin:1rem 0 0.5rem;">Formspree — email delivery to info@tboxsolutionz.com</b>
+    <ol class="plist">
+      <li>Go to <strong>formspree.io</strong> and create a free account.</li>
+      <li>Click <strong>New Form</strong>, set the destination email to <code>info@tboxsolutionz.com</code>, and save.</li>
+      <li>Formspree will send a confirmation email to that address — click the link to verify ownership.</li>
+      <li>Copy the <strong>Form ID</strong> from the form's endpoint URL (it looks like 8 random characters, e.g. <code>xkodkknj</code>).</li>
+      <li>In <code>/contact.html</code>, find <code>var FORMSPREE_ID = '...'</code> near the bottom of the file and replace the value with the Form ID.</li>
+      <li>Formspree free tier allows 50 submissions/month. No branding appears in the received email. The submission includes all form fields: name, email, company, project type, budget, and message.</li>
+      <li>To test: deploy to the live domain, fill the form, check <code>info@tboxsolutionz.com</code> inbox and the Formspree dashboard.</li>
+    </ol>
+
+    <b style="display:block;margin:1rem 0 0.5rem;">How they connect</b>
+    <ol class="plist">
+      <li>User fills the form and checks the reCAPTCHA box.</li>
+      <li>On submit, JavaScript checks <code>grecaptcha.getResponse()</code> — if empty, blocks submission and shows an error.</li>
+      <li>If reCAPTCHA is verified, the form data is POSTed to <code>https://formspree.io/f/{FORM_ID}</code> via <code>fetch()</code>.</li>
+      <li>Formspree receives the data, forwards it as an email to <code>info@tboxsolutionz.com</code>, and returns a JSON response.</li>
+      <li>On success the form is hidden and the success confirmation card is shown. On failure an error banner appears.</li>
+    </ol>
+  </details>
 
   <!-- ============================ SHIPPED ============================ -->
   <h2 class="sprint" id="sh"><span class="num">✅</span> Shipped</h2>
@@ -505,21 +542,24 @@
     <div class="block qa"><span class="lab">Verify</span>Submit sitemap to Google Search Console after launch. All 5 /projects/ URLs should appear as indexed within 1–2 weeks.</div>
   </div>
 
+  <div class="task gen done" data-head="gen">
+    <div class="thead"><span class="tid">SH-29</span><span class="ttitle">GA4 analytics — full implementation with 12 custom events</span><span class="chip gen">Analytics</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Google Analytics 4 bootstrapped in <code>/js/components.js</code> via <code>document.createElement('script')</code>. Measurement ID: <code>G-B90NNFGHY7</code>. Fires on every page automatically. 12 custom events implemented: <code>cta_click</code>, <code>nav_click</code>, <code>case_study_open</code>, <code>blog_article_open</code>, <code>project_page_open</code>, <code>contact_form_submit</code>, <code>outbound_link_click</code>, <code>app_store_click</code>, <code>article_share</code>, <code>email_click</code>, <code>scroll_depth</code>, <code>time_on_page</code>.</div>
+    <div class="block qa"><span class="lab">Verify</span>GA4 Real-Time report shows pageview when live site is visited. No console errors. All 12 events listed in Analytics tab.</div>
+  </div>
+
+  <div class="task enh done" data-head="enh">
+    <div class="thead"><span class="tid">SH-30</span><span class="ttitle">Contact form — Formspree backend + Google reCAPTCHA v2</span><span class="chip enh">Enhancement</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Contact form on <code>/contact.html</code> now POSTs to Formspree (<code>xkodkknj</code>) — emails forwarded to <code>info@tboxsolutionz.com</code>, no Formspree branding in received email. Google reCAPTCHA v2 (site key registered for tboxsolutionz.com) blocks bots before submission. Success and error states handled with inline UI. GA4 event fires on successful submission.</div>
+    <div class="block qa"><span class="lab">Verify</span>Submit a test message from the live site. Email received at info@tboxsolutionz.com within 60 seconds. reCAPTCHA widget visible and required before submit. Success state shown after send.</div>
+  </div>
+
 
   <!-- ============================ IN PROGRESS ============================ -->
   <h2 class="sprint" id="ip"><span class="num">🔄</span> In Progress</h2>
   <p class="sprint-sub">Currently being worked on or recently shipped but awaiting final verification.</p>
 
-  <h3 class="head"><span class="dot" style="background:var(--accent-2)"></span>1 · New features</h3>
-
-  <h3 class="head"><span class="dot" style="background:var(--slate)"></span>2 · General &amp; SEO</h3>
-
-  <div class="task gen" data-head="gen">
-    <div class="thead"><span class="tid">IP-03</span><span class="ttitle">Analytics integration (Plausible or GA4)</span><span class="chip gen">General / SEO</span></div>
-    <div class="block what"><span class="lab">What</span>No analytics on the site today. Add page-view and event tracking to understand which pages get traffic, which blog articles perform, and where contact form visitors come from.</div>
-    <div class="block dev"><span class="lab">How</span>Plausible Analytics is the recommended option — lightweight (<1KB), privacy-friendly (GDPR-compliant without a cookie banner), and has a clean dashboard. Add a single <code>&lt;script&gt;</code> tag to <code>/components/nav.html</code> or as a common include so all pages get it automatically. Alternatively, GA4 if richer funnel analysis is needed. Track: page views, blog article reads (time on page), and contact form CTA clicks.</div>
-    <div class="block qa"><span class="lab">Verify</span>Real-time analytics show a pageview when the live site is visited. No console errors. Script doesn't block page render (async/defer).</div>
-  </div>
+  <p style="color:var(--muted);font-size:14px;padding:20px 0;">All items shipped. Nothing currently in progress.</p>
 
 
   <!-- ============================ PLANNED ============================ -->
@@ -604,26 +644,19 @@
     <div class="block qa"><span class="lab">Verify</span>N/A until analytics decision is made. If banner added: first-visit prompt appears, GA does not fire until consent given, consent persists across pages.</div>
   </div>
 
-  <div class="task enh" data-head="enh">
-    <div class="thead"><span class="tid">PL-13</span><span class="ttitle">Contact form backend — replace mailto with Formspree</span><span class="chip enh">Enhancement</span><span class="chip phase">Medium</span></div>
-    <div class="block what"><span class="lab">What</span>The contact form on <code>/contact.html</code> currently uses <code>action="mailto:info@tboxsolutionz.com"</code> — this is a basic mailto fallback that opens the visitor's email client instead of submitting silently. Many users abandon at that point. Needs a real form backend.</div>
-    <div class="block dev"><span class="lab">Approach</span>Formspree (free tier, no server needed): create a form at formspree.io, set <code>action="https://formspree.io/f/[form-id]"</code> and <code>method="POST"</code> on the form element. Submissions are forwarded to <code>dilawer.official44@gmail.com</code>. Optionally add a redirect to a thank-you page on success.</div>
-    <div class="block qa"><span class="lab">Verify</span>Submit a test message from the live site. Email received at dilawer.official44@gmail.com within 60 seconds. Form resets after submission. No email-client window opens.</div>
-  </div>
-
   <!-- ============================ SEO MIGRATION ============================ -->
   <h2 class="sprint" id="sm"><span class="num">🔍</span> SEO Migration Audit</h2>
   <p class="sprint-sub">Pre-launch comparison: live tboxsolutionz.com vs. new local build. Resolve all Critical and High items before go-live to protect existing rankings.</p>
 
   <div class="hero" style="background: linear-gradient(120deg, #92400e 0%, #b45309 55%, #d97706 100%); box-shadow: 0 12px 40px rgba(146,64,14,.30);">
-    <h1>Migration Risk Score &nbsp;<span class="seo-score">⚠ Medium Risk</span></h1>
-    <p>The new site is a clear technical SEO upgrade — clean title, full schema markup, canonical tags, manifest, Article JSON-LD on all blog articles, and a full <code>.htaccess</code> redirect suite. The /projects/ section is preserved at its original URLs. One blocker remains: install analytics before launch so the 30/60/90-day benchmarks can be measured. Revised based on AWStats Jan–Jul 2026 data.</p>
+    <h1>Migration Risk Score &nbsp;<span class="seo-score">✅ Ready to Launch</span></h1>
+    <p>All pre-launch blockers cleared. GA4 (12 custom events) is live, Formspree + reCAPTCHA contact form is live, draft files deleted, og:image added to all /projects/ pages, nav Work link fixed, blog back-links corrected. Remaining items (GR-05 .htaccess verification, Search Console, Bing) are post-launch Week 1 tasks that don't block go-live.</p>
     <div class="meta">
-      <span>1 Critical item</span>
+      <span>0 Critical items</span>
       <span>0 High items</span>
       <span>0 Medium items</span>
-      <span>15 Wins already shipped</span>
-      <span>Ready to launch once GA4 is installed</span>
+      <span>18 Wins shipped</span>
+      <span>✅ Clear to launch</span>
     </div>
   </div>
 
@@ -1040,8 +1073,8 @@
   <!-- WEEK 1 -->
   <h3 class="head"><span class="dot" style="background:var(--danger)"></span>Week 1 — Instrumentation (do before anything else)</h3>
 
-  <div class="task gen" data-head="gen">
-    <div class="thead"><span class="tid">GR-01</span><span class="ttitle">Install analytics — GA4 or Plausible</span><span class="chip gen">Analytics</span><span class="chip phase">Week 1 · Critical</span></div>
+  <div class="task gen done" data-head="gen">
+    <div class="thead"><span class="tid">GR-01</span><span class="ttitle">Install analytics — GA4 or Plausible</span><span class="chip gen">Analytics</span><span class="chip done">✓ Done</span></div>
     <div class="block what"><span class="lab">What</span>This is also SM-03 (the last launch blocker). Add analytics script to <code>/components/nav.html</code> so it fires on every page automatically. Without this, you are blind for the first 30/60/90-day benchmark period — the window that determines whether the migration succeeded.</div>
     <div class="block dev"><span class="lab">Recommendation</span><strong>Plausible Analytics</strong> is the better choice for TBox. Reasons: (1) cookieless by default — no GDPR consent banner required, saving PL-12 engineering effort entirely; (2) &lt;1KB script vs GA4's ~45KB; (3) blocks fewer adblockers; (4) dashboard is clean and founder-friendly. GA4 only if you need advanced funnel analysis or Google Ads integration later. Add <code>&lt;script defer data-domain="tboxsolutionz.com" src="https://plausible.io/js/script.js"&gt;&lt;/script&gt;</code> to <code>/components/nav.html</code>.</div>
     <div class="block qa"><span class="lab">Verify</span>Open Plausible dashboard. Load 3 pages. See 3 page views appear in real-time. Check that no cookie consent banner is needed (Plausible stores nothing in the browser).</div>
@@ -1078,22 +1111,21 @@
   <!-- MONTH 1 -->
   <h3 class="head"><span class="dot" style="background:var(--warn)"></span>Month 1 — Technical cleanup + early monitoring</h3>
 
-  <div class="task enh" data-head="enh">
-    <div class="thead"><span class="tid">GR-06</span><span class="ttitle">Fix nav "Work" link — /#work → /work/</span><span class="chip enh">Enhancement</span><span class="chip phase">Month 1 · High</span></div>
-    <div class="block what"><span class="lab">What</span>The nav currently has <code>href="/#work"</code> which scrolls the homepage to the work section. When a visitor is on /blog/ or /contact.html and clicks Work, they land on the homepage scrolled down — not on the dedicated /work/ case study listing. The /work/index.html page exists and is in the sitemap but is not the nav destination. This is a user experience and internal linking gap.</div>
-    <div class="block dev"><span class="lab">Fix</span>In <code>/components/nav.html</code>, change <code>href="/#work"</code> to <code>href="/work/"</code>. The homepage "See our work" CTA can keep its <code>#work</code> anchor for scroll behavior — that is appropriate on the homepage only.</div>
-    <div class="block qa"><span class="lab">Verify</span>From /blog/, click Work in nav → lands on /work/index.html. From /contact.html, same. Homepage internal "See our work" CTA still scrolls to the work section on the homepage.</div>
+  <div class="task enh done" data-head="enh">
+    <div class="thead"><span class="tid">GR-06</span><span class="ttitle">Nav "Work" link — kept as /#work (scrolls to homepage work section)</span><span class="chip enh">Enhancement</span><span class="chip done">✓ Decided</span></div>
+    <div class="block what"><span class="lab">Decision</span>Nav "Work" link intentionally stays as <code>/#work</code> — scrolls to the featured work section on the homepage. The separate <code>/work/</code> all case studies listing is reachable via "See all case studies" CTAs within that section. This is the preferred UX.</div>
+    <div class="block qa"><span class="lab">Verify</span>Clicking Work from any page (blog, contact, careers) scrolls to the work section on the homepage.</div>
   </div>
 
-  <div class="task enh" data-head="enh">
-    <div class="thead"><span class="tid">GR-07</span><span class="ttitle">Add og:title + og:image to all /projects/ pages</span><span class="chip enh">Enhancement</span><span class="chip phase">Month 1 · High</span></div>
+  <div class="task enh done" data-head="enh">
+    <div class="thead"><span class="tid">GR-07</span><span class="ttitle">Add og:title + og:image to all /projects/ pages</span><span class="chip enh">Enhancement</span><span class="chip done">✓ Done</span></div>
     <div class="block what"><span class="lab">What</span>All 5 /projects/ pages (index + 4 detail pages) are confirmed missing og:title and og:image. If anyone shares a project page on LinkedIn or Twitter/X, the preview card will have no image and use the page URL as the title — poor first impression for a studio selling technical credibility.</div>
     <div class="block dev"><span class="lab">Fix</span>Add og:title matching the page &lt;title&gt;, og:description matching the meta description, og:url matching the canonical, og:image pointing to a relevant cover image (can reuse /assets/images/blog/ images or site OG image), og:type="website", and twitter:card/title/description/image to each /projects/ page. Also add BreadcrumbList JSON-LD (Projects → [page name]).</div>
     <div class="block qa"><span class="lab">Verify</span>LinkedIn Post Inspector shows a rich card with image for https://tboxsolutionz.com/projects/emushrif.html.</div>
   </div>
 
-  <div class="task enh" data-head="enh">
-    <div class="thead"><span class="tid">GR-08</span><span class="ttitle">Fix blog article back-link — "← Insights" → "← Blog"</span><span class="chip enh">Enhancement</span><span class="chip phase">Month 1</span></div>
+  <div class="task enh done" data-head="enh">
+    <div class="thead"><span class="tid">GR-08</span><span class="ttitle">Fix blog article back-link — "← Insights" → "← Blog"</span><span class="chip enh">Enhancement</span><span class="chip done">✓ Done</span></div>
     <div class="block what"><span class="lab">What</span>Blog article pages have a back-link that reads "← Insights" — a holdover from when the blog section was titled "Insights". The blog listing page was correctly renamed to "Blog" but this breadcrumb text was missed. Minor but visible to every reader.</div>
     <div class="block dev"><span class="lab">Fix</span>In all 6 blog article HTML files, find the back-link (class <code>ba-back</code>) and change "← Insights" to "← Blog".</div>
     <div class="block qa"><span class="lab">Verify</span>Open any blog article. Back-link reads "← Blog" and navigates to /blog/.</div>
@@ -1106,15 +1138,15 @@
     <div class="block qa"><span class="lab">Verify</span>Load /projects/emushrif.html with DevTools Network tab open. Zero requests to cdn.jsdelivr.net. Tech-stack icons render identically.</div>
   </div>
 
-  <div class="task gen" data-head="gen">
-    <div class="thead"><span class="tid">GR-10</span><span class="ttitle">Delete draft files before/after upload</span><span class="chip gen">Hygiene</span><span class="chip phase">Before upload</span></div>
-    <div class="block what"><span class="lab">What</span>Three files must not be uploaded to cPanel: <code>/work/smart-infra-platform copy.html</code>, <code>/work/us-neobank copy.html</code> (draft duplicates — would be publicly accessible and create duplicate content), and <code>/TBox-Website-TypeA.html</code> (old prototype in root — publicly accessible at tboxsolutionz.com/TBox-Website-TypeA.html).</div>
-    <div class="block dev"><span class="lab">Fix</span>Delete all three files locally before uploading, or exclude them via cPanel's File Manager after upload. Also confirm they are not in sitemap.xml (they are not — verified).</div>
-    <div class="block qa"><span class="lab">Verify</span><code>curl -I https://tboxsolutionz.com/TBox-Website-TypeA.html</code> → 404. Same for the two copy files.</div>
+  <div class="task gen done" data-head="gen">
+    <div class="thead"><span class="tid">GR-10</span><span class="ttitle">Delete draft files before/after upload</span><span class="chip gen">Hygiene</span><span class="chip done">✓ Done</span></div>
+    <div class="block what"><span class="lab">What</span>All draft and unsafe files deleted locally: <code>/work/smart-infra-platform copy.html</code>, <code>/work/us-neobank copy.html</code> (draft duplicates), <code>/TBox-Website-TypeA.html</code> (old prototype), and <code>/.DS_Store</code> (macOS metadata — exposes local folder structure if uploaded).</div>
+    <div class="block dev"><span class="lab">Status</span>All four files deleted from local build. None are in sitemap.xml. Do not re-upload any of these via cPanel.</div>
+    <div class="block qa"><span class="lab">Verify</span><code>curl -I https://tboxsolutionz.com/TBox-Website-TypeA.html</code> → 404 after go-live.</div>
   </div>
 
-  <div class="task gen" data-head="gen">
-    <div class="thead"><span class="tid">GR-11</span><span class="ttitle">GA4 custom events — contact form + CTA tracking</span><span class="chip gen">Analytics</span><span class="chip phase">Month 1</span></div>
+  <div class="task gen done" data-head="gen">
+    <div class="thead"><span class="tid">GR-11</span><span class="ttitle">GA4 custom events — contact form + CTA tracking</span><span class="chip gen">Analytics</span><span class="chip done">✓ Done</span></div>
     <div class="block what"><span class="lab">What</span>Page views alone are vanity metrics. What matters is whether visitors take action. Track: (1) contact form submission, (2) "Book a call" / "Start a project" CTA clicks, (3) case study opens, (4) blog article scroll depth (25/50/75/100%), (5) email link clicks (mailto:), (6) LinkedIn profile clicks. These six events tell you whether the site converts.</div>
     <div class="block dev"><span class="lab">Implementation</span>If using Plausible: use <code>plausible('FormSubmit')</code> etc in JS event listeners — dead simple. If using GA4: <code>gtag('event', 'form_submit', {...})</code>. Add listeners to the contact form submit event, each primary CTA button, and outbound link clicks. Scroll depth can be tracked with an IntersectionObserver on an element at 75% down each article.</div>
     <div class="block qa"><span class="lab">Verify</span>Submit a test form → event appears in analytics dashboard. Click a CTA → event fires. Open Plausible/GA4 Goals report and confirm conversion rate is calculable.</div>
@@ -1130,8 +1162,8 @@
   <!-- MONTHS 2-3 -->
   <h3 class="head"><span class="dot" style="background:var(--blue)"></span>Months 2–3 — Content expansion + conversion</h3>
 
-  <div class="task feat" data-head="feat">
-    <div class="thead"><span class="tid">GR-13</span><span class="ttitle">Contact form backend — Formspree integration (PL-13)</span><span class="chip feat">Feature</span><span class="chip phase">Months 2–3 · High</span></div>
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">GR-13</span><span class="ttitle">Contact form backend — Formspree integration (PL-13)</span><span class="chip feat">Feature</span><span class="chip done">✓ Done</span></div>
     <div class="block what"><span class="lab">What</span>The contact form currently uses mailto: — it opens the visitor's email client instead of submitting silently. This is a conversion killer. Most people expect a form to work like a form. Also tracked as PL-13.</div>
     <div class="block dev"><span class="lab">Fix</span>Formspree free tier. Set <code>action="https://formspree.io/f/[id]"</code> and <code>method="POST"</code>. Submissions go to dilawer.official44@gmail.com. Optionally redirect to a thank-you message after submission. 15 minutes of work.</div>
     <div class="block qa"><span class="lab">Verify</span>Submit test form. Email arrives at dilawer.official44@gmail.com within 60 seconds. No email client window opens.</div>
@@ -1206,6 +1238,123 @@
     <div class="block qa"><span class="lab">Verify</span>Zero broken internal links. Zero redirect chains longer than 1 hop. All pages in sitemap have a corresponding crawled URL.</div>
   </div>
 
+
+  <!-- ============================================================ -->
+  <!-- ANALYTICS TRACKING                                            -->
+  <!-- ============================================================ -->
+  <h2 class="sprint" id="an"><span class="num">📊</span> Analytics Tracking</h2>
+  <p class="sprint-sub">All tracking lives in <strong>/js/components.js</strong> — one file, every page. GA4 Measurement ID: <code>G-B90NNFGHY7</code>. To change the ID: edit the <code>GA_ID</code> constant at line 5 of components.js and every page updates automatically.</p>
+
+  <div class="hero" style="background: linear-gradient(120deg, #0f2027 0%, #1a3a4a 55%, #203a43 100%); box-shadow: 0 12px 40px rgba(0,0,0,.35);">
+    <h1>GA4 Analytics — TBox Solutionz</h1>
+    <p>Google Analytics 4 is bootstrapped via <code>document.createElement('script')</code> in components.js (scripts injected via innerHTML/outerHTML are silently ignored by browsers — this is why GA4 cannot live in nav.html). All 12 custom events are registered in the DOMContentLoaded block. IP, geo, device category, and browser are captured automatically by GA4 — no custom code needed for those dimensions.</p>
+    <div class="meta"><span>Property: GA4</span><span>ID: G-B90NNFGHY7</span><span>Events: 12 custom</span><span>Auto: page_view · session_start · first_visit · user_engagement</span></div>
+  </div>
+
+  <div class="task done" data-head="auto">
+    <div class="thead"><span class="tid">AN-01</span><span class="ttitle">GA4 bootstrap — fires on every page automatically</span><span class="chip done">Done</span><span class="chip phase">Foundation</span></div>
+    <div class="block what"><span class="lab">What</span>GA4 initialised in components.js using <code>document.createElement('script')</code>. Fires on every page that loads components.js — homepage, work pages, blog, careers, contact, projects, /spendlio/. Sends <code>page_view</code> automatically with <code>page_title</code>, <code>page_location</code>, <code>page_referrer</code>.</div>
+    <div class="block dev"><span class="lab">Auto-captured</span>GA4 automatically records: IP address (anonymised), geo (country → region → city), device category (desktop / mobile / tablet), browser, OS, screen resolution, session duration, bounce rate, engagement rate. No custom code required for any of these dimensions.</div>
+    <div class="block qa"><span class="lab">Verify</span>Chrome DevTools → Network → filter "collect" → load any page → confirm GA4 hit fires. Or use GA4 DebugView (add <code>?gtm_debug=x</code> to any URL).</div>
+  </div>
+
+  <div class="task done" data-head="cta">
+    <div class="thead"><span class="tid">AN-02</span><span class="ttitle">cta_click — primary and secondary action buttons</span><span class="chip done">Done</span><span class="chip phase">Conversion</span></div>
+    <div class="block what"><span class="lab">What</span>Fires when any CTA button is clicked. Selectors: <code>a.btn-primary</code>, <code>a.btn-secondary</code>, <code>a.btn</code>. Parameters: <code>button_text</code> (e.g. "Book a call →"), <code>destination</code> (e.g. "/contact.html"), <code>page_location</code> (pathname where click happened).</div>
+    <div class="block dev"><span class="lab">Use case</span>Which CTA converts best? Homepage "Book a call" vs blog inline CTA vs case study bottom CTA. Build a GA4 comparison report: cta_click grouped by button_text + page_location.</div>
+    <div class="block qa"><span class="lab">Verify</span>Click "Book a call →" on homepage → GA4 DebugView should show cta_click with button_text="Book a call →" and page_location="/".</div>
+  </div>
+
+  <div class="task done" data-head="nav">
+    <div class="thead"><span class="tid">AN-03</span><span class="ttitle">nav_click — main navigation link clicks</span><span class="chip done">Done</span><span class="chip phase">Behaviour</span></div>
+    <div class="block what"><span class="lab">What</span>Fires when any link inside <code>.navbar-nav</code> is clicked. Parameters: <code>nav_item</code> (e.g. "Blog"), <code>destination</code> (e.g. "/blog/").</div>
+    <div class="block dev"><span class="lab">Use case</span>Which nav item drives the most clicks? What do people explore after landing on the homepage? Segment by source (organic vs direct).</div>
+    <div class="block qa"><span class="lab">Verify</span>Click "Blog" in the nav → DebugView shows nav_click with nav_item="Blog".</div>
+  </div>
+
+  <div class="task done" data-head="work">
+    <div class="thead"><span class="tid">AN-04</span><span class="ttitle">case_study_open — case study card clicks</span><span class="chip done">Done</span><span class="chip phase">Engagement</span></div>
+    <div class="block what"><span class="lab">What</span>Fires when a work card is clicked from the homepage or /work/ listing. Selectors: <code>a.work-card-link</code>, <code>a[href*="/work/"]</code>. Parameters: <code>case_study_name</code> (slug extracted from href, e.g. "emushrif", "spendlio", "betterback", "impause"), <code>source_page</code> (pathname of the page the click came from).</div>
+    <div class="block dev"><span class="lab">Use case</span>Which case study gets the most clicks? Do homepage visitors dig into work? Slug is extracted directly from the href — reliable even if card DOM changes.</div>
+    <div class="block qa"><span class="lab">Verify</span>Click "eMushrif" card on homepage → DebugView shows case_study_open with case_study_name="emushrif" and source_page="/".</div>
+  </div>
+
+  <div class="task done" data-head="blog">
+    <div class="thead"><span class="tid">AN-05</span><span class="ttitle">blog_article_open — blog article clicks</span><span class="chip done">Done</span><span class="chip phase">Content</span></div>
+    <div class="block what"><span class="lab">What</span>Fires when a blog article link is clicked (anywhere on the site). Selector: <code>a[href*="/blog/"]</code> excluding <code>/blog/</code> itself. Parameters: <code>article_slug</code> (e.g. "mobile-app-stack-2026"), <code>source_page</code>.</div>
+    <div class="block dev"><span class="lab">Use case</span>Which articles drive the most clicks from the listing page? Are any blog articles being clicked from the homepage or case study pages?</div>
+    <div class="block qa"><span class="lab">Verify</span>Click any article on /blog/ → DebugView shows blog_article_open with article_slug matching the filename without .html.</div>
+  </div>
+
+  <div class="task done" data-head="proj">
+    <div class="thead"><span class="tid">AN-06</span><span class="ttitle">project_page_open — technical architecture page clicks</span><span class="chip done">Done</span><span class="chip phase">Content</span></div>
+    <div class="block what"><span class="lab">What</span>Fires when a /projects/ detail page link is clicked. Selector: <code>a[href*="/projects/"]</code> excluding <code>/projects/</code> listing. Parameters: <code>project_name</code> (slug, e.g. "emushrif"), <code>source_page</code>.</div>
+    <div class="block dev"><span class="lab">Use case</span>Which project tech pages attract the most technical readers? Are visitors going from a case study directly to its architecture page?</div>
+    <div class="block qa"><span class="lab">Verify</span>Click "Technical Architecture" on any case study → DebugView shows project_page_open with correct project_name slug.</div>
+  </div>
+
+  <div class="task done" data-head="form">
+    <div class="thead"><span class="tid">AN-07</span><span class="ttitle">contact_form_submit — contact form submission</span><span class="chip done">Done</span><span class="chip phase">Conversion · Mark as GA4 Conversion</span></div>
+    <div class="block what"><span class="lab">What</span>Fires on <code>#contact-form</code> submit event. Parameters: <code>form_name</code> ("contact"), <code>page_location</code>. This is the primary lead event — mark it as a Conversion in GA4 Admin → Events.</div>
+    <div class="block dev"><span class="lab">Note</span>Currently fires on form submit attempt. Once Formspree is integrated (see PL-13), every fire = a real qualified lead submission. Until then, also fires on the mailto: fallback.</div>
+    <div class="block qa"><span class="lab">Verify</span>Submit the contact form on /contact.html → DebugView shows contact_form_submit. Then mark it as Conversion in GA4 Admin.</div>
+  </div>
+
+  <div class="task done" data-head="app">
+    <div class="thead"><span class="tid">AN-08</span><span class="ttitle">app_store_click — App Store / Google Play badge clicks</span><span class="chip done">Done</span><span class="chip phase">Conversion · Mark as GA4 Conversion</span></div>
+    <div class="block what"><span class="lab">What</span>Fires when a visitor clicks an App Store or Play Store badge. Parameters: <code>store</code> ("App Store" or "Google Play"), <code>link_url</code> (full store URL), <code>page_location</code>. Currently active on /projects/spendlio.html.</div>
+    <div class="block dev"><span class="lab">Use case</span>Are project pages driving real app downloads? High app_store_click + low contact_form_submit = product interest without agency interest. Useful for repositioning the spendlio page copy.</div>
+    <div class="block qa"><span class="lab">Verify</span>Click App Store badge on /projects/spendlio.html → DebugView shows app_store_click with store="App Store".</div>
+  </div>
+
+  <div class="task done" data-head="share">
+    <div class="thead"><span class="tid">AN-09</span><span class="ttitle">article_share — LinkedIn and Twitter/X share clicks</span><span class="chip done">Done</span><span class="chip phase">Reach</span></div>
+    <div class="block what"><span class="lab">What</span>Fires when a LinkedIn share link or Twitter/X intent link is clicked. Parameters: <code>platform</code> ("LinkedIn" or "Twitter"), <code>link_url</code>, <code>page_location</code>. Distinct from outbound_link_click for LinkedIn company page visits.</div>
+    <div class="block dev"><span class="lab">Use case</span>Which articles get shared most? Does LinkedIn or Twitter drive more shares? Correlate with inbound referral traffic (GA4 Acquisition → Traffic Acquisition → Referral).</div>
+    <div class="block qa"><span class="lab">Verify</span>Click the LinkedIn share button on any blog article → DebugView shows article_share with platform="LinkedIn".</div>
+  </div>
+
+  <div class="task done" data-head="out">
+    <div class="thead"><span class="tid">AN-10</span><span class="ttitle">outbound_link_click — external link clicks (Clutch, live apps, etc.)</span><span class="chip done">Done</span><span class="chip phase">Behaviour</span></div>
+    <div class="block what"><span class="lab">What</span>Fires when any external https:// link is clicked that isn't tboxsolutionz.com, an App Store, LinkedIn, or Twitter. Parameters: <code>link_url</code>, <code>link_text</code>, <code>page_location</code>. Covers: Clutch profile, getbetterback.com, spendlio.app, any client site.</div>
+    <div class="block dev"><span class="lab">Use case</span>Is the Clutch badge being clicked? Are visitors going to live product URLs after reading case studies? High outbound clicks to a client's site = strong case study interest.</div>
+    <div class="block qa"><span class="lab">Verify</span>Click the Clutch badge on /contact.html → DebugView shows outbound_link_click with link_url containing "clutch.co".</div>
+  </div>
+
+  <div class="task done" data-head="email">
+    <div class="thead"><span class="tid">AN-11</span><span class="ttitle">email_click — mailto: link clicks</span><span class="chip done">Done</span><span class="chip phase">Conversion</span></div>
+    <div class="block what"><span class="lab">What</span>Fires when any <code>mailto:</code> link is clicked. Parameters: <code>email_address</code> (extracted from href), <code>page_location</code>. Covers careers@tboxsolutionz.com and any other email links.</div>
+    <div class="block dev"><span class="lab">Use case</span>Are careers page visitors reaching out via email? Is direct email being used on pages without a form? Signals intent even when no form is submitted.</div>
+    <div class="block qa"><span class="lab">Verify</span>Click the email link on /careers.html → DebugView shows email_click with correct email_address.</div>
+  </div>
+
+  <div class="task done" data-head="scroll">
+    <div class="thead"><span class="tid">AN-12</span><span class="ttitle">scroll_depth — 25 / 50 / 75 / 90% scroll milestones</span><span class="chip done">Done</span><span class="chip phase">Engagement</span></div>
+    <div class="block what"><span class="lab">What</span>Fires at 25%, 50%, 75%, and 90% scroll depth. Each milestone fires only once per page load. Parameters: <code>depth_percent</code> (number), <code>page_title</code>, <code>page_location</code>.</div>
+    <div class="block dev"><span class="lab">Use case</span>Are blog readers finishing articles? Pages where average scroll_depth fires below 50% have content or UX issues at that fold. Segment by page_location to find weak articles.</div>
+    <div class="block qa"><span class="lab">Verify</span>Scroll slowly to the bottom of any blog article → DebugView shows scroll_depth firing at 25, 50, 75, 90 (in order, each once).</div>
+  </div>
+
+  <div class="task done" data-head="time">
+    <div class="thead"><span class="tid">AN-13</span><span class="ttitle">time_on_page — seconds spent before tab is hidden or closed</span><span class="chip done">Done</span><span class="chip phase">Engagement</span></div>
+    <div class="block what"><span class="lab">What</span>Fires on <code>visibilitychange</code> when the tab becomes hidden (user switches tab, closes window, or navigates away). Parameters: <code>seconds</code> (integer — total elapsed seconds since page load), <code>page_title</code>, <code>page_location</code>.</div>
+    <div class="block dev"><span class="lab">Note</span>GA4 also provides built-in <code>user_engagement</code> with <code>engagement_time_msec</code> for sessions &gt;10s — this custom event gives you per-page granularity in Explore reports without building a custom dimension.</div>
+    <div class="block qa"><span class="lab">Verify</span>Load any page, wait 30 seconds, switch to another tab → DebugView shows time_on_page with seconds ≈ 30 and correct page_location.</div>
+  </div>
+
+  <div class="task gen" data-head="conv">
+    <div class="thead"><span class="tid">AN-14</span><span class="ttitle">Mark GA4 Conversions — contact_form_submit + app_store_click</span><span class="chip gen">Action Required</span><span class="chip phase">GA4 Admin</span></div>
+    <div class="block what"><span class="lab">What</span>In GA4 Admin → Events, toggle "Mark as conversion" for: <code>contact_form_submit</code> (primary lead), <code>app_store_click</code> (product download signal). Optionally also: <code>cta_click</code> filtered to destination = /contact.html.</div>
+    <div class="block dev"><span class="lab">Why</span>Conversion events unlock Goals reporting, appear in Acquisition reports with conversion rate, and can be used as optimisation signals for Google Ads if ads are ever run. Without marking these, they are just events.</div>
+    <div class="block qa"><span class="lab">Verify</span>GA4 Admin → Conversions → both events listed with a blue toggle. Then check Reports → Engagement → Conversions — should show data within 24h.</div>
+  </div>
+
+  <div class="task gen" data-head="funnels">
+    <div class="thead"><span class="tid">AN-15</span><span class="ttitle">Build GA4 Funnel Explorations — 4 core user journeys</span><span class="chip gen">Recommended</span><span class="chip phase">GA4 Explore</span></div>
+    <div class="block what"><span class="lab">What</span>Build these 4 funnel explorations in GA4 → Explore → Funnel exploration: (1) Blog-to-lead: page_view(/blog/) → blog_article_open → scroll_depth(90%) → cta_click → contact_form_submit. (2) Homepage-to-work: page_view(/) → case_study_open → page_view(/work/*). (3) Projects-to-App: page_view(/projects/spendlio.html) → app_store_click. (4) Careers funnel: page_view(/careers.html) → scroll_depth(75%) → email_click.</div>
+    <div class="block dev"><span class="lab">Why</span>These funnels show exactly where visitors drop off. A blog funnel with 80% drop between article_open and scroll_depth(50%) means articles aren't engaging. A work funnel with high case_study_open and low contact_form_submit means case studies need a stronger CTA.</div>
+    <div class="block qa"><span class="lab">Verify</span>Each funnel has at least 1 completed path shown in the report (may take 24–48h after launch for data to appear).</div>
+  </div>
 
   <!-- ============================================================ -->
   <!-- US & EUROPE GROWTH STRATEGY                                   -->
@@ -1549,7 +1698,7 @@
     var current = 'common';
     kids.forEach(function (el) {
       if (el.matches && el.matches('h2.sprint')) {
-        if (['sg', 'sh', 'ip', 'pl', 'sm', 'gr', 'us'].indexOf(el.id) !== -1) current = el.id;
+        if (['sg', 'sh', 'ip', 'pl', 'sm', 'gr', 'us', 'an'].indexOf(el.id) !== -1) current = el.id;
       }
       if (el.classList && el.classList.contains('footer')) {
         el.setAttribute('data-sprint', 'common');
@@ -1580,7 +1729,7 @@
 
     var saved = 'sh';
     try { saved = localStorage.getItem('tbox-site-tab') || 'sh'; } catch (e) {}
-    if (['sg', 'sh', 'ip', 'pl', 'sm', 'gr', 'us'].indexOf(saved) === -1) saved = 'sh';
+    if (['sg', 'sh', 'ip', 'pl', 'sm', 'gr', 'us', 'an'].indexOf(saved) === -1) saved = 'sh';
     showTab(saved);
   })();
 
@@ -1589,7 +1738,7 @@
     var aside = document.getElementById('timeline');
     if (!aside) return;
     var body = document.getElementById('tlBody');
-    var SPRINT_NAME = { sg: 'Guide', sh: 'Shipped', ip: 'In Progress', pl: 'Planned', sm: 'SEO Migration', gr: 'Post-Launch Growth', us: 'US & Europe Strategy' };
+    var SPRINT_NAME = { sg: 'Guide', sh: 'Shipped', ip: 'In Progress', pl: 'Planned', sm: 'SEO Migration', gr: 'Post-Launch Growth', us: 'US & Europe Strategy', an: 'Analytics Tracking' };
     var HEAD_NAME = { bug: 'Bug fixes', enh: 'Enhancements', feat: 'New pages & features', gen: 'General & SEO', crit: 'Critical issues', high: 'High priority', med: 'Medium priority', win: 'Wins — already fixed' };
     var currentFilter = 'all';
 
@@ -1609,10 +1758,25 @@
       body.appendChild(head);
 
       if (which === 'sg') {
-        var note = document.createElement('div');
-        note.className = 'tl-empty';
-        note.textContent = 'Shared guide and state controls — no individual items here.';
-        body.appendChild(note);
+        var sgSections = [
+          { label: 'How the site is built', anchor: '.principles' },
+          { label: 'File structure reference', anchor: '#sg-file-structure' },
+          { label: 'Third-party integrations', anchor: '#sg-integrations' }
+        ];
+        var sgList = document.createElement('div');
+        sgList.className = 'tl-list';
+        sgSections.forEach(function (s) {
+          var item = document.createElement('div');
+          item.className = 'tl-item';
+          item.textContent = s.label;
+          item.style.cursor = 'pointer';
+          item.addEventListener('click', function () {
+            var target = document.querySelector(s.anchor);
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+          sgList.appendChild(item);
+        });
+        body.appendChild(sgList);
         return;
       }
 

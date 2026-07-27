@@ -32,6 +32,8 @@
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#E01B1B">
   <link rel="stylesheet" href="/css/styles.css">
+  <!-- Google reCAPTCHA v2 — replace YOUR_RECAPTCHA_SITE_KEY with your actual site key -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <style>
     /* ── Contact page ── */
 
@@ -367,6 +369,95 @@
     }
     .ct-logos-row img:hover { opacity: 0.8; filter: grayscale(0); }
 
+    /* ── reCAPTCHA wrapper ── */
+    .recaptcha-wrap { margin-bottom: 0.25rem; }
+    .recaptcha-error {
+      font-size: 12.5px;
+      color: #C0392B;
+      font-family: var(--mono);
+      margin-top: 0.4rem;
+      display: none;
+    }
+    .recaptcha-error.show { display: block; }
+
+    /* ── Submit loading state ── */
+    .ct-submit[disabled] { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+    .ct-submit .spinner {
+      width: 15px; height: 15px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin360 0.7s linear infinite;
+      display: none;
+    }
+    @keyframes spin360 { to { transform: rotate(360deg); } }
+    .ct-submit.loading .spinner { display: block; }
+    .ct-submit.loading .submit-arrow { display: none; }
+
+    /* ── Success state ── */
+    .ct-success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 3rem 2rem 2.5rem;
+      background: var(--bg-alt);
+      border: 1.5px solid var(--border-band);
+      border-radius: 16px;
+      animation: fadeInUp 0.45s ease;
+    }
+    .ct-success.show { display: flex; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .ct-success-icon {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: #D4EDDA;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.5rem;
+      color: #1A6638;
+    }
+    .ct-success h3 {
+      font-size: 1.65rem;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.625rem;
+      color: var(--text);
+    }
+    .ct-success-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 420px;
+      line-height: 1.65;
+      margin-bottom: 2rem;
+    }
+    .ct-success-steps {
+      width: 100%; max-width: 380px;
+      display: flex; flex-direction: column; gap: 0.75rem;
+      text-align: left;
+    }
+    .ct-success-step {
+      display: flex; align-items: flex-start; gap: 0.75rem;
+      font-size: 14px; color: var(--text-muted); line-height: 1.5;
+    }
+    .ct-success-step-num {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--red); color: #fff;
+      font-family: var(--mono); font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+
+    /* ── Error banner ── */
+    .ct-form-error {
+      background: #FDE8E8; border: 1px solid #F5C0C0;
+      border-radius: 10px; padding: 0.875rem 1rem;
+      font-size: 14px; color: #8B1A1A;
+      display: none;
+    }
+    .ct-form-error.show { display: block; }
+
     /* ── Responsive ── */
     @media (max-width: 900px) {
       .ct-hero-inner { grid-template-columns: 1fr; }
@@ -398,7 +489,7 @@
           <div class="ct-hero-meta">
             <div class="ct-meta-item"><span class="ct-meta-dot"></span> Reply within 24 hours</div>
             <div class="ct-meta-item"><span class="ct-meta-dot"></span> Based in Lahore, Pakistan</div>
-            <div class="ct-meta-item"><span class="ct-meta-dot"></span> 40+ products shipped</div>
+            <div class="ct-meta-item"><span class="ct-meta-dot"></span> 200+ products shipped</div>
           </div>
         </div>
         <div class="ct-hero-visual" aria-hidden="true">
@@ -581,7 +672,25 @@
             <h2>Tell us about your project</h2>
             <p>We read every submission ourselves &mdash; no bots, no auto-responders.</p>
           </div>
-          <form class="ct-form" name="contact" method="POST" action="mailto:info@tboxsolutionz.com" enctype="text/plain" id="contact-form">
+          <!-- Success state (shown after submission) -->
+          <div class="ct-success" id="ct-success" role="alert">
+            <div class="ct-success-icon">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <h3>Message sent!</h3>
+            <p class="ct-success-desc">Thanks — your brief is on its way to <strong>info@tboxsolutionz.com</strong>. We'll be back within 24 hours with a plan.</p>
+            <div class="ct-success-steps">
+              <div class="ct-success-step"><div class="ct-success-step-num">1</div><span>A senior engineer reads your submission today.</span></div>
+              <div class="ct-success-step"><div class="ct-success-step-num">2</div><span>We'll reach out to schedule a 30-minute discovery call.</span></div>
+              <div class="ct-success-step"><div class="ct-success-step-num">3</div><span>You receive a delivery plan + early prototype direction — free, no commitment.</span></div>
+            </div>
+          </div>
+
+          <div class="ct-form-error" id="ct-form-error">
+            Something went wrong sending your message. Please try again or email us directly at <a href="mailto:info@tboxsolutionz.com">info@tboxsolutionz.com</a>.
+          </div>
+
+          <form class="ct-form" id="contact-form" novalidate>
             <div class="ct-row">
               <div class="ct-field">
                 <label class="ct-label" for="ct-name">Your name <span class="req">*</span></label>
@@ -630,9 +739,16 @@
               <label class="ct-label" for="ct-message">Tell us about your project <span class="req">*</span></label>
               <textarea class="ct-textarea" id="ct-message" name="message" placeholder="What are you building? What problem does it solve? Where are you in the process?" required></textarea>
             </div>
-            <button type="submit" class="ct-submit">
+            <!-- Google reCAPTCHA v2 -->
+            <div class="recaptcha-wrap">
+              <div class="g-recaptcha" data-sitekey="6Ldj-GctAAAAAGP5sUG5At2shpQ7gOR_gx8HHbCR" id="g-recaptcha"></div>
+              <div class="recaptcha-error" id="recaptcha-error">Please complete the "I'm not a robot" check.</div>
+            </div>
+
+            <button type="submit" class="ct-submit" id="ct-submit-btn">
               Send message
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span class="spinner"></span>
+              <svg class="submit-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
             <p class="ct-note">* Required fields. We respect your privacy and never share your details.</p>
           </form>
@@ -773,5 +889,98 @@
 
   <div id="footer-placeholder"></div>
   <script src="/js/components.js" defer></script>
+  <script>
+  // ─────────────────────────────────────────────────────────────────
+  // SETUP CHECKLIST (do both before going live):
+  //
+  // 1. RECAPTCHA — get a free site key:
+  //    a. Go to https://www.google.com/recaptcha/admin/create
+  //    b. Choose reCAPTCHA v2 → "I'm not a robot" Checkbox
+  //    c. Add domain: tboxsolutionz.com
+  //    d. Copy the Site Key and replace YOUR_RECAPTCHA_SITE_KEY
+  //       in the <div class="g-recaptcha"> tag in this file's HTML
+  //       AND in the script tag src in <head>.
+  //
+  // 2. FORMSPREE — free email forwarding to info@tboxsolutionz.com:
+  //    a. Go to https://formspree.io, create a free account
+  //    b. Create a new form, set destination to info@tboxsolutionz.com
+  //    c. Copy your Form ID (e.g. "xpzgkqej") and replace below
+  // ─────────────────────────────────────────────────────────────────
+  var FORMSPREE_ID = 'xkodkknj'; // ← replace with your Formspree form ID
+
+  (function () {
+    function submitForm(e) {
+      e.preventDefault();
+
+      var form      = document.getElementById('contact-form');
+      var btn       = document.getElementById('ct-submit-btn');
+      var errBanner = document.getElementById('ct-form-error');
+      var rcErr     = document.getElementById('recaptcha-error');
+
+      // Check reCAPTCHA
+      var rcResponse = (typeof grecaptcha !== 'undefined') ? grecaptcha.getResponse() : '';
+      if (!rcResponse) {
+        rcErr.classList.add('show');
+        document.getElementById('g-recaptcha').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      rcErr.classList.remove('show');
+
+      // Basic field validation
+      var name    = form.querySelector('#ct-name').value.trim();
+      var email   = form.querySelector('#ct-email').value.trim();
+      var type    = form.querySelector('#ct-type').value;
+      var message = form.querySelector('#ct-message').value.trim();
+      if (!name || !email || !type || !message) {
+        errBanner.textContent = 'Please fill in all required fields.';
+        errBanner.classList.add('show');
+        return;
+      }
+      errBanner.classList.remove('show');
+
+      btn.disabled = true;
+      btn.classList.add('loading');
+
+      var data = new FormData(form);
+
+      fetch('https://formspree.io/f/' + FORMSPREE_ID, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      })
+      .then(function (res) {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        if (res.ok) {
+          document.querySelector('.ct-form-head').style.display = 'none';
+          form.style.display = 'none';
+          var success = document.getElementById('ct-success');
+          success.classList.add('show');
+          success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (typeof gtag === 'function') {
+            gtag('event', 'contact_form_submit', { form_name: 'contact', page_location: window.location.pathname });
+          }
+        } else {
+          res.json().then(function (json) {
+            errBanner.textContent = (json && json.error) ? json.error : 'Something went wrong. Please try again or email info@tboxsolutionz.com directly.';
+            errBanner.classList.add('show');
+            if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
+          });
+        }
+      })
+      .catch(function () {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        errBanner.textContent = 'Network error. Please try again or email info@tboxsolutionz.com directly.';
+        errBanner.classList.add('show');
+        if (typeof grecaptcha !== 'undefined') grecaptcha.reset();
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('contact-form').addEventListener('submit', submitForm);
+    });
+  })();
+  </script>
 </body>
 </html>
