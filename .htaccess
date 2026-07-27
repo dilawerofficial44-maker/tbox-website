@@ -39,3 +39,32 @@ RewriteRule ^careers/?$ /careers.html [L,R=301]
 
 # ─── Custom 404 page ──────────────────────────────────────────────────────────
 ErrorDocument 404 /404.html
+
+# ─── Gzip compression ─────────────────────────────────────────────────────────
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json application/xml text/xml image/svg+xml
+</IfModule>
+
+# ─── Browser cache headers ────────────────────────────────────────────────────
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # Images — 1 year (WebP, PNG, JPG, SVG, ICO)
+  ExpiresByType image/webp              "access plus 1 year"
+  ExpiresByType image/png               "access plus 1 year"
+  ExpiresByType image/jpeg              "access plus 1 year"
+  ExpiresByType image/svg+xml           "access plus 1 year"
+  ExpiresByType image/x-icon            "access plus 1 year"
+  ExpiresByType image/vnd.microsoft.icon "access plus 1 year"
+  # Web fonts
+  ExpiresByType font/woff2              "access plus 1 year"
+  ExpiresByType font/woff               "access plus 1 year"
+  # CSS & JS — 1 year (update filenames to bust cache)
+  ExpiresByType text/css                "access plus 1 year"
+  ExpiresByType application/javascript  "access plus 1 year"
+  ExpiresByType text/javascript         "access plus 1 year"
+  # HTML — 1 hour (allows content updates to propagate quickly)
+  ExpiresByType text/html               "access plus 1 hour"
+  # Manifest & JSON
+  ExpiresByType application/json        "access plus 1 hour"
+  ExpiresByType application/manifest+json "access plus 1 week"
+</IfModule>

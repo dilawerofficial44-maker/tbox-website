@@ -730,7 +730,7 @@ section { padding: 7rem 0; }
 
   /* Process */
   .process-steps { grid-template-columns: 1fr; }
-  .process-step { border-right: none !important; border-bottom: 1px solid var(--border); }
+  .process-step { border-right: none !important; border-bottom: 1px solid var(--border); padding-left: 1.75rem !important; padding-right: 1.75rem !important; }
   .process-step:last-child { border-bottom: none; }
 
   /* Team */
