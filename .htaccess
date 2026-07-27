@@ -1,0 +1,41 @@
+# TBox Solutionz — Apache redirect rules
+# Deploy this file to the root of the web server (public_html/)
+# All redirects are 301 (permanent) — transfers SEO equity to the new URL
+
+Options -Indexes
+
+# ─── HTTPS enforcement ────────────────────────────────────────────────────────
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# ─── WWW → non-www (canonical domain) ────────────────────────────────────────
+RewriteCond %{HTTP_HOST} ^www\.tboxsolutionz\.com$ [NC]
+RewriteRule ^ https://tboxsolutionz.com%{REQUEST_URI} [L,R=301]
+
+# ─── SEO Migration redirects ──────────────────────────────────────────────────
+
+# /projects/* unknown slugs → /projects/  (listing page)
+# Pages that exist on new site (emushrif, betterback, impause, spendlio) are
+# served directly by Apache — this rule only fires when no file/directory matches.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^projects/(.+)$ /projects/ [L,R=301]
+
+# /blogs → /blog/  (old WordPress plural slug, 1,051 confirmed views — SM-02)
+RewriteRule ^blogs/?$ /blog/ [L,R=301]
+RewriteRule ^blogs/(.*)$ /blog/ [L,R=301]
+
+
+# /feed/ → /blog/  (WordPress RSS feed, 834 confirmed views — SM-06)
+RewriteRule ^feed/?$ /blog/ [L,R=301]
+RewriteRule ^feed/(.*)$ /blog/ [L,R=301]
+
+# /company → /  (homepage, 632 confirmed views — SM-05)
+RewriteRule ^company/?$ / [L,R=301]
+
+# /careers → /careers.html  (built this session — SM-18)
+RewriteRule ^careers/?$ /careers.html [L,R=301]
+
+# ─── Custom 404 page ──────────────────────────────────────────────────────────
+ErrorDocument 404 /404.html

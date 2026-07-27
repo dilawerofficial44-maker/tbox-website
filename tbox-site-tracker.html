@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TBox Solutionz — Website Tracker</title>
+<style>
+  :root {
+    --bg: #f6f7fb; --surface: #ffffff; --surface-2: #fbfcfe;
+    --ink: #16213b; --muted: #5d6980;
+    --accent: #4f46e5; --accent-2: #7c3aed;
+    --accent-soft: #eef1fe; --accent-border: #d9defc;
+    --border: #e5e8f0; --code-bg: #eef1f8;
+    --good: #059669; --good-soft: #ecfdf5; --good-border:#b5e3cd;
+    --warn: #d97706; --warn-soft: #fffbeb; --warn-border:#f3d9a4;
+    --danger: #dc2626; --danger-soft: #fef2f2; --danger-border:#f6c9c9;
+    --blue: #2563eb; --blue-soft:#eff5ff; --blue-border:#c7dbfb;
+    --slate:#475569; --slate-soft:#f1f5f9; --slate-border:#d8dfe8;
+    --shadow: 0 1px 2px rgba(22,33,59,.05), 0 4px 16px rgba(22,33,59,.06);
+    --radius: 14px;
+    --mono: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  :root[data-theme="dark"] {
+    --bg:#0f1420; --surface:#171d2b; --surface-2:#1b2233;
+    --ink:#e8ecf4; --muted:#9aa6bd;
+    --accent:#8b8bff; --accent-2:#b18bff;
+    --accent-soft:#20223a; --accent-border:#33375c; --border:#28303f; --code-bg:#222a3a;
+    --good:#34d399; --good-soft:#122a22; --good-border:#1f5140;
+    --warn:#fbbf24; --warn-soft:#2a2312; --warn-border:#5a4a1f;
+    --danger:#f87171; --danger-soft:#2a1717; --danger-border:#5a2a2a;
+    --blue:#60a5fa; --blue-soft:#111d33; --blue-border:#26456f;
+    --slate:#94a3b8; --slate-soft:#1a2130; --slate-border:#30394a;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 18px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 78px; }
+  body {
+    margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg); color: var(--ink); line-height: 1.6; font-size: 15px;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 26px 24px 120px; }
+
+  /* top bar */
+  .topbar {
+    position: sticky; top: 0; z-index: 50; backdrop-filter: saturate(1.4) blur(8px);
+    background: color-mix(in srgb, var(--bg) 84%, transparent);
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar .inner { max-width: 1360px; margin: 0 auto; padding: 10px 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .topbar .brand { font-weight: 800; letter-spacing: -.02em; font-size: 15px; }
+  .topbar a.nav { color: var(--muted); text-decoration: none; font-weight: 600; font-size: 13.5px; padding: 5px 11px; border-radius: 8px; }
+  .topbar a.nav:hover { color: var(--ink); background: var(--accent-soft); }
+  .topbar .spacer { flex: 1; }
+  .toggle { cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 5px 13px; font-size: 12.5px; font-weight: 600; }
+
+  .hero {
+    padding: 30px 36px; border-radius: 20px; color: #fff; margin-top: 22px;
+    background: linear-gradient(120deg, #4f46e5 0%, #7c3aed 55%, #9333ea 100%);
+    box-shadow: 0 12px 40px rgba(79,70,229,.30);
+  }
+  .hero h1 { margin: 0 0 6px; font-size: 26px; letter-spacing: -.02em; }
+  .hero p { margin: 0; opacity: .93; font-size: 15px; max-width: 780px; }
+  .hero .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .hero .meta span { background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.25); padding: 4px 13px; border-radius: 999px; font-size: 12.5px; font-weight: 600; }
+
+  h2.sprint { display: flex; align-items: center; gap: 12px; font-size: 22px; margin: 50px 0 6px; letter-spacing: -.01em; }
+  h2.sprint .num { min-width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+  .sprint-sub { color: var(--muted); margin: 0 0 8px 52px; font-size: 14.5px; }
+  h3.head { font-size: 15px; text-transform: uppercase; letter-spacing: .06em; margin: 30px 0 12px; display:flex; align-items:center; gap:9px; }
+  .dot { width: 11px; height: 11px; border-radius: 3px; display:inline-block; }
+
+  code { background: var(--code-bg); padding: 2px 7px; border-radius: 6px; font-family: var(--mono); font-size: 12.5px; }
+  .lead { color: var(--muted); }
+  a.xref { color: var(--accent); text-decoration: none; font-weight: 600; }
+  a.xref:hover { text-decoration: underline; }
+
+  /* task cards */
+  .task { position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin: 12px 0; box-shadow: var(--shadow); border-left: 4px solid var(--border); }
+  .taskcopy { position: absolute; top: 12px; right: 12px; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--muted); border-radius: 7px; width: 26px; height: 26px; font-size: 13px; line-height: 1; display: flex; align-items: center; justify-content: center; padding: 0; opacity: .55; transition: opacity .12s, color .12s, border-color .12s; }
+  .task:hover .taskcopy { opacity: 1; }
+  .taskcopy:hover { border-color: var(--accent); color: var(--accent); }
+  .taskcopy.copied { border-color: var(--good); color: var(--good); background: var(--good-soft); opacity: 1; }
+  .task.bug { border-left-color: var(--danger); }
+  .task.enh { border-left-color: var(--blue); }
+  .task.feat { border-left-color: var(--accent-2); }
+  .task.gen { border-left-color: var(--slate); }
+  .task .thead { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; margin-bottom: 4px; padding-right: 36px; }
+  .task .tid { font-family: var(--mono); font-size: 12px; font-weight: 700; background: var(--accent-soft); color: var(--accent); padding: 2px 8px; border-radius: 6px; }
+  .task .ttitle { font-weight: 700; font-size: 15.5px; }
+  .chip { font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px; text-transform: uppercase; letter-spacing: .04em; border: 1px solid; }
+  .chip.bug { color: var(--danger); background: var(--danger-soft); border-color: var(--danger-border); }
+  .chip.enh { color: var(--blue); background: var(--blue-soft); border-color: var(--blue-border); }
+  .chip.feat { color: var(--accent-2); background: var(--accent-soft); border-color: var(--accent-border); }
+  .chip.gen { color: var(--slate); background: var(--slate-soft); border-color: var(--slate-border); }
+  .chip.phase { color: var(--warn); background: var(--warn-soft); border-color: var(--warn-border); }
+  .chip.status { color: var(--good); background: var(--good-soft); border-color: var(--good-border); }
+  .chip.done { color: var(--good); background: var(--good-soft); border-color: var(--good-border); }
+  .task.done { border-left-color: var(--good); }
+  .task .block { margin: 8px 0 0; }
+  .task .lab { font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-right: 6px; }
+  .task .block.what .lab { color: var(--accent); }
+  .task .block.dev .lab { color: var(--blue); }
+  .task .block.qa .lab { color: var(--good); }
+  .task ul { margin: 6px 0 0; padding-left: 20px; }
+  .task li { margin: 3px 0; }
+
+  .callout { display: flex; gap: 12px; border: 1px solid var(--accent-border); background: var(--accent-soft); padding: 13px 17px; border-radius: var(--radius); margin: 14px 0; font-size: 14px; }
+  .callout.warn { border-color: var(--warn-border); background: var(--warn-soft); }
+  .callout .ic { font-size: 17px; }
+  details.box { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 4px 18px; margin: 14px 0; box-shadow: var(--shadow); }
+  details.box summary { cursor: pointer; font-weight: 700; padding: 12px 0; font-size: 14.5px; }
+  details.box[open] summary { border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+  details.box ol, details.box ul { margin: 4px 0 14px; padding-left: 20px; }
+  details.box li { margin: 4px 0; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 18px 0 4px; }
+  .filter { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin: 8px 0 0; }
+  .fbtn { cursor:pointer; border:1px solid var(--border); background:var(--surface); color:var(--muted); border-radius:999px; padding:5px 13px; font-size:12.5px; font-weight:700; display:flex; align-items:center; gap:7px; }
+  .fbtn.active { color: var(--ink); border-color: var(--accent); background: var(--accent-soft); }
+  .fbtn .dot { width:9px; height:9px; }
+  .checklist { background: var(--surface); border:1px solid var(--border); border-radius: var(--radius); padding: 8px 20px; box-shadow: var(--shadow); }
+  .checklist div { padding: 8px 0; border-bottom: 1px solid var(--border); display:flex; gap:10px; }
+  .checklist div:last-child { border-bottom:none; }
+  .footer { color: var(--muted); font-size: 12.5px; margin-top: 60px; border-top: 1px solid var(--border); padding-top: 16px; }
+  .hidden { display: none !important; }
+  .tab-hidden { display: none !important; }
+  .topbar a.nav.active { color: var(--accent); background: var(--accent-soft); }
+
+  .principles { background: var(--surface); border: 1px solid var(--accent-border); border-left: 4px solid var(--accent); border-radius: var(--radius); padding: 16px 22px 18px; margin: 20px 0 4px; box-shadow: var(--shadow); }
+  .principles .phead { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; }
+  .principles .phead b { font-size: 16px; }
+  .principles .phead .ic { font-size: 17px; }
+  .principles .phead .psub { color: var(--muted); font-size: 13px; }
+  .principles ol.plist { margin: 12px 0 0; padding-left: 22px; }
+  .principles ol.plist li { margin: 7px 0; font-size: 14px; }
+
+  /* ---------- two-column layout with left timeline rail ---------- */
+  .layout { max-width: 1360px; margin: 0 auto; display: flex; align-items: flex-start; gap: 24px; padding-left: 18px; }
+  .layout > .wrap { flex: 1 1 auto; min-width: 0; max-width: 1080px; margin: 0; }
+  .timeline {
+    flex: 0 0 var(--tl-w, 246px); width: var(--tl-w, 246px); position: sticky; top: 66px; align-self: flex-start;
+    max-height: calc(100vh - 84px); overflow: hidden; margin-top: 26px; display: flex; flex-direction: column;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow);
+  }
+  .tl-body { flex: 1 1 auto; overflow-y: auto; padding: 14px 12px 16px; }
+  .tl-resize { position: absolute; top: 0; right: 0; width: 9px; height: 100%; cursor: col-resize; z-index: 3; }
+  .tl-resize::after { content: ""; position: absolute; top: 50%; right: 3px; transform: translateY(-50%); width: 3px; height: 34px; border-radius: 3px; background: var(--border); }
+  .tl-resize:hover::after, .timeline.resizing .tl-resize::after { background: var(--accent); }
+  .timeline.resizing { user-select: none; }
+  .tl-empty { color: var(--muted); font-size: 12.5px; padding: 8px 6px; line-height: 1.5; }
+  .tl-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.42); z-index: 150; }
+  .drawerbtn { display: none; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 5px 11px; font-size: 12.5px; font-weight: 700; }
+  .topprog { font-size: 12.5px; font-weight: 800; color: var(--muted); white-space: nowrap; }
+  .topprog b { color: var(--good); }
+  .copybtn { margin-left: auto; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--muted); border-radius: 8px; padding: 4px 11px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .copybtn:hover { border-color: var(--accent); color: var(--accent); }
+  .copybtn.copied { border-color: var(--good); color: var(--good); background: var(--good-soft); }
+  .tl-head { display: flex; align-items: center; justify-content: space-between; font-weight: 800; font-size: 13.5px; padding: 2px 4px 10px; border-bottom: 1px solid var(--border); margin-bottom: 6px; }
+  .tl-head .tl-count { color: var(--muted); font-weight: 700; font-size: 12px; }
+  .tl-list { position: relative; padding-left: 4px; }
+  .tl-list::before { content: ""; position: absolute; left: 11px; top: 8px; bottom: 8px; width: 2px; background: var(--border); border-radius: 2px; }
+  .tl-head-group { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 800; padding: 9px 4px 3px 26px; }
+  .tl-item { position: relative; display: flex; align-items: flex-start; gap: 9px; padding: 4px 2px 4px 0; }
+  .tl-node { flex: 0 0 auto; width: 15px; height: 15px; margin-top: 1px; border-radius: 50%; border: 2px solid var(--border); background: var(--surface); cursor: pointer; padding: 0; position: relative; z-index: 1; }
+  .tl-node:hover { border-color: var(--accent); }
+  .tl-item.done .tl-node { background: var(--good); border-color: var(--good); }
+  .tl-item.done .tl-node::after { content: "✓"; color: #fff; font-size: 9px; font-weight: 900; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+  .tl-title { flex: 1 1 auto; text-align: left; background: none; border: none; padding: 0; margin: 0; cursor: pointer; font: inherit; color: var(--ink); font-size: 12.5px; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .tl-title:hover { color: var(--accent); }
+  .tl-item.done .tl-title { color: var(--muted); }
+  .tl-title .tl-id { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--accent); }
+  .tl-off { display: none !important; }
+  @keyframes tlflash { 0%,100% { box-shadow: var(--shadow); } 25% { box-shadow: 0 0 0 3px var(--accent-border), var(--shadow); } }
+  .task.flash { animation: tlflash 1.1s ease; }
+  .tl-item.active { background: var(--accent-soft); border-radius: 8px; }
+  .tl-item.active .tl-title { color: var(--accent); font-weight: 700; }
+  .tl-item.active .tl-node { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+  @media (max-width: 1080px) {
+    .layout { display: block; padding-left: 0; }
+    .layout > .wrap { max-width: 1080px; margin: 0 auto; }
+    .drawerbtn { display: inline-flex; }
+    .timeline {
+      position: fixed; top: 0; left: 0; height: 100vh; max-height: none;
+      width: 82vw; max-width: 330px; flex: none; margin: 0; border-radius: 0;
+      z-index: 200; transform: translateX(-100%); transition: transform .25s ease;
+    }
+    .timeline.open { transform: translateX(0); }
+    .tl-resize { display: none; }
+    .tl-overlay.show { display: block; }
+  }
+
+  /* ---- progress / state bar + per-task checkboxes ---- */
+  .statebar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 11px 16px; margin: 14px 0 4px; box-shadow: var(--shadow); }
+  .statebar .prog { font-weight: 800; font-size: 14px; }
+  .statebar .prog b { color: var(--good); }
+  .statebar .spacer2 { flex: 1; }
+  .sbtn { cursor: pointer; border: 1px solid var(--border); background: var(--surface-2); color: var(--ink); border-radius: 8px; padding: 6px 12px; font-size: 12.5px; font-weight: 700; }
+  .sbtn:hover { border-color: var(--accent); color: var(--accent); }
+  .modenote { flex-basis: 100%; color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .modenote code { font-size: 11.5px; }
+  .taskcheck { width: 18px; height: 18px; cursor: pointer; accent-color: var(--good); flex: 0 0 auto; margin: 0 2px 0 0; }
+  .task.done-checked { border-left-color: var(--good); opacity: .84; }
+  .task.done-checked .ttitle { text-decoration: line-through; text-decoration-color: var(--good); }
+  .task.done-checked .ttitle::after { content: " ✓"; color: var(--good); font-weight: 800; text-decoration: none; }
+  /* SEO Migration tab — task severity border colours */
+  .task.crit { border-left-color: var(--danger); }
+  .task.high { border-left-color: var(--warn); }
+  .task.med  { border-left-color: var(--blue); }
+  .task.win  { border-left-color: var(--good); }
+  /* SEO redirect-map table */
+  .redirect-table { width: 100%; border-collapse: collapse; font-size: 13px; font-family: var(--mono); }
+  .redirect-table th { padding: 8px 10px; color: var(--muted); text-align: left; border-bottom: 2px solid var(--border); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+  .redirect-table td { padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .redirect-table tr:last-child td { border-bottom: none; }
+  .seo-score { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.25); padding: 5px 16px; border-radius: 10px; font-size: 14px; font-weight: 800; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="inner">
+    <button class="drawerbtn" id="drawerBtn" aria-label="Show item navigator">☰ Items</button>
+    <span class="brand">TBox Solutionz · Website Tracker</span>
+    <a class="nav" href="#sg">Guide</a>
+    <a class="nav" href="#sh">Shipped</a>
+    <a class="nav" href="#ip">In Progress</a>
+    <a class="nav" href="#pl">Planned</a>
+    <a class="nav" href="#sm">SEO Migration</a>
+    <a class="nav" href="#gr">Growth Roadmap</a>
+    <a class="nav" href="#us">US &amp; Europe</a>
+    <span class="spacer"></span>
+    <span class="topprog" id="topProgress" title="Overall progress"></span>
+    <span class="toggle" id="themeToggle">🌙 Dark</span>
+  </div>
+</div>
+
+<div class="tl-overlay" id="tlOverlay"></div>
+<div class="layout">
+<aside class="timeline" id="timeline" aria-label="Item navigator">
+  <div class="tl-body" id="tlBody"></div>
+  <div class="tl-resize" id="tlResize" title="Drag to resize" aria-label="Resize navigator"></div>
+</aside>
+<div class="wrap">
+
+  <!-- legend + filter -->
+  <div class="legend">
+    <span class="lead" style="font-weight:700;">Types:</span>
+    <span class="chip bug">Bug fix</span>
+    <span class="chip enh">Enhancement</span>
+    <span class="chip feat">New page / feature</span>
+    <span class="chip gen">General / SEO</span>
+    <span class="chip done">✓ Shipped</span>
+  </div>
+  <div class="filter">
+    <span class="lead" style="font-weight:700;">Filter:</span>
+    <span class="fbtn active" data-f="all">All</span>
+    <span class="fbtn" data-f="bug"><span class="dot" style="background:var(--danger)"></span>Bug fixes</span>
+    <span class="fbtn" data-f="enh"><span class="dot" style="background:var(--blue)"></span>Enhancements</span>
+    <span class="fbtn" data-f="feat"><span class="dot" style="background:var(--accent-2)"></span>New pages &amp; features</span>
+    <span class="fbtn" data-f="gen"><span class="dot" style="background:var(--slate)"></span>General / SEO</span>
+  </div>
+
+
+  <!-- ============================ GUIDE ============================ -->
+  <h2 class="sprint" id="sg"><span class="num">ℹ️</span> Guide &amp; controls</h2>
+  <p class="sprint-sub">How the site is built, shared conventions, and state controls — common across all tabs.</p>
+
+  <div class="hero">
+    <h1>TBox Solutionz — Website Tracker</h1>
+    <p>Single source of truth for the tboxsolutionz.com marketing site. Tracks everything shipped, in progress, and planned — with context on why each item exists and what done looks like. Use the tabs above to switch between sections; use the left rail to navigate and check off items.</p>
+    <div class="meta">
+      <span>Static HTML · CSS · Vanilla JS</span>
+      <span>Nav + footer injected via components.js</span>
+      <span>Hosted at tboxsolutionz.com</span>
+      <span>Local preview: port 4500</span>
+    </div>
+  </div>
+
+  <div class="statebar">
+    <span class="prog" id="progressText">— done</span>
+    <span class="spacer2"></span>
+    <button class="sbtn" id="btnExport">⬇ Export state</button>
+    <button class="sbtn" id="btnImport">⬆ Import state</button>
+    <button class="sbtn" id="btnReset">↺ Reset</button>
+    <input type="file" id="fileImport" accept="application/json,.json" style="display:none">
+    <div class="modenote" id="modeNote"></div>
+  </div>
+
+  <div class="principles">
+    <div class="phead"><span class="ic">🏗️</span><b>How the site is built</b><span class="psub">conventions every change must follow — a fix is not done if it breaks these</span></div>
+    <ol class="plist">
+      <li><b>Static HTML/CSS/JS only.</b> No build step, no framework. Pages are plain <code>.html</code> files served directly. All CSS lives in inline <code>&lt;style&gt;</code> blocks per page (global variables in <code>/css/styles.css</code>). No external runtime dependencies.</li>
+      <li><b>Nav and footer are injected, not duplicated.</b> <code>/js/components.js</code> (loaded with <code>defer</code>) fetches <code>/components/nav.html</code> and <code>/components/footer.html</code> and injects them into <code>#nav-placeholder</code> and <code>#footer-placeholder</code>. Never hardcode nav or footer in individual pages — edit only the component files.</li>
+      <li><b>CSS custom properties are the color system.</b> All colors come from <code>var(--red)</code>, <code>var(--text)</code>, <code>var(--text-muted)</code>, <code>var(--bg-alt)</code>, <code>var(--border)</code>, <code>var(--border-band)</code>, <code>var(--mono)</code> etc., defined in <code>/css/styles.css</code>. Hardcode hex only when a specific contrast override is intentional (e.g. <code>#4A4845</code> for accessibility).</li>
+      <li><b>Images go in <code>/assets/</code>, not inline.</b> Blog images in <code>/assets/images/blog/</code>, product screenshots in <code>/assets/[product]/</code>. Optimize to WebP when possible. Blog cover images (downloaded from Unsplash, free commercial license) live at 800×500px.</li>
+      <li><b>No external CDN requests on any page.</b> Fonts are system stack. Icons are SVG inline or text. All JS is inline or loaded from <code>/js/</code>. Pages must load with zero external network requests.</li>
+      <li><b>Every page needs proper <code>&lt;meta&gt;</code> coverage.</b> <code>description</code>, <code>og:title</code>, <code>og:description</code>, <code>og:image</code>, <code>canonical</code>, and <code>twitter:card</code>. Blog posts additionally need <code>og:type = article</code> and <code>article:published_time</code>.</li>
+      <li><b>Sitemap must be updated when pages are added.</b> <code>/sitemap.xml</code> lists all URLs. Add new pages with their <code>lastmod</code> date; don't leave them out.</li>
+    </ol>
+  </div>
+
+  <details class="box">
+    <summary>File structure reference</summary>
+    <ul>
+      <li><code>/index.html</code> — Landing page (homepage)</li>
+      <li><code>/contact.html</code> — Contact / Book a call page</li>
+      <li><code>/blog/index.html</code> — Blog listing page</li>
+      <li><code>/blog/[slug].html</code> — Individual blog article pages (6 articles)</li>
+      <li><code>/work/[project].html</code> — Case study detail pages (6 projects)</li>
+      <li><code>/css/styles.css</code> — Global CSS variables and shared styles</li>
+      <li><code>/js/components.js</code> — Nav + footer injection</li>
+      <li><code>/components/nav.html</code> — Navigation component</li>
+      <li><code>/components/footer.html</code> — Footer component</li>
+      <li><code>/assets/images/</code> — Shared images (logo, founder photo, favicons)</li>
+      <li><code>/assets/images/blog/</code> — Blog article cover images (Unsplash, free license)</li>
+      <li><code>/sitemap.xml</code> — All page URLs for search engines</li>
+    </ul>
+  </details>
+
+
+  <!-- ============================ SHIPPED ============================ -->
+  <h2 class="sprint" id="sh"><span class="num">✅</span> Shipped</h2>
+  <p class="sprint-sub">Everything live on the site. Items start checked — uncheck anything that needs revisiting.</p>
+
+  <!-- New pages / features -->
+  <h3 class="head"><span class="dot" style="background:var(--accent-2)"></span>1 · New pages &amp; features</h3>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-01</span><span class="ttitle">Landing page — full homepage</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Full homepage at <code>/index.html</code>. Sections: hero (headline + CTA), services grid, featured work/case studies, 4-step process, about-us (founder photo + bio), testimonials carousel with dot-nav, and footer.</div>
+    <div class="block dev"><span class="lab">Notes</span>Testimonial dots use 44×44px touch targets with negative margin to keep visual dot spacing tight without breaking accessibility. Nav and footer injected via <code>components.js</code>. All copy and layout in inline <code>&lt;style&gt;</code> block.</div>
+    <div class="block qa"><span class="lab">Verify</span>Hero CTA → contact page. Services scroll. Work cards → case study pages. Process steps visible. Testimonial carousel left/right + dots functional. Mobile layout at 375px. Light + dark CSS variables.</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-02</span><span class="ttitle">Contact page — with SVG illustration hero</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Contact page at <code>/contact.html</code>. Two-column hero: left = headline + sub-copy + meta info; right = custom inline SVG illustration (Design → Build → Scale trajectory arc with wireframe cards). Below: what-happens-next steps, contact rows (email/LinkedIn), and a contact form.</div>
+    <div class="block dev"><span class="lab">Notes</span>Hero layout uses CSS grid <code>1fr 420px</code>. Right column hides below 900px. Readability pass done: font sizes increased throughout, <code>var(--text-muted)</code> replaced with <code>#4A4845</code> / <code>#5A5855</code> on sidebar labels. "Trusted by founders" logos section removed.</div>
+    <div class="block qa"><span class="lab">Verify</span>Two-column hero on ≥900px. SVG illustration visible and scales. Right column hides on mobile. All form fields accessible. Meta info text readable (not faint).</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-03</span><span class="ttitle">Case study — eMushrif</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Case study detail page at <code>/work/emushrif.html</code>. Hero with project label, title, and metadata. Screenshots section, stats bar, and body content covering challenge, approach, and outcome.</div>
+    <div class="block qa"><span class="lab">Verify</span>Page loads. Screenshots display. Stats correct. Back link to work listing.</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-04</span><span class="ttitle">Case study — Spendlio (screenshots 2nd, stats 3rd)</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Case study at <code>/work/spendlio.html</code>. Screenshots section appears immediately after the hero (2nd position), stats bar is 3rd — corrected from an earlier order where screenshots were after stats.</div>
+    <div class="block dev"><span class="lab">Notes</span>Section order verified via JS: <code>["cs-hero","cs-screenshots","cs-stats","cs-body"]</code>.</div>
+    <div class="block qa"><span class="lab">Verify</span>Screenshots visible on scroll before stats. Section order correct.</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-05</span><span class="ttitle">Case study — Impause (screenshots 2nd, stats 3rd)</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Case study at <code>/work/impause.html</code>. Same screenshots-first ordering as Spendlio.</div>
+    <div class="block qa"><span class="lab">Verify</span>Screenshots before stats. Section order matches Spendlio pattern.</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-06</span><span class="ttitle">Case study — BetterBack (no app icon in hero)</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Case study at <code>/work/betterback.html</code>. App icon removed from the hero section — the icon stays on the project detail listing card, not on the case study hero.</div>
+    <div class="block qa"><span class="lab">Verify</span>Hero section has no app icon block. Hero goes from label straight to title.</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-07</span><span class="ttitle">Case study — Smart Infrastructure Platform</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Case study at <code>/work/smart-infra-platform.html</code>.</div>
+    <div class="block qa"><span class="lab">Verify</span>Page loads correctly with all sections.</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-08</span><span class="ttitle">Case study — US Neobank</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Case study at <code>/work/us-neobank.html</code>.</div>
+    <div class="block qa"><span class="lab">Verify</span>Page loads correctly with all sections.</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-09</span><span class="ttitle">Blog — listing page with featured article hero</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Blog listing page at <code>/blog/index.html</code>. Two-column hero: left = headline + sub-copy; right = "Latest article" featured card with real cover image, category pill, title, date, read time, and "Read article →" link. Below: 3-column grid of 6 article cards, each with a real Unsplash photo thumbnail, category tag, title, excerpt, author avatar, and date.</div>
+    <div class="block dev"><span class="lab">Notes</span>Original SVG placeholder thumbnails replaced with downloaded Unsplash JPEG images in <code>/assets/images/blog/</code>. All images are under the Unsplash free commercial license. Card hover adds a subtle zoom on the photo.</div>
+    <div class="block qa"><span class="lab">Verify</span>Hero featured card visible on ≥1000px; hides on smaller screens. All 6 cards show photos. Cards link to correct article pages. Nav shows "Blog" link.</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-10</span><span class="ttitle">Blog article — Mobile App Stack 2026</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span><code>/blog/mobile-app-stack-2026.html</code> — "Building a Mobile App in 2026: Why the Native vs. Cross-Platform Debate Has Finally Changed" (Jul 17, 2026). Full informational article on React Native New Architecture, Flutter, native iOS/Android, and a decision framework. Cover image. Share buttons (LinkedIn, X, copy link). Author card with contact link.</div>
+    <div class="block qa"><span class="lab">Verify</span>Cover image displays. Back link → <code>/blog/</code>. Share buttons functional. Author card shows founder photo. Contact button links to <code>/contact.html</code>. Dark CTA at bottom.</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-11</span><span class="ttitle">Blog article — AI Agents in Production</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span><code>/blog/ai-agents-business-automation.html</code> — "AI Agents in Production: What They Can Actually Automate in Your Business Right Now" (Jul 10, 2026). Covers agent vs chatbot distinction, 5 automation areas, limits, prerequisites, and first agent guidance.</div>
+    <div class="block qa"><span class="lab">Verify</span>Cover image (AI circuit board). All sections render. Share + author card + CTA present.</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-12</span><span class="ttitle">Blog article — Mobile App Development Timeline</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span><code>/blog/mobile-app-development-timeline.html</code> — "The Real Mobile App Development Timeline in 2026 — Week by Week" (Jul 3, 2026). Each phase as a visual timeline block (Scope → Design → Backend → Mobile → QA → Store). Explains AI's impact on timelines and common causes of slippage.</div>
+    <div class="block qa"><span class="lab">Verify</span>Timeline blocks render with left-border styling. Cover image visible.</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-13</span><span class="ttitle">Blog article — Fractional CTO Guide</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span><code>/blog/fractional-cto-2026.html</code> — "When Should a Startup Hire a Fractional CTO? A Practical Guide for 2026" (Jun 26, 2026). Covers the role, 3 stages where fractional works, limits, engagement models, and key evaluation questions.</div>
+    <div class="block qa"><span class="lab">Verify</span>Cover image (leadership meeting). Article readable. CTA links correctly.</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-14</span><span class="ttitle">Blog article — SaaS MVP Scoping</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span><code>/blog/saas-mvp-scoping.html</code> — "How to Scope Your SaaS MVP Without Wasting Six Months" (Jun 19, 2026). Covers what "minimum" really means, 3 common scoping mistakes, a 4-question scoping framework, and what to safely cut.</div>
+    <div class="block qa"><span class="lab">Verify</span>Cover image (startup scoping). All callout blocks render correctly.</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-15</span><span class="ttitle">Blog article — Offshore Development Myths</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span><code>/blog/offshore-development-myths.html</code> — "What Founders Get Wrong About Offshore Development in 2026" (Jun 12, 2026). Covers hidden costs behind hourly rates, 3 common failure modes, what offshore does well, and a 5-question partner evaluation framework.</div>
+    <div class="block qa"><span class="lab">Verify</span>Cover image (remote team). Article content complete. No broken links.</div>
+  </div>
+
+  <!-- Enhancements -->
+  <h3 class="head"><span class="dot" style="background:var(--blue)"></span>2 · Enhancements</h3>
+
+  <div class="task enh done" data-head="enh">
+    <div class="thead"><span class="tid">SH-16</span><span class="ttitle">Contact page — readability overhaul</span><span class="chip enh">Enhancement</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Multiple readability improvements on the contact page. Font sizes increased across all sub-elements (hero label 11→13px, card labels 10→12px, step text 12→13px, contact rows 13→14px, form note 12→13px). Light <code>var(--text-muted)</code> / <code>var(--text-light)</code> replaced with <code>#4A4845</code> and <code>#5A5855</code> throughout.</div>
+    <div class="block dev"><span class="lab">Notes</span>Same readability pattern applied earlier to the landing page and case study pages — contact now matches. Colors are hardcoded overrides, not CSS variable changes, to preserve the variables for other uses.</div>
+    <div class="block qa"><span class="lab">Verify</span>Small text on contact page (sidebar labels, step text, meta info) is legible in both light and dark browser preference.</div>
+  </div>
+
+  <div class="task enh done" data-head="enh">
+    <div class="thead"><span class="tid">SH-17</span><span class="ttitle">Blog listing — two-column hero with featured article card</span><span class="chip enh">Enhancement</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Blog listing hero was single-column with empty space on the right. Added a "Latest article" featured card on the right side. Card has a real cover photo (180px tall), category pill, article title, date + read time, and a red "Read article →" link. Collapses to single column below 1000px.</div>
+    <div class="block qa"><span class="lab">Verify</span>Featured card visible at desktop width. Correct article linked. Card collapses at ≤1000px. Photo hover zoom works.</div>
+  </div>
+
+  <div class="task enh done" data-head="enh">
+    <div class="thead"><span class="tid">SH-18</span><span class="ttitle">Blog listing — real Unsplash photo thumbnails on cards</span><span class="chip enh">Enhancement</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Blog card thumbnails replaced from custom inline SVGs with downloaded Unsplash photos. 6 images downloaded to <code>/assets/images/blog/</code>: <code>mobile-stack.jpg</code>, <code>ai-agents.jpg</code>, <code>app-timeline.jpg</code>, <code>fractional-cto.jpg</code>, <code>saas-mvp.jpg</code>, <code>offshore-dev.jpg</code>. All 800×500px JPEG, Unsplash free commercial license.</div>
+    <div class="block dev"><span class="lab">Notes</span>Images are served locally — no external requests. <code>loading="lazy"</code> on card images; <code>loading="eager"</code> on hero and article cover images.</div>
+    <div class="block qa"><span class="lab">Verify</span>All 6 card thumbnails display correctly. Images zoom on card hover. No broken image icons. File sizes ≤110KB each.</div>
+  </div>
+
+  <div class="task enh done" data-head="enh">
+    <div class="thead"><span class="tid">SH-19</span><span class="ttitle">Blog articles — full-width cover images</span><span class="chip enh">Enhancement</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Each article detail page now has a full-width cover image (max-height 420px, <code>object-fit: cover</code>, border-radius 14px, subtle shadow) in a <code>.ba-cover</code> section between the article metadata hero and the article body. Each article uses its own matching Unsplash image.</div>
+    <div class="block qa"><span class="lab">Verify</span>Cover image appears on all 6 article pages between the author/meta line and the first paragraph. Rounded corners. Scales correctly on mobile.</div>
+  </div>
+
+  <div class="task enh done" data-head="enh">
+    <div class="thead"><span class="tid">SH-20</span><span class="ttitle">Testimonial dots — collapsed spacing fix</span><span class="chip enh">Enhancement</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Testimonial carousel navigation dots had excessive spacing between them. The <code>.testimonial-dots</code> container <code>gap</code> changed from <code>0.5rem</code> to <code>0</code>, and <code>.t-dot</code> buttons got <code>margin: 0 -10px</code> to pull them together visually. The 44×44px WCAG touch target is preserved by keeping the button size unchanged.</div>
+    <div class="block dev"><span class="lab">Notes</span>Negative margin causes adjacent buttons to visually overlap so 8px visual dots appear ~16px apart, while the full 44px tap area remains intact. File: <code>/css/styles.css</code>.</div>
+    <div class="block qa"><span class="lab">Verify</span>Testimonial dots on landing page appear close together (not widely spaced). Each dot is still tappable on mobile. Correct dot highlights as carousel advances.</div>
+  </div>
+
+  <!-- General / SEO -->
+  <h3 class="head"><span class="dot" style="background:var(--slate)"></span>3 · General &amp; SEO</h3>
+
+  <div class="task gen done" data-head="gen">
+    <div class="thead"><span class="tid">SH-21</span><span class="ttitle">Nav + footer — Blog link added</span><span class="chip gen">General</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Blog link added to both <code>/components/nav.html</code> (between "About" and "Book a call") and <code>/components/footer.html</code> (Company section). Since nav/footer are injected globally, one change propagates to all pages.</div>
+    <div class="block qa"><span class="lab">Verify</span>Every page shows "Blog" in the nav bar. Footer Company section includes Blog link. Both link to <code>/blog/</code>.</div>
+  </div>
+
+  <div class="task gen done" data-head="gen">
+    <div class="thead"><span class="tid">SH-22</span><span class="ttitle">Sitemap — all pages including blog</span><span class="chip gen">General / SEO</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span><code>/sitemap.xml</code> updated to include <code>/contact.html</code>, <code>/blog/</code>, and all 6 blog article URLs with their <code>lastmod</code> dates matching actual publish dates.</div>
+    <div class="block qa"><span class="lab">Verify</span>Sitemap has 15 URLs total. All blog article slugs correct. <code>lastmod</code> dates match article dates (Jun 12 → Jul 17, 2026). No trailing slashes mismatch.</div>
+  </div>
+
+  <div class="task gen done" data-head="gen">
+    <div class="thead"><span class="tid">SH-23</span><span class="ttitle">.gitignore — node_modules + lock files excluded</span><span class="chip gen">General</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span><code>.gitignore</code> updated to exclude <code>node_modules/</code>, <code>dist/</code>, <code>package-lock.json</code>, <code>pnpm-lock.yaml</code>, <code>yarn.lock</code>, and <code>.claude/</code>. Previously staged <code>node_modules/</code> and <code>dist/</code> from an old React/Vite project were removed from the git index via <code>git rm --cached -r</code>.</div>
+    <div class="block qa"><span class="lab">Verify</span><code>git status</code> shows no <code>node_modules</code> or <code>dist</code> entries. <code>.gitignore</code> contains all exclusions.</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-24</span><span class="ttitle">Careers page — /careers.html with hero, role cards, and contact CTA</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Full careers page built following the site template. Hero with careers-focused SVG illustration, 4 open role cards (Full-Stack, Mobile, AI/Backend, General/Internship), 6-value company culture grid, sticky sidebar with <code>careers@tboxsolutionz.com</code> mailto links.</div>
+    <div class="block qa"><span class="lab">Done</span>BreadcrumbList JSON-LD, full OG/Twitter meta, canonical, sitemap entry, nav link, and footer link all in place.</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-25</span><span class="ttitle">Per-article OG images — each article uses its own cover photo</span><span class="chip feat">New feature</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>All 6 blog articles previously shared <code>og-cover.jpg</code>. Each article's <code>og:image</code>, <code>twitter:image</code>, and Article JSON-LD <code>image</code> field now point to its own cover: mobile-stack.jpg · ai-agents.jpg · app-timeline.jpg · fractional-cto.jpg · saas-mvp.jpg · offshore-dev.jpg — already in <code>/assets/images/blog/</code>, no new files needed.</div>
+    <div class="block qa"><span class="lab">Verify</span>LinkedIn Post Inspector for any article URL shows its unique cover image, not the generic site cover.</div>
+  </div>
+
+  <div class="task feat done" data-head="feat">
+    <div class="thead"><span class="tid">SH-26</span><span class="ttitle">404 page — branded error page with nav recovery links</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span><code>/404.html</code> built using site template (nav + footer via components.js). Large typographic "404", "Page not found" headline, recovery links to Home / Work / Blog / Contact / Careers. Apache <code>ErrorDocument 404 /404.html</code> directive in <code>.htaccess</code>.</div>
+    <div class="block qa"><span class="lab">Verify</span>After upload: <code>curl -I https://tboxsolutionz.com/does-not-exist</code> → HTTP 404 with branded page body.</div>
+  </div>
+
+  <div class="task gen done" data-head="gen">
+    <div class="thead"><span class="tid">SH-27</span><span class="ttitle">Article JSON-LD + article:published_time on all 6 blog articles</span><span class="chip gen">SEO</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span>Each blog article now has a full <code>Article</code> JSON-LD block (headline, datePublished, author: Dilawer Hussain / Founder &amp; CEO, image, publisher) and <code>&lt;meta property="article:published_time"&gt;</code> with Pakistan Standard Time (UTC+5) timestamps ranging afternoon to evening across June–July 2026.</div>
+    <div class="block qa"><span class="lab">Verify</span>Google Rich Results Test for any article URL should pass Article validation and display author + date in the preview.</div>
+  </div>
+
+  <div class="task gen done" data-head="gen">
+    <div class="thead"><span class="tid">SH-28</span><span class="ttitle">Sitemap — /projects/ listing + 4 project detail pages added</span><span class="chip gen">SEO</span><span class="chip done">✓ Shipped</span></div>
+    <div class="block what"><span class="lab">What</span><code>/projects/</code> index and all 4 project architecture pages (<code>emushrif</code>, <code>spendlio</code>, <code>impause</code>, <code>betterback</code>) were absent from <code>sitemap.xml</code>. Google would not have discovered them via the sitemap after launch.</div>
+    <div class="block qa"><span class="lab">Verify</span>Submit sitemap to Google Search Console after launch. All 5 /projects/ URLs should appear as indexed within 1–2 weeks.</div>
+  </div>
+
+
+  <!-- ============================ IN PROGRESS ============================ -->
+  <h2 class="sprint" id="ip"><span class="num">🔄</span> In Progress</h2>
+  <p class="sprint-sub">Currently being worked on or recently shipped but awaiting final verification.</p>
+
+  <h3 class="head"><span class="dot" style="background:var(--accent-2)"></span>1 · New features</h3>
+
+  <h3 class="head"><span class="dot" style="background:var(--slate)"></span>2 · General &amp; SEO</h3>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">IP-03</span><span class="ttitle">Analytics integration (Plausible or GA4)</span><span class="chip gen">General / SEO</span></div>
+    <div class="block what"><span class="lab">What</span>No analytics on the site today. Add page-view and event tracking to understand which pages get traffic, which blog articles perform, and where contact form visitors come from.</div>
+    <div class="block dev"><span class="lab">How</span>Plausible Analytics is the recommended option — lightweight (<1KB), privacy-friendly (GDPR-compliant without a cookie banner), and has a clean dashboard. Add a single <code>&lt;script&gt;</code> tag to <code>/components/nav.html</code> or as a common include so all pages get it automatically. Alternatively, GA4 if richer funnel analysis is needed. Track: page views, blog article reads (time on page), and contact form CTA clicks.</div>
+    <div class="block qa"><span class="lab">Verify</span>Real-time analytics show a pageview when the live site is visited. No console errors. Script doesn't block page render (async/defer).</div>
+  </div>
+
+
+  <!-- ============================ PLANNED ============================ -->
+  <h2 class="sprint" id="pl"><span class="num">📋</span> Planned</h2>
+  <p class="sprint-sub">Future improvements. Not committed — pull from here when current work lands. Re-triage each quarter.</p>
+
+  <h3 class="head"><span class="dot" style="background:var(--accent-2)"></span>1 · New pages &amp; features</h3>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">PL-01</span><span class="ttitle">Dedicated /about page</span><span class="chip feat">New page</span><span class="chip phase">Medium</span></div>
+    <div class="block what"><span class="lab">What</span>The landing page has an "About" section, but it's a short scroll-target section, not a full page. A dedicated <code>/about.html</code> could go deeper: the team story, how TBox works, values, founder background, and a client list. Better for SEO (target "about TBox Solutionz") and a more credible destination for referral traffic.</div>
+    <div class="block dev"><span class="lab">Approach</span>New page following the existing page template pattern. Sections: founder hero, team (if applicable), values/principles, studio model, client logos (if approved for use), and a CTA to the contact page.</div>
+    <div class="block qa"><span class="lab">Verify</span>Nav "About" link updated to point to <code>/about.html</code> instead of <code>/#about-us</code>. Sitemap updated. OG image and meta tags complete.</div>
+  </div>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">PL-02</span><span class="ttitle">Work listing — add category filter chips</span><span class="chip feat">Enhancement</span><span class="chip phase">Medium</span></div>
+    <div class="block what"><span class="lab">What</span><code>/work/index.html</code> exists with "All Case Studies" listing. What's still missing: category filter chips (Mobile, AI, Web, Fintech, etc.) that let visitors narrow the grid by type. Currently all case studies appear as a flat list with no filtering.</div>
+    <div class="block dev"><span class="lab">Approach</span>Add filter chip row above the cards grid. Pure JS — on click, show/hide cards whose <code>data-category</code> attributes match the selected chip. "All" chip resets. No backend needed. Tag each existing card with appropriate categories.</div>
+    <div class="block qa"><span class="lab">Verify</span>Filter chips show/hide cards correctly. "All" resets. All 6 case studies visible with no filter active. Mobile layout works correctly.</div>
+  </div>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">PL-03</span><span class="ttitle">Blog search</span><span class="chip feat">New feature</span><span class="chip phase">Small</span></div>
+    <div class="block what"><span class="lab">What</span>With 6 articles today and more planned, a simple search on the blog listing page would help. Static client-side search — no backend needed. Fuse.js or a simple custom filter on title + excerpt text.</div>
+    <div class="block dev"><span class="lab">Approach</span>Add a search input above the article grid. On keystroke, filter cards by matching title/excerpt. Reset button. No network request. Can be built with ~30 lines of vanilla JS.</div>
+    <div class="block qa"><span class="lab">Verify</span>Typing "mobile" shows only mobile-related articles. Clearing the search shows all 6. Empty state message when no results. Accessible (label on input).</div>
+  </div>
+
+  <!-- Enhancements -->
+  <h3 class="head"><span class="dot" style="background:var(--blue)"></span>2 · Enhancements</h3>
+
+  <div class="task enh" data-head="enh">
+    <div class="thead"><span class="tid">PL-05</span><span class="ttitle">Dark mode toggle for visitors</span><span class="chip enh">Enhancement</span><span class="chip phase">Medium</span></div>
+    <div class="block what"><span class="lab">What</span>The site respects the OS dark mode preference (via CSS media query), but there's no manual toggle for visitors who want to switch without changing their OS setting. Adding a toggle in the nav would let visitors choose explicitly.</div>
+    <div class="block dev"><span class="lab">Approach</span>Add a theme toggle button to <code>/components/nav.html</code>. JS reads/sets <code>localStorage</code> key and toggles a <code>data-theme="dark"</code> attribute on <code>&lt;html&gt;</code>. CSS must already use <code>@media (prefers-color-scheme: dark)</code> properly. Audit current dark-mode styles before adding the toggle — some pages may have hardcoded colors that don't invert correctly.</div>
+    <div class="block qa"><span class="lab">Verify</span>Toggle switches all pages dark. Preference persists across reload and navigation. Colors readable in both modes (check contrast on all text/background combos).</div>
+  </div>
+
+  <div class="task enh" data-head="enh">
+    <div class="thead"><span class="tid">PL-06</span><span class="ttitle">Newsletter/mailing list signup</span><span class="chip enh">Enhancement</span><span class="chip phase">Medium</span></div>
+    <div class="block what"><span class="lab">What</span>Blog articles generate organic traffic but have no retention mechanism. A newsletter signup ("Get new articles in your inbox") keeps interested readers engaged. Could be placed at the end of each article and on the blog listing page.</div>
+    <div class="block dev"><span class="lab">Approach</span>Use ConvertKit, Mailchimp, or Buttondown (simple, developer-friendly). Embed their hosted form or API-powered inline form. A minimal email + name input with a submit button. Don't add a cookie banner just for this — use a provider that stores consent server-side.</div>
+    <div class="block qa"><span class="lab">Verify</span>Test signup flow. Confirmation email received. Subscriber appears in the provider dashboard. Form accessible without JS (progressive enhancement).</div>
+  </div>
+
+  <div class="task enh" data-head="enh">
+    <div class="thead"><span class="tid">PL-07</span><span class="ttitle">Blog pagination (when articles exceed 9)</span><span class="chip enh">Enhancement</span><span class="chip phase">Low — not yet needed</span></div>
+    <div class="block what"><span class="lab">What</span>Current blog has 6 articles on one page. When the count exceeds 9, the listing page gets long and load time increases. Add pagination or "Load more" functionality at that point.</div>
+    <div class="block dev"><span class="lab">Approach</span>Simplest approach for a static site: generate separate listing pages (<code>/blog/page-2.html</code>). Alternatively, a JS-powered "show more" that reveals hidden cards. Defer until 10+ articles exist.</div>
+    <div class="block qa"><span class="lab">Verify</span>N/A until 10+ articles. Flag to revisit when a 10th article is added.</div>
+  </div>
+
+  <div class="task enh" data-head="enh">
+    <div class="thead"><span class="tid">PL-08</span><span class="ttitle">Related articles on blog post pages</span><span class="chip enh">Enhancement</span><span class="chip phase">Small</span></div>
+    <div class="block what"><span class="lab">What</span>After reading an article, there's currently no prompt to read another. A "More articles" or "Related articles" section at the bottom of each article page (before the CTA) would increase time on site and page depth.</div>
+    <div class="block dev"><span class="lab">Approach</span>Static approach: hand-pick 2–3 related article cards per article (by topic proximity) and hardcode them into each article's HTML. No JS required. Cards reuse the same card style from the listing page. Update when new articles are added.</div>
+    <div class="block qa"><span class="lab">Verify</span>Related cards appear on each article. No broken links. Cards look consistent with the listing page style.</div>
+  </div>
+
+  <!-- General / SEO -->
+  <h3 class="head"><span class="dot" style="background:var(--slate)"></span>3 · General &amp; SEO</h3>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">PL-10</span><span class="ttitle">Performance audit — Core Web Vitals</span><span class="chip gen">Performance</span><span class="chip phase">Medium</span></div>
+    <div class="block what"><span class="lab">What</span>No performance baseline has been measured. Run a Lighthouse audit and PageSpeed Insights check on the 3 highest-traffic pages (homepage, blog listing, top blog article). Address any LCP, CLS, or FID failures. Target: all three Core Web Vitals in the "Good" range.</div>
+    <div class="block dev"><span class="lab">Approach</span>Common issues on static sites: unoptimized images (convert JPEG to WebP), render-blocking CSS, font loading. The blog cover images (currently JPEG) should be converted to WebP for ~30–40% size reduction. Ensure <code>loading="lazy"</code> on all below-fold images. Check <code>components.js</code> defer timing doesn't cause layout shift.</div>
+    <div class="block qa"><span class="lab">Verify</span>PageSpeed Insights score ≥90 on mobile for the homepage. LCP &lt;2.5s. CLS &lt;0.1. No render-blocking resources.</div>
+  </div>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">PL-11</span><span class="ttitle">Accessibility audit (WCAG AA)</span><span class="chip gen">Accessibility</span><span class="chip phase">Medium</span></div>
+    <div class="block what"><span class="lab">What</span>Accessibility hasn't been systematically audited. The testimonial dots touch targets are fixed (44px), but other icon-only buttons, color contrasts on faint text, and keyboard navigation paths may have issues.</div>
+    <div class="block dev"><span class="lab">Approach</span>Run axe DevTools or Lighthouse accessibility audit on all main pages. Check: (1) all icon-only buttons have <code>aria-label</code>; (2) color contrast ≥4.5:1 for normal text, ≥3:1 for large text; (3) keyboard navigation covers all interactive elements; (4) images have meaningful <code>alt</code> text; (5) forms have proper labels.</div>
+    <div class="block qa"><span class="lab">Verify</span>Axe reports zero critical violations. Tab navigation reaches all interactive elements. Screen reader announces button purposes correctly.</div>
+  </div>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">PL-12</span><span class="ttitle">GDPR cookie consent banner (if analytics added)</span><span class="chip gen">Legal / Compliance</span><span class="chip phase">Low — depends on IP-03 (analytics)</span></div>
+    <div class="block what"><span class="lab">What</span>If Google Analytics (GA4) is added, a cookie consent banner is required for EU visitors under GDPR. If Plausible Analytics is chosen instead (cookieless, no personal data), this is not required. Decide after the analytics provider is selected.</div>
+    <div class="block dev"><span class="lab">Approach</span>If GA4: use a lightweight consent library (e.g. <code>cookieconsent</code>) or build a minimal banner that blocks the GA script until consent is given. If Plausible: skip this entirely — Plausible doesn't require consent and stores no personal data.</div>
+    <div class="block qa"><span class="lab">Verify</span>N/A until analytics decision is made. If banner added: first-visit prompt appears, GA does not fire until consent given, consent persists across pages.</div>
+  </div>
+
+  <div class="task enh" data-head="enh">
+    <div class="thead"><span class="tid">PL-13</span><span class="ttitle">Contact form backend — replace mailto with Formspree</span><span class="chip enh">Enhancement</span><span class="chip phase">Medium</span></div>
+    <div class="block what"><span class="lab">What</span>The contact form on <code>/contact.html</code> currently uses <code>action="mailto:info@tboxsolutionz.com"</code> — this is a basic mailto fallback that opens the visitor's email client instead of submitting silently. Many users abandon at that point. Needs a real form backend.</div>
+    <div class="block dev"><span class="lab">Approach</span>Formspree (free tier, no server needed): create a form at formspree.io, set <code>action="https://formspree.io/f/[form-id]"</code> and <code>method="POST"</code> on the form element. Submissions are forwarded to <code>dilawer.official44@gmail.com</code>. Optionally add a redirect to a thank-you page on success.</div>
+    <div class="block qa"><span class="lab">Verify</span>Submit a test message from the live site. Email received at dilawer.official44@gmail.com within 60 seconds. Form resets after submission. No email-client window opens.</div>
+  </div>
+
+  <!-- ============================ SEO MIGRATION ============================ -->
+  <h2 class="sprint" id="sm"><span class="num">🔍</span> SEO Migration Audit</h2>
+  <p class="sprint-sub">Pre-launch comparison: live tboxsolutionz.com vs. new local build. Resolve all Critical and High items before go-live to protect existing rankings.</p>
+
+  <div class="hero" style="background: linear-gradient(120deg, #92400e 0%, #b45309 55%, #d97706 100%); box-shadow: 0 12px 40px rgba(146,64,14,.30);">
+    <h1>Migration Risk Score &nbsp;<span class="seo-score">⚠ Medium Risk</span></h1>
+    <p>The new site is a clear technical SEO upgrade — clean title, full schema markup, canonical tags, manifest, Article JSON-LD on all blog articles, and a full <code>.htaccess</code> redirect suite. The /projects/ section is preserved at its original URLs. One blocker remains: install analytics before launch so the 30/60/90-day benchmarks can be measured. Revised based on AWStats Jan–Jul 2026 data.</p>
+    <div class="meta">
+      <span>1 Critical item</span>
+      <span>0 High items</span>
+      <span>0 Medium items</span>
+      <span>15 Wins already shipped</span>
+      <span>Ready to launch once GA4 is installed</span>
+    </div>
+  </div>
+
+  <!-- ============================ TRAFFIC BASELINE ============================ -->
+  <h3 class="head" style="margin-top:2rem;"><span class="dot" style="background:var(--blue)"></span>📊 Traffic Baseline — Year 2026 (Jan 1 – Jul 24) · AWStats Report</h3>
+  <p style="font-size:13.5px;color:var(--muted);margin:0 0 1.25rem;">Source: cPanel AWStats, tboxsolutionz.com (WordPress/CMS). Captured 24 Jul 2026 17:19. Use these numbers as the pre-migration benchmark — reassess 30, 60, and 90 days after new site goes live.</p>
+
+  <!-- Stat cards row -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem;">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:1rem 1.25rem;text-align:center;">
+      <div style="font-size:1.6rem;font-weight:900;font-family:var(--mono);color:var(--ink);letter-spacing:-0.03em;">38,592</div>
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:4px;">AWStats unique visitors</div>
+      <div style="font-size:11px;color:var(--warn);margin-top:6px;">⚠ includes undetected bots</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:1rem 1.25rem;text-align:center;">
+      <div style="font-size:1.6rem;font-weight:900;font-family:var(--mono);color:var(--good);letter-spacing:-0.03em;">~3,500</div>
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:4px;">Est. real human visitors</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px;">~500 / month average</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:1rem 1.25rem;text-align:center;">
+      <div style="font-size:1.6rem;font-weight:900;font-family:var(--mono);color:var(--ink);letter-spacing:-0.03em;">63,009</div>
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:4px;">Total visits (viewed)</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px;">213,459 bot hits excluded</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:1rem 1.25rem;text-align:center;">
+      <div style="font-size:1.6rem;font-weight:900;font-family:var(--mono);color:var(--danger);letter-spacing:-0.03em;">1,659</div>
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:4px;">Organic search visits</div>
+      <div style="font-size:11px;color:var(--danger);margin-top:6px;">0.3% of all traffic</div>
+    </div>
+  </div>
+
+  <!-- Monthly trend table -->
+  <details class="box" open>
+    <summary>📅 Monthly unique visitors & visit counts (Jan–Jul 2026)</summary>
+    <div style="overflow-x:auto;margin-top:8px;">
+      <table class="redirect-table">
+        <thead><tr><th>Month</th><th>Unique visitors</th><th>Visits</th><th>Pages</th><th>Hits</th><th>Bandwidth</th><th>Trend</th></tr></thead>
+        <tbody>
+          <tr><td>Jan 2026</td><td style="font-weight:700;">5,729</td><td>11,098</td><td>70,714</td><td>89,452</td><td>1.04 GB</td><td>—</td></tr>
+          <tr><td>Feb 2026</td><td style="font-weight:700;">5,098</td><td>11,154</td><td>64,650</td><td>83,549</td><td>1.09 GB</td><td style="color:var(--danger)">▼ −11%</td></tr>
+          <tr><td>Mar 2026</td><td style="font-weight:700;">5,441</td><td>7,819</td><td>68,939</td><td>83,220</td><td>856 MB</td><td style="color:var(--good)">▲ +7%</td></tr>
+          <tr><td>Apr 2026</td><td style="font-weight:700;">5,959</td><td>8,628</td><td>79,504</td><td>93,617</td><td>854 MB</td><td style="color:var(--good)">▲ +10%</td></tr>
+          <tr><td>May 2026</td><td style="font-weight:700;">5,499</td><td>8,476</td><td>68,146</td><td>83,060</td><td>1.00 GB</td><td style="color:var(--danger)">▼ −8%</td></tr>
+          <tr><td>Jun 2026</td><td style="font-weight:700;">5,630</td><td>8,996</td><td>98,020</td><td>114,250</td><td>1.65 GB</td><td style="color:var(--good)">▲ +2%</td></tr>
+          <tr><td>Jul 2026 <span style="font-size:10px;color:var(--muted)">(1–24)</span></td><td style="font-weight:700;">4,597</td><td>6,838</td><td>116,859</td><td>127,315</td><td>1.21 GB</td><td style="color:var(--muted)">partial</td></tr>
+          <tr style="border-top:2px solid var(--border);font-weight:700;"><td>Total YTD</td><td style="color:var(--blue)">38,592</td><td>63,009</td><td>566,832</td><td>674,463</td><td>7.66 GB</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <!-- Bot analysis -->
+  <details class="box" style="margin-top:10px;">
+    <summary>🤖 Bot traffic breakdown — why real human count is ~3,500 not 38,592</summary>
+    <div style="font-size:13.5px;color:var(--ink);line-height:1.7;margin-top:10px;">
+      <p style="margin-bottom:10px;">AWStats already excluded 83 identified robots (213,459 "not-viewed" hits). But the 38,592 reported unique visitors still contain significant automated traffic based on 5 signals:</p>
+      <table class="redirect-table">
+        <thead><tr><th>Signal</th><th>Evidence</th><th>Impact</th></tr></thead>
+        <tbody>
+          <tr><td><strong>91.3% of visits are 0–30 seconds</strong></td><td>57,543 of 63,009 sessions — bots don't dwell</td><td style="color:var(--danger)">Removes ~57,500 visits</td></tr>
+          <tr><td><strong>WordPress attack paths dominate top URLs</strong></td><td>/wp-cron.php 153k + /xmlrpc.php 155k + /wp-admin 108k + /wp-login.php 46k = ~464k automated hits</td><td style="color:var(--danger)">Not content traffic</td></tr>
+          <tr><td><strong>Iran is #1 country at 265,343 pages</strong></td><td>Ahead of US (142k) — well-known scraper/bot origin; 0 bandwidth shown suggests no assets loaded</td><td style="color:var(--danger)">~265k pages = scrapers</td></tr>
+          <tr><td><strong>Single IP: 261,174 page hits</strong></td><td>37.27.108.228 alone generated 261,174 pages on Jul 24 — one scraper</td><td style="color:var(--danger)">Distorts all totals</td></tr>
+          <tr><td><strong>99.4% "Direct" traffic</strong></td><td>Only 1,659 pages (0.3%) from search engines — real sites don't have this ratio</td><td style="color:var(--warn)">No organic SEO traction</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:10px;padding:10px 14px;background:rgba(255,255,255,.08);border-radius:8px;border-left:3px solid var(--good);">
+        <strong>Estimate methodology:</strong> Visits with duration &gt;30s = 5,454 sessions. Subtract RSS/feed bots (~830) and admin sessions (~25). Adjusted for Iran/scraper IP exclusion proportion → <strong>~3,000–4,000 genuine human visitors YTD</strong>, roughly <strong>430–570 per month</strong>.
+      </p>
+      <div style="margin-top:10px;">
+        <p style="margin-bottom:6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">Identified robots (top 10 by hits):</p>
+        <table class="redirect-table">
+          <thead><tr><th>Bot</th><th>Hits</th><th>Type</th></tr></thead>
+          <tbody>
+            <tr><td>AhrefsBot</td><td style="font-family:var(--mono)">15,741+647</td><td>SEO crawler</td></tr>
+            <tr><td>Unknown bots</td><td style="font-family:var(--mono)">10,203+1,913</td><td>Unidentified</td></tr>
+            <tr><td>YisoSpider</td><td style="font-family:var(--mono)">11,104</td><td>Search crawler</td></tr>
+            <tr><td>crawl</td><td style="font-family:var(--mono)">7,383+234</td><td>Web crawler</td></tr>
+            <tr><td>Bytespider</td><td style="font-family:var(--mono)">4,399+789</td><td>ByteDance crawler</td></tr>
+            <tr><td>bingbot</td><td style="font-family:var(--mono)">4,004+186</td><td>Microsoft search</td></tr>
+            <tr><td>Googlebot</td><td style="font-family:var(--mono)">3,801+189</td><td>Google search</td></tr>
+            <tr><td>GPTBot</td><td style="font-family:var(--mono)">2,500</td><td>OpenAI training</td></tr>
+            <tr><td>SemrushBot</td><td style="font-family:var(--mono)">670+502</td><td>SEO audit tool</td></tr>
+            <tr><td>Others (73 bots)</td><td style="font-family:var(--mono)">~2,878+242</td><td>Various</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- Geographic breakdown -->
+  <details class="box" style="margin-top:10px;">
+    <summary>🌍 Geographic breakdown — by country (pages served, bot-inclusive)</summary>
+    <div style="overflow-x:auto;margin-top:8px;">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:8px;">Note: These are AWStats locale counts which include undetected bots. Iran (#1) is almost certainly scraper traffic. US and Western Europe numbers are the most credible for real human visitors. AWStats does not provide city-level data — that requires Google Analytics.</p>
+      <table class="redirect-table">
+        <thead><tr><th>#</th><th>Country</th><th>Pages</th><th>Hits</th><th>Est. real humans</th><th>Continent</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>🇮🇷 Iran</td><td style="font-family:var(--mono)">265,343</td><td style="font-family:var(--mono)">267,401</td><td style="color:var(--danger)">~0 (scrapers)</td><td>Asia</td></tr>
+          <tr style="background:rgba(255,255,255,.04);"><td>2</td><td>🇺🇸 United States</td><td style="font-family:var(--mono)">142,830</td><td style="font-family:var(--mono)">184,968</td><td style="color:var(--good);font-weight:700;">~800–1,200</td><td>North America</td></tr>
+          <tr><td>3</td><td>🇮🇳 India</td><td style="font-family:var(--mono)">39,104</td><td style="font-family:var(--mono)">47,005</td><td style="color:var(--warn)">~300–500</td><td>Asia</td></tr>
+          <tr><td>4</td><td>🇷🇺 Russia</td><td style="font-family:var(--mono)">12,707</td><td style="font-family:var(--mono)">14,755</td><td style="color:var(--warn)">~80–150 (mixed bots)</td><td>Europe/Asia</td></tr>
+          <tr style="background:rgba(255,255,255,.04);"><td>5</td><td>🇬🇧 United Kingdom</td><td style="font-family:var(--mono)">9,313</td><td style="font-family:var(--mono)">11,595</td><td style="color:var(--good);font-weight:700;">~200–350</td><td>Europe</td></tr>
+          <tr><td>6</td><td>🇯🇵 Japan</td><td style="font-family:var(--mono)">8,779</td><td style="font-family:var(--mono)">12,144</td><td style="color:var(--muted)">~50–100</td><td>Asia</td></tr>
+          <tr><td>7</td><td>🇵🇰 Pakistan</td><td style="font-family:var(--mono)">6,492</td><td style="font-family:var(--mono)">19,900</td><td style="color:var(--warn)">~200–400 (high hits/page ratio)</td><td>Asia</td></tr>
+          <tr><td>8</td><td>🇨🇳 China</td><td style="font-family:var(--mono)">5,345</td><td style="font-family:var(--mono)">19,000</td><td style="color:var(--danger)">~0–50 (crawlers)</td><td>Asia</td></tr>
+          <tr><td>9</td><td>🇻🇳 Vietnam</td><td style="font-family:var(--mono)">5,136</td><td style="font-family:var(--mono)">5,483</td><td style="color:var(--muted)">~30–80</td><td>Asia</td></tr>
+          <tr style="background:rgba(255,255,255,.04);"><td>10</td><td>🇩🇪 Germany</td><td style="font-family:var(--mono)">4,415</td><td style="font-family:var(--mono)">7,216</td><td style="color:var(--good)">~100–180</td><td>Europe</td></tr>
+          <tr><td>11</td><td>🇳🇱 Netherlands</td><td style="font-family:var(--mono)">4,250</td><td style="font-family:var(--mono)">4,557</td><td style="color:var(--muted)">~60–100</td><td>Europe</td></tr>
+          <tr><td>12</td><td>🇨🇦 Canada</td><td style="font-family:var(--mono)">3,695</td><td style="font-family:var(--mono)">5,557</td><td style="color:var(--warn)">~100–160</td><td>North America</td></tr>
+          <tr><td>13</td><td>🇸🇪 Sweden</td><td style="font-family:var(--mono)">3,640</td><td style="font-family:var(--mono)">3,971</td><td style="color:var(--muted)">~40–80</td><td>Europe</td></tr>
+          <tr><td>14</td><td>🇦🇺 Australia</td><td style="font-family:var(--mono)">3,605</td><td style="font-family:var(--mono)">4,464</td><td style="color:var(--muted)">~60–100</td><td>Oceania</td></tr>
+          <tr><td>15</td><td>🇹🇭 Thailand</td><td style="font-family:var(--mono)">3,121</td><td style="font-family:var(--mono)">3,214</td><td style="color:var(--muted)">~20–50</td><td>Asia</td></tr>
+          <tr><td>16</td><td>🇷🇴 Romania</td><td style="font-family:var(--mono)">2,402</td><td style="font-family:var(--mono)">2,759</td><td style="color:var(--muted)">~20–50</td><td>Europe</td></tr>
+          <tr><td>17</td><td>🇵🇭 Philippines</td><td style="font-family:var(--mono)">2,246</td><td style="font-family:var(--mono)">2,598</td><td style="color:var(--muted)">~30–60</td><td>Asia</td></tr>
+          <tr><td>18</td><td>🇫🇷 France</td><td style="font-family:var(--mono)">2,103</td><td style="font-family:var(--mono)">5,570</td><td style="color:var(--muted)">~40–80</td><td>Europe</td></tr>
+          <tr><td>19</td><td>🇦🇪 UAE</td><td style="font-family:var(--mono)">1,743</td><td style="font-family:var(--mono)">2,021</td><td style="color:var(--muted)">~40–70</td><td>Asia/Middle East</td></tr>
+          <tr><td>—</td><td>All others</td><td style="font-family:var(--mono)">31,342</td><td style="font-family:var(--mono)">38,005</td><td style="color:var(--muted)">~200–400</td><td>Various</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div style="padding:10px 14px;background:rgba(255,255,255,.06);border-radius:8px;border-left:3px solid var(--blue);">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">Continent split (est. real humans)</div>
+        <div style="font-size:13px;line-height:1.9;">
+          🌎 <strong>North America</strong> — ~900–1,400 (US + CA) — largest real audience<br>
+          🌍 <strong>Europe</strong> — ~500–850 (UK, DE, NL, SE, FR, RO)<br>
+          🌏 <strong>Asia</strong> — ~600–1,000 (IN, PK, JP, VN, PH, AE, TH)<br>
+          🌍 <strong>Africa</strong> — ~80–150 (AO, ZA, others)<br>
+          🌏 <strong>Oceania</strong> — ~60–100 (AU)
+        </div>
+      </div>
+      <div style="padding:10px 14px;background:rgba(255,255,255,.06);border-radius:8px;border-left:3px solid var(--warn);">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">City-level data — not available</div>
+        <div style="font-size:13px;line-height:1.7;color:var(--muted);">AWStats (cPanel server logs) only shows country level. City and metro breakdown requires Google Analytics 4 or a pixel-based tool (Plausible, Fathom). <strong>Install GA4 on the new site before launch</strong> to get city data from day one (IP-03 in Planned tab).</div>
+      </div>
+    </div>
+  </details>
+
+  <!-- Search & referral sources -->
+  <details class="box" style="margin-top:10px;">
+    <summary>🔎 Search & referral sources — organic footprint is nearly zero</summary>
+    <div style="overflow-x:auto;margin-top:8px;">
+      <table class="redirect-table">
+        <thead><tr><th>Source</th><th>Pages</th><th>% of total</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td>Direct / Bookmark / Email</td><td style="font-family:var(--mono)">479,984</td><td style="color:var(--warn);font-weight:700;">99.4%</td><td>Overwhelmingly bots and automated tools hitting known URLs</td></tr>
+          <tr><td><strong>Google.com (organic)</strong></td><td style="font-family:var(--mono)">1,344</td><td style="color:var(--danger)">0.28%</td><td>The entire year's organic Google traffic — critically low</td></tr>
+          <tr><td>Bing</td><td style="font-family:var(--mono)">125</td><td>0.03%</td><td>Negligible</td></tr>
+          <tr><td>DuckDuckGo</td><td style="font-family:var(--mono)">97</td><td>0.02%</td><td>Negligible</td></tr>
+          <tr><td>Facebook</td><td style="font-family:var(--mono)">95</td><td>0.02%</td><td>Small social referral</td></tr>
+          <tr><td>WordPress.org</td><td style="font-family:var(--mono)">85</td><td>0.02%</td><td>Plugin/theme directory traffic (old WP site)</td></tr>
+          <tr><td>All other search engines</td><td style="font-family:var(--mono)">~300</td><td>0.06%</td><td>Yahoo, Baidu, YouTube, etc.</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:10px;padding:10px 14px;background:rgba(224,27,27,.08);border-radius:8px;border-left:3px solid var(--danger);font-size:13px;">
+        <strong>Key insight:</strong> Only <strong>1,659 page views (0.3%)</strong> came from search engines in 7 months. The old WordPress site has essentially no organic SEO presence. This means the new site — with its structured data, blog content, and clean URLs — starts from near zero but has a clear ceiling to grow into. SEO migration is still important to preserve the <em>small</em> existing equity and not make things worse.
+      </p>
+    </div>
+  </details>
+
+  <!-- HTTP health -->
+  <details class="box" style="margin-top:10px;">
+    <summary>🔴 HTTP status codes — 51.6% are 404s (site health warning)</summary>
+    <div style="overflow-x:auto;margin-top:8px;">
+      <table class="redirect-table">
+        <thead><tr><th>Code</th><th>Meaning</th><th>Hits</th><th>%</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--danger);font-weight:700;">404</td><td>Not Found</td><td style="font-family:var(--mono)">63,335</td><td style="color:var(--danger)">51.6%</td><td>Bots probing WordPress paths that don't exist on this server. Also any real 404s.</td></tr>
+          <tr><td style="color:var(--good);">301</td><td>Moved Permanently</td><td style="font-family:var(--mono)">23,112</td><td>18.8%</td><td>Good — existing redirects working</td></tr>
+          <tr><td style="color:var(--warn);">400</td><td>Bad Request</td><td style="font-family:var(--mono)">16,964</td><td>13.8%</td><td>Malformed bot requests</td></tr>
+          <tr><td>302</td><td>Temporary redirect</td><td style="font-family:var(--mono)">5,782</td><td>4.7%</td><td>Should be 301s — temporary redirects don't pass link equity</td></tr>
+          <tr><td style="color:var(--danger);">500</td><td>Internal Server Error</td><td style="font-family:var(--mono)">3,005</td><td>2.4%</td><td>Server errors — worth investigating on current WP install</td></tr>
+          <tr><td>403</td><td>Forbidden</td><td style="font-family:var(--mono)">2,578</td><td>2.1%</td><td>Security blocks (expected for WP attack paths)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <!-- Reassessment tracker -->
+  <div style="margin-top:1.5rem;">
+    <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;">📈 Reassessment schedule — post-launch benchmarks</h3>
+    <div style="overflow-x:auto;">
+      <table class="redirect-table">
+        <thead><tr><th>Checkpoint</th><th>Target date</th><th>Unique visitors (goal)</th><th>Organic search visits (goal)</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Baseline (now)</strong></td>
+            <td>Jul 2026</td>
+            <td style="font-family:var(--mono)">~500/mo (est. real)</td>
+            <td style="font-family:var(--mono)">~237/mo (Google: 1,344 ÷ 7mo)</td>
+            <td><span class="chip done" style="font-size:10px;">Recorded</span></td>
+          </tr>
+          <tr>
+            <td><strong>30-day check</strong></td>
+            <td>~Aug–Sep 2026</td>
+            <td style="font-family:var(--mono);color:var(--muted)">≥500/mo (hold baseline)</td>
+            <td style="font-family:var(--mono);color:var(--muted)">≥300/mo (+26%)</td>
+            <td><span class="chip" style="font-size:10px;background:rgba(255,255,255,.08);">Pending</span></td>
+          </tr>
+          <tr>
+            <td><strong>60-day check</strong></td>
+            <td>~Sep–Oct 2026</td>
+            <td style="font-family:var(--mono);color:var(--muted)">≥700/mo (+40%)</td>
+            <td style="font-family:var(--mono);color:var(--muted)">≥500/mo (+111%)</td>
+            <td><span class="chip" style="font-size:10px;background:rgba(255,255,255,.08);">Pending</span></td>
+          </tr>
+          <tr>
+            <td><strong>90-day check</strong></td>
+            <td>~Oct–Nov 2026</td>
+            <td style="font-family:var(--mono);color:var(--muted)">≥1,000/mo (+100%)</td>
+            <td style="font-family:var(--mono);color:var(--muted)">≥1,000/mo (+321%)</td>
+            <td><span class="chip" style="font-size:10px;background:rgba(255,255,255,.08);">Pending</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px;">Goals assume: new site live, GA4 installed, 301 redirects in place, blog articles indexed. Organic search goal is the primary metric — AWStats "unique visitors" will remain inflated by bots regardless of platform. Use GA4 after launch for clean session data and city-level geo.</p>
+  </div>
+
+  <div class="callout warn" style="margin-top:1.25rem;margin-bottom:2rem;">
+    <span class="ic">💡</span>
+    <div><strong>Bottom line:</strong> The current site receives roughly <strong>430–570 real human visitors per month</strong>, almost all arriving directly (bookmarks, referrals, client links) — not from organic search. Google organic brings only ~237 pages/month. This means the SEO migration is <em>not</em> about protecting large existing traffic — it's about making sure the new site doesn't lose even this small foundation, while the blog content begins building organic growth from scratch. Every redirect missed is link equity lost from an already thin base. Treat all Critical and High items as mandatory.</div>
+  </div>
+
+  <!-- URL Redirect Map -->
+  <details class="box">
+    <summary>📋 Full URL Redirect Map — 301 destinations for all live pages</summary>
+    <div style="overflow-x:auto;margin-top:6px;">
+      <table class="redirect-table">
+        <thead>
+          <tr><th>Old URL (live site)</th><th>New URL / Destination</th><th>Action</th><th>Risk</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>/</td><td>/index.html</td><td><span class="chip done" style="font-size:10px;">Keep</span></td><td style="color:var(--good)">None</td></tr>
+          <tr><td>/projects</td><td>/projects/</td><td><span class="chip done" style="font-size:10px;">Keep — page exists</span></td><td style="color:var(--good)">None</td></tr>
+          <tr><td>/projects/emushrif</td><td>/projects/emushrif.html</td><td><span class="chip done" style="font-size:10px;">Keep — page exists</span></td><td style="color:var(--good)">None</td></tr>
+          <tr><td>/projects/getbetterback</td><td>/projects/betterback.html</td><td><span class="chip done" style="font-size:10px;">Keep — page exists</span></td><td style="color:var(--good)">None</td></tr>
+          <tr><td>/projects/impause</td><td>/projects/impause.html</td><td><span class="chip done" style="font-size:10px;">Keep — page exists</span></td><td style="color:var(--good)">None</td></tr>
+          <tr><td>/projects/spendlio</td><td>/projects/spendlio.html</td><td><span class="chip done" style="font-size:10px;">Keep — page exists</span></td><td style="color:var(--good)">None</td></tr>
+          <tr><td>/projects/ojaexpress</td><td>/projects/</td><td><span class="chip phase" style="font-size:10px;">301 → /projects/</span></td><td style="color:var(--warn)">Med</td></tr>
+          <tr><td>/projects/carigo, /projects/swaplink, /projects/ecare21, /projects/nearhero, /projects/magzinenu, /projects/kizbin, /projects/hmushrif, /projects/envago, /projects/rehlati, /projects/arifbutt, /projects/usalak, /projects/fotki, /projects/newsandnews, /projects/bohoio, /projects/proeffabriek…, /projects/clubenz, /projects/trumpjump, /projects/pantry, /projects/pod-digital-media</td><td>/projects/</td><td><span class="chip phase" style="font-size:10px;">301 → /projects/ (file-existence rule)</span></td><td style="color:var(--warn)">Med</td></tr>
+          <tr><td>/blogs</td><td>/blog/</td><td><span class="chip bug" style="font-size:10px;">301 redirect</span></td><td style="color:var(--danger)">Critical</td></tr>
+          <tr><td>/contact</td><td>/contact.html</td><td><span class="chip done" style="font-size:10px;">Keep</span></td><td style="color:var(--good)">None</td></tr>
+          <tr><td>/careers</td><td>/careers.html</td><td><span class="chip done" style="font-size:10px;">✓ Page built + 301</span></td><td style="color:var(--good)">Done</td></tr>
+          <tr><td>/company</td><td>/</td><td><span class="chip done" style="font-size:10px;">✓ 301 in .htaccess</span></td><td style="color:var(--good)">Done</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <!-- Critical -->
+  <h3 class="head"><span class="dot" style="background:var(--danger)"></span>1 · Critical — must fix before launch</h3>
+  <p style="font-size:12.5px;color:var(--muted);margin:0 0 1rem;padding-left:2px;">All redirect-based Critical items are resolved via <code>.htaccess</code>. One item remains: analytics must be installed before go-live or the 30/60/90-day benchmarks cannot be measured.</p>
+
+  <div class="task crit" data-head="crit">
+    <div class="thead"><span class="tid">SM-03</span><span class="ttitle">Install GA4 analytics before launch — 30/60/90-day benchmarks are unmeasurable without it</span><span class="chip bug">Critical</span></div>
+    <div class="block what"><span class="lab">What</span>The new site has <strong>no analytics installed</strong>. AWStats (cPanel server logs) existed on the WordPress host but a static hosting environment does not generate server-side logs that AWStats can read. Without GA4 or equivalent from day one, you cannot measure whether the migration maintained or grew traffic, and the 30/60/90 day benchmarks set in this document are unmeasurable.</div>
+    <div class="block dev"><span class="lab">Impact</span>Without analytics you have zero visibility into: (a) whether real human sessions increased or dropped vs. the 430–570/month baseline, (b) which blog articles are attracting organic clicks, (c) city-level geographic data for US and European visitors, (d) whether any 404s are leaking through the redirect rules. Every other improvement made during this migration becomes unverifiable.</div>
+    <div class="block qa"><span class="lab">Fix</span>Create a free GA4 property at analytics.google.com. Add the GA4 script to <code>/components/nav.html</code> (injected on every page): <code>&lt;script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"&gt;&lt;/script&gt;</code> plus the init snippet. Alternative: Plausible Analytics — privacy-friendly, no cookie banner needed, ~$9/mo. Verify data is flowing in GA4 Real-Time before going live. Also listed as IP-03.</div>
+  </div>
+
+
+  <!-- Wins -->
+  <h3 class="head"><span class="dot" style="background:var(--good)"></span>3 · Wins — already improved in the new site</h3>
+
+  <div class="task win" data-head="win">
+    <div class="thead"><span class="tid">SM-10</span><span class="ttitle">Per-article OG images — each article now has its own unique cover image</span><span class="chip done">✓ Fixed</span></div>
+    <div class="block what"><span class="lab">Before</span>All 6 blog articles shared the same generic <code>og-cover.jpg</code>. When shared on LinkedIn or X, every article looked identical — no visual differentiation in link previews.</div>
+    <div class="block dev"><span class="lab">After</span>Each article's <code>og:image</code>, <code>twitter:image</code>, and Article JSON-LD <code>image</code> field now point to its own cover photo already in <code>/assets/images/blog/</code>: mobile-stack.jpg · ai-agents.jpg · app-timeline.jpg · fractional-cto.jpg · saas-mvp.jpg · offshore-dev.jpg. No new files needed — the unique Unsplash covers were already there.</div>
+    <div class="block qa"><span class="lab">Verify</span>Test any article URL in <a href="https://www.linkedin.com/post-inspector/" target="_blank" rel="noopener">LinkedIn Post Inspector</a> — each should now show its own distinct cover image in the link preview rather than the generic site cover.</div>
+  </div>
+
+  <div class="task win" data-head="win">
+    <div class="thead"><span class="tid">SM-12</span><span class="ttitle">Duplicate page title fixed</span><span class="chip done">✓ Fixed</span></div>
+    <div class="block what"><span class="lab">Before</span>Live site homepage title: <code>"TBox Solutionz - Software Development Company - TBox Solutionz - Software Development Company"</code> — the full title was duplicated, exceeding 60 characters and likely being truncated by Google into something incoherent in SERPs.</div>
+    <div class="block dev"><span class="lab">After</span>New site title: <code>"TBox Solutionz — AI-Native Engineering Studio"</code> — clean, 46 characters, includes primary keyword and differentiating positioning. All other pages have unique, descriptive titles under 60 characters.</div>
+    <div class="block qa"><span class="lab">Impact</span>Direct improvement to SERP click-through rate for branded searches. Google may have been rewriting the old title in results. The new title is within spec and will be used as-is.</div>
+  </div>
+
+  <div class="task win" data-head="win">
+    <div class="thead"><span class="tid">SM-13</span><span class="ttitle">JSON-LD structured data added across all pages</span><span class="chip done">✓ Fixed</span></div>
+    <div class="block what"><span class="lab">Before</span>The live site has no visible JSON-LD schema markup. No Organization schema, no WebSite schema, no Review schema, no BreadcrumbList.</div>
+    <div class="block dev"><span class="lab">After</span>New site homepage: <code>Organization</code> schema with name, URL, foundingDate, address, sameAs (Clutch, LinkedIn, Facebook), <code>AggregateRating</code> (5.0 / 5 reviews), and 3 individual <code>Review</code> entries. Plus <code>WebSite</code> schema. Inner pages (contact, work, case studies): <code>BreadcrumbList</code> schema. Blog articles: <code>og:type=article</code> (Article JSON-LD still needs adding — see SM-09).</div>
+    <div class="block qa"><span class="lab">Impact</span>Organization schema enables Google's Knowledge Panel for branded searches. AggregateRating schema enables star ratings in SERPs. BreadcrumbList enables breadcrumb display in SERPs. All significant SERP appearance improvements with zero ranking risk.</div>
+  </div>
+
+  <div class="task win" data-head="win">
+    <div class="thead"><span class="tid">SM-14</span><span class="ttitle">OG + Twitter Card meta on all major pages</span><span class="chip done">✓ Fixed</span></div>
+    <div class="block what"><span class="lab">Before</span>The live site appears to have minimal or no Open Graph / Twitter Card meta tags (none visible in page text extraction).</div>
+    <div class="block dev"><span class="lab">After</span>Every page in the new site has <code>og:type</code>, <code>og:url</code>, <code>og:title</code>, <code>og:description</code>, <code>og:image</code>, <code>twitter:card</code>, <code>twitter:title</code>, <code>twitter:description</code>, <code>twitter:image</code> — except blog/index.html (see SM-09). All OG images point to the same og-cover.jpg (see SM-08 for per-article improvement).</div>
+    <div class="block qa"><span class="lab">Impact</span>Rich link previews on LinkedIn, X, Facebook, Slack, and messaging apps. Controlled brand presentation on social shares. Particularly valuable for the blog articles and case studies which are most likely to be shared.</div>
+  </div>
+
+  <div class="task win" data-head="win">
+    <div class="thead"><span class="tid">SM-15</span><span class="ttitle">Manifest, multi-size favicons, and theme-color added</span><span class="chip done">✓ Fixed</span></div>
+    <div class="block what"><span class="lab">Before</span>The live site likely has only a basic favicon. No web app manifest, no Apple touch icon, no theme-color meta.</div>
+    <div class="block dev"><span class="lab">After</span>New site: <code>&lt;link rel="manifest" href="/site.webmanifest"&gt;</code>, <code>&lt;meta name="theme-color" content="#E01B1B"&gt;</code>, favicon at 16px, 32px, and 192px (Apple touch icon), plus <code>/favicon.ico</code>. All pages consistently include all four favicon/manifest links.</div>
+    <div class="block qa"><span class="lab">Impact</span>Enables PWA-style "Add to Home Screen" on mobile. Correct favicon displayed in browser tabs and bookmarks at all DPI levels. theme-color shown in Android Chrome address bar.</div>
+  </div>
+
+  <div class="task win" data-head="win">
+    <div class="thead"><span class="tid">SM-16</span><span class="ttitle">robots.txt and sitemap.xml properly configured</span><span class="chip done">✓ Fixed</span></div>
+    <div class="block what"><span class="lab">Before</span>Unknown state of live site robots.txt and sitemap. No evidence of sitemap.xml in the current site structure.</div>
+    <div class="block dev"><span class="lab">After</span>New site <code>robots.txt</code>: <code>User-agent: * / Allow: /</code> with <code>Sitemap: https://tboxsolutionz.com/sitemap.xml</code>. Sitemap covers all 16 URLs: homepage, /work/, 6 case studies, /contact.html, /blog/, 6 blog articles — all with correct canonical URLs and lastmod dates on blog articles. No noindex or disallow directives blocking indexation.</div>
+    <div class="block qa"><span class="lab">Impact</span>Sitemap submission to Google Search Console gives Google a definitive list of pages to index. robots.txt Sitemap directive allows any crawler to discover the sitemap automatically without GSC submission.</div>
+  </div>
+
+  <div class="task win" data-head="win">
+    <div class="thead"><span class="tid">SM-17</span><span class="ttitle">Blog section launched — 6 fresh SEO articles</span><span class="chip done">✓ Fixed</span></div>
+    <div class="block what"><span class="lab">Before</span>The live site has a <code>/blogs</code> section but individual article pages were not evident. The old site focused almost entirely on services and portfolio, with minimal fresh content.</div>
+    <div class="block dev"><span class="lab">After</span>New site has 6 long-form articles (1,200–2,000 words each) targeting high-intent keywords: mobile app development 2026, AI agents business automation, mobile app development timeline, fractional CTO, SaaS MVP scoping, offshore development. Each article has proper canonical, meta description, OG tags, author card, and social sharing.</div>
+    <div class="block qa"><span class="lab">Impact</span>Blog content is the primary driver of organic search traffic for agencies. These 6 articles target informational queries from the exact buyer persona (founders, product managers, non-technical CTOs). Expected to begin ranking within 60–90 days of indexation for long-tail variants of these topics.</div>
+  </div>
+
+  <div class="task win" data-head="win">
+    <div class="thead"><span class="tid">SM-18</span><span class="ttitle">/careers.html page built — full page with hero, roles, and contact CTA</span><span class="chip done">✓ Fixed</span></div>
+    <div class="block what"><span class="lab">Before</span>The live site had a <code>/careers</code> link in the navigation that pointed to a missing or placeholder page. AWStats confirmed the URL was being crawled. Post-migration without this page would result in a 404 for any job seeker, recruiter, or external link.</div>
+    <div class="block dev"><span class="lab">After</span>New <code>/careers.html</code> built this session: hero section with careers-focused SVG illustration, 4 open role cards (Full-Stack, Mobile, AI/Backend, General/Internship), 6-value company culture grid, sticky sidebar with <code>careers@tboxsolutionz.com</code> and mailto links, BreadcrumbList JSON-LD, full OG/Twitter meta, canonical. Added to sitemap.xml, nav, and footer.</div>
+    <div class="block qa"><span class="lab">Impact</span>Eliminates the /careers 404 risk. Provides a proper landing page for inbound recruitment interest, job board links, and branded searches for "TBox Solutionz jobs / careers". Mailto link uses <code>?subject=Application — [Role Name]</code> to route applications to careers@tboxsolutionz.com.</div>
+  </div>
+
+  <div class="task win" data-head="win">
+    <div class="thead"><span class="tid">SM-19</span><span class="ttitle">Article JSON-LD + article:published_time added to all 6 blog articles</span><span class="chip done">✓ Fixed</span></div>
+    <div class="block what"><span class="lab">Before</span>All 6 blog articles were missing <code>Article</code> JSON-LD schema and <code>article:published_time</code> meta. Google could not generate rich results (byline, publish date, image) for any of them in SERPs.</div>
+    <div class="block dev"><span class="lab">After</span>Each article now has: (1) <code>&lt;meta property="article:published_time"&gt;</code> with a Pakistan Standard Time (UTC+5) timestamp, and (2) a full <code>Article</code> JSON-LD block with <code>headline</code>, <code>datePublished</code>, <code>author</code> (Dilawer Hussain, Founder &amp; CEO), <code>image</code>, <code>publisher</code>, and <code>url</code>. Publish times are randomised across afternoon (14:30–16:45) and evening (18:40–20:00) PKT.</div>
+    <div class="block qa"><span class="lab">Verify</span>Test each article URL in <a href="https://search.google.com/test/rich-results" target="_blank" rel="noopener">Google's Rich Results Test</a>. Should pass Article validation and show author name, date, and image in the preview.</div>
+  </div>
+
+  <div class="task win" data-head="win">
+    <div class="thead"><span class="tid">SM-20</span><span class="ttitle">/404.html built — branded error page with full nav recovery links</span><span class="chip done">✓ Fixed</span></div>
+    <div class="block what"><span class="lab">Before</span>No <code>/404.html</code> existed. Any broken URL (missed redirect, old bookmark, typo) would show the generic cPanel error page — no branding, no navigation, visitor lost entirely.</div>
+    <div class="block dev"><span class="lab">After</span><code>/404.html</code> built following the site template: nav + footer injected via components.js, large typographic 404 code, "Page not found" headline, recovery links to Home, Work, Blog, Contact, and Careers. <code>.htaccess</code> <code>ErrorDocument 404 /404.html</code> directive points to it.</div>
+    <div class="block qa"><span class="lab">Verify</span>After uploading: <code>curl -I https://tboxsolutionz.com/this-does-not-exist</code> → HTTP status <code>404</code> (not 200) with the branded page body returned.</div>
+  </div>
+
+  <div class="task win" data-head="win">
+    <div class="thead"><span class="tid">SM-25</span><span class="ttitle">/projects/ section preserved on new site — 4 pages live, unknown old slugs redirect to listing</span><span class="chip done">✓ Fixed</span></div>
+    <div class="block what"><span class="lab">Clarification</span>The new site has two distinct sections: <code>/work/</code> (new case studies) and <code>/projects/</code> (original project detail pages). These are different content — /projects/emushrif is a technical architecture deep-dive; /work/emushrif.html is a marketing-focused case study. They are not duplicates.</div>
+    <div class="block dev"><span class="lab">After</span>The 4 project detail pages (emushrif, betterback, impause, spendlio) are preserved at their exact original URLs under <code>/projects/</code> — no redirect needed, no SEO equity lost. Apache serves the files directly. For the 26+ old slugs that have no page on the new site (ojaexpress, carigo, swaplink, etc.), <code>.htaccess</code> uses a file-existence condition to redirect only unknown slugs → <code>/projects/</code> listing: <code>RewriteCond %{REQUEST_FILENAME} !-f → RewriteRule ^projects/(.+)$ /projects/ [R=301]</code>.</div>
+    <div class="block qa"><span class="lab">Verify</span><code>curl -I https://tboxsolutionz.com/projects/emushrif</code> → <code>200</code> (page exists, served directly). <code>curl -I https://tboxsolutionz.com/projects/carigo</code> → <code>301 Location: /projects/</code> (unknown slug, redirected to listing).</div>
+  </div>
+
+  <div class="task win" data-head="win">
+    <div class="thead"><span class="tid">SM-21</span><span class="ttitle">/blogs → /blog/ redirect — 1,051-view URL safely redirected (was SM-02)</span><span class="chip done">✓ Fixed</span></div>
+    <div class="block what"><span class="lab">Before</span>The 2nd most-visited content URL (/blogs/, 1,051 views) would have returned 404. Any external links, directory listings, or social shares using the old plural URL would have broken.</div>
+    <div class="block dev"><span class="lab">After</span><code>.htaccess</code>: <code>RewriteRule ^blogs/?$ /blog/ [L,R=301]</code> and <code>RewriteRule ^blogs/(.*)$ /blog/ [L,R=301]</code> covering the root and any sub-paths.</div>
+    <div class="block qa"><span class="lab">Verify</span><code>curl -I https://tboxsolutionz.com/blogs</code> → <code>301 Location: /blog/</code>.</div>
+  </div>
+
+  <div class="task win" data-head="win">
+    <div class="thead"><span class="tid">SM-22</span><span class="ttitle">/company → / redirect — 632-view URL covered (was SM-05)</span><span class="chip done">✓ Fixed</span></div>
+    <div class="block what"><span class="lab">Before</span>/company/ (632 AWStats views) had no equivalent page in the new site. Directory listings on Clutch, GoodFirms, and LinkedIn that deep-link to /company would have hit a 404.</div>
+    <div class="block dev"><span class="lab">After</span><code>.htaccess</code>: <code>RewriteRule ^company/?$ / [L,R=301]</code> — redirects to homepage where the About section lives. Can be updated to <code>/about.html</code> when PL-01 is built.</div>
+    <div class="block qa"><span class="lab">Verify</span><code>curl -I https://tboxsolutionz.com/company</code> → <code>301 Location: /</code>.</div>
+  </div>
+
+  <div class="task win" data-head="win">
+    <div class="thead"><span class="tid">SM-23</span><span class="ttitle">/feed/ → /blog/ redirect — 834-view RSS URL preserved (was SM-06)</span><span class="chip done">✓ Fixed</span></div>
+    <div class="block what"><span class="lab">Before</span>WordPress RSS /feed/ URL (834 views — the 3rd most visited non-homepage URL) had no equivalent. Feed readers and RSS aggregators would have received 404s, marking the feed as dead.</div>
+    <div class="block dev"><span class="lab">After</span><code>.htaccess</code>: <code>RewriteRule ^feed/?$ /blog/ [L,R=301]</code> and <code>RewriteRule ^feed/(.*)$ /blog/ [L,R=301]</code>. Redirects feed subscribers to the blog listing page.</div>
+    <div class="block qa"><span class="lab">Verify</span><code>curl -I https://tboxsolutionz.com/feed/</code> → <code>301 Location: /blog/</code>.</div>
+  </div>
+
+  <div class="task win" data-head="win">
+    <div class="thead"><span class="tid">SM-24</span><span class="ttitle">HTTPS enforcement + www → non-www — canonical domain locked in .htaccess</span><span class="chip done">✓ Fixed</span></div>
+    <div class="block what"><span class="lab">Before</span>Not explicitly listed as a task, but without these rules: http:// URLs would serve content without SSL (bad for security and Google ranking), and www.tboxsolutionz.com and tboxsolutionz.com would both be live as separate URLs — splitting any link equity between two versions of the same domain.</div>
+    <div class="block dev"><span class="lab">After</span><code>.htaccess</code>: RewriteCond forces https:// upgrade for all http:// requests. Second rule forces www. → non-www, consolidating the canonical domain to <code>tboxsolutionz.com</code>. All links, sitemaps, and canonical tags already point to the non-www version.</div>
+    <div class="block qa"><span class="lab">Verify</span><code>curl -I http://tboxsolutionz.com</code> → <code>301 Location: https://tboxsolutionz.com/</code>. <code>curl -I https://www.tboxsolutionz.com</code> → <code>301 Location: https://tboxsolutionz.com/</code>.</div>
+  </div>
+
+  <!-- Pre-launch checklist -->
+  <h3 class="head" style="margin-top:2.5rem;"><span class="dot" style="background:var(--accent)"></span>5 · Pre-launch SEO checklist</h3>
+  <div class="checklist">
+    <div style="opacity:.55;text-decoration:line-through;"><input type="checkbox" class="taskcheck" checked disabled> <span>301 redirects: /projects → /work/, /blogs → /blog/, /feed/ → /blog/, /company → / — done in .htaccess (SM-20–23)</span></div>
+    <div style="opacity:.55;text-decoration:line-through;"><input type="checkbox" class="taskcheck" checked disabled> <span>HTTPS enforcement + www → non-www canonical — done in .htaccess (SM-24)</span></div>
+    <div style="opacity:.55;text-decoration:line-through;"><input type="checkbox" class="taskcheck" checked disabled> <span>/careers.html built and /404.html built — page, nav link, footer link, sitemap in place (SM-18, SM-19)</span></div>
+    <div style="background:rgba(220,38,38,.06);"><input type="checkbox" class="taskcheck"> <span>🔴 <strong>Install GA4 or Plausible before going live</strong> — add script to /components/nav.html (SM-03 / IP-03)</span></div>
+    <div><input type="checkbox" class="taskcheck"> <span>Delete <code>/work/smart-infra-platform copy.html</code> and <code>/work/us-neobank copy.html</code> draft duplicates before uploading to cPanel</span></div>
+    <div style="opacity:.55;text-decoration:line-through;"><input type="checkbox" class="taskcheck" checked disabled> <span>/404.html built — upload to cPanel alongside other files (SM-19)</span></div>
+    <div style="opacity:.55;text-decoration:line-through;"><input type="checkbox" class="taskcheck" checked disabled> <span>Article JSON-LD + article:published_time added to all 6 blog articles — PKT timestamps, author: Dilawer Hussain (SM-19)</span></div>
+    <div><input type="checkbox" class="taskcheck"> <span>Verify redirects live: <code>curl -I https://tboxsolutionz.com/blogs</code> → 301, <code>/projects/emushrif</code> → 301, <code>/feed/</code> → 301</span></div>
+    <div><input type="checkbox" class="taskcheck"> <span>Submit sitemap.xml to Google Search Console after launch</span></div>
+    <div><input type="checkbox" class="taskcheck"> <span>Request indexation of homepage, /work/, /blog/, /contact.html, /careers.html in GSC</span></div>
+    <div><input type="checkbox" class="taskcheck"> <span>Run Screaming Frog crawl — confirm no broken internal links and no /projects/ links remaining</span></div>
+    <div><input type="checkbox" class="taskcheck"> <span>Test OG card previews for homepage and top blog article using LinkedIn Post Inspector</span></div>
+    <div><input type="checkbox" class="taskcheck"> <span>Confirm Organization schema validates in Google's Rich Results Test</span></div>
+  </div>
+
+  <div class="callout warn" style="margin-top:1.5rem;">
+    <span class="ic">⚠</span>
+    <div><strong>Post-launch monitoring:</strong> Watch Google Search Console's Coverage report daily for the first 2 weeks. Any spike in 404 errors means a redirect was missed. Also monitor Core Web Vitals and organic impressions in GSC's Performance report — expect a temporary dip of 1–3 weeks as Google re-indexes the new URLs, then recovery and growth driven by the blog content.</div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- POST-LAUNCH GROWTH ROADMAP                                   -->
+  <!-- ============================================================ -->
+
+  <h2 class="sprint" id="gr"><span class="num">🚀</span> Post-Launch Growth Roadmap</h2>
+  <p class="sprint-sub">Actions to take after the site is live. None of these are launch blockers. Sequenced by compounding value — earlier actions unlock later ones.</p>
+
+  <div class="hero" style="background: linear-gradient(120deg, #065f46 0%, #047857 55%, #059669 100%); box-shadow: 0 12px 40px rgba(6,95,70,.30);">
+    <h1>Growth Strategy — Post Migration</h1>
+    <p>The migration protects existing equity. Growth is what earns new equity. This roadmap is sequenced so each phase builds on the last: first you measure, then you fix what measurement reveals, then you expand what's working. Do not skip to Month 4 actions without completing Week 1 foundations.</p>
+    <div class="meta">
+      <span>Week 1 — Analytics + monitoring</span>
+      <span>Month 1 — Technical fixes + GSC</span>
+      <span>Months 2–3 — Content + CRO</span>
+      <span>Months 4–6 — Authority + landing pages</span>
+      <span>Ongoing — Compound</span>
+    </div>
+  </div>
+
+  <!-- WEEK 1 -->
+  <h3 class="head"><span class="dot" style="background:var(--danger)"></span>Week 1 — Instrumentation (do before anything else)</h3>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">GR-01</span><span class="ttitle">Install analytics — GA4 or Plausible</span><span class="chip gen">Analytics</span><span class="chip phase">Week 1 · Critical</span></div>
+    <div class="block what"><span class="lab">What</span>This is also SM-03 (the last launch blocker). Add analytics script to <code>/components/nav.html</code> so it fires on every page automatically. Without this, you are blind for the first 30/60/90-day benchmark period — the window that determines whether the migration succeeded.</div>
+    <div class="block dev"><span class="lab">Recommendation</span><strong>Plausible Analytics</strong> is the better choice for TBox. Reasons: (1) cookieless by default — no GDPR consent banner required, saving PL-12 engineering effort entirely; (2) &lt;1KB script vs GA4's ~45KB; (3) blocks fewer adblockers; (4) dashboard is clean and founder-friendly. GA4 only if you need advanced funnel analysis or Google Ads integration later. Add <code>&lt;script defer data-domain="tboxsolutionz.com" src="https://plausible.io/js/script.js"&gt;&lt;/script&gt;</code> to <code>/components/nav.html</code>.</div>
+    <div class="block qa"><span class="lab">Verify</span>Open Plausible dashboard. Load 3 pages. See 3 page views appear in real-time. Check that no cookie consent banner is needed (Plausible stores nothing in the browser).</div>
+  </div>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">GR-02</span><span class="ttitle">Google Search Console — add property + submit sitemap</span><span class="chip gen">Analytics</span><span class="chip phase">Week 1 · Critical</span></div>
+    <div class="block what"><span class="lab">What</span>GSC is your primary SEO measurement tool. It shows: which queries bring visitors, which pages rank, index coverage, crawl errors, Core Web Vitals, and manual actions. Without it you cannot measure migration recovery or identify ranking opportunities.</div>
+    <div class="block dev"><span class="lab">Steps</span>1. Go to search.google.com/search-console. 2. Add property for <code>tboxsolutionz.com</code> (domain property, not URL prefix — covers http/https/www/non-www). 3. Verify via DNS TXT record in cPanel. 4. Submit <code>https://tboxsolutionz.com/sitemap.xml</code>. 5. Request indexing for homepage, /work/, /blog/, /contact.html, /careers.html manually via URL Inspection.</div>
+    <div class="block qa"><span class="lab">Verify</span>Sitemap shows "Success" status. URL Inspection for homepage shows "URL is on Google" within 1–3 days. Coverage report shows 0 errors after 2 weeks.</div>
+  </div>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">GR-03</span><span class="ttitle">Bing Webmaster Tools — add property + submit sitemap</span><span class="chip gen">Analytics</span><span class="chip phase">Week 1</span></div>
+    <div class="block what"><span class="lab">What</span>Bing powers search results in Microsoft Edge (default browser on Windows), Bing.com, and DuckDuckGo. US corporate audiences — exactly your target — over-index on Windows + Edge. Bing Webmaster Tools takes 10 minutes and reaches an audience Google does not.</div>
+    <div class="block dev"><span class="lab">Steps</span>Go to bing.com/webmasters. Import your GSC property (one-click if GSC is already set up). Submit sitemap. Done. Bing also has its own keyword research tool (free) that shows queries GSC doesn't surface.</div>
+    <div class="block qa"><span class="lab">Verify</span>Sitemap submitted. Bing shows crawl activity within 48 hours.</div>
+  </div>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">GR-04</span><span class="ttitle">Microsoft Clarity — install session recording</span><span class="chip gen">Analytics</span><span class="chip phase">Week 1</span></div>
+    <div class="block what"><span class="lab">What</span>Clarity is a free Microsoft tool that records real user sessions (heatmaps + scroll maps + click maps + session replays). It shows exactly where founders drop off on the homepage, whether the contact form gets clicked, how far people scroll on case studies. This is conversion intelligence, not traffic intelligence.</div>
+    <div class="block dev"><span class="lab">Steps</span>Create a free account at clarity.microsoft.com. Add the script tag to <code>/components/nav.html</code> alongside analytics. GDPR note: Clarity anonymises data by default and does not require a consent banner in most jurisdictions, but check your specific legal context.</div>
+    <div class="block qa"><span class="lab">Verify</span>After 24–48 hours: Clarity dashboard shows sessions. Click on one session replay and confirm it records page interactions correctly.</div>
+  </div>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">GR-05</span><span class="ttitle">Verify all .htaccess redirects on live server</span><span class="chip gen">Technical</span><span class="chip phase">Week 1 · Critical</span></div>
+    <div class="block what"><span class="lab">What</span>Redirects tested locally do not guarantee they work on Apache/cPanel — server config can interfere. A missed redirect means 404s for URLs with existing Google equity, which can cause ranking drops in the first 90 days.</div>
+    <div class="block dev"><span class="lab">Test each rule</span>Run: <code>curl -I https://tboxsolutionz.com/blogs</code> → expect 301 to /blog/. <code>curl -I https://tboxsolutionz.com/feed/</code> → 301 to /blog/. <code>curl -I https://tboxsolutionz.com/company</code> → 301 to /. <code>curl -I https://tboxsolutionz.com/careers</code> → 301 to /careers.html. <code>curl -I http://tboxsolutionz.com/</code> → 301 https://. <code>curl -I https://www.tboxsolutionz.com/</code> → 301 non-www.</div>
+    <div class="block qa"><span class="lab">Verify</span>Every rule returns HTTP 301 (not 302, not 200). All location headers point to correct destination URLs.</div>
+  </div>
+
+  <!-- MONTH 1 -->
+  <h3 class="head"><span class="dot" style="background:var(--warn)"></span>Month 1 — Technical cleanup + early monitoring</h3>
+
+  <div class="task enh" data-head="enh">
+    <div class="thead"><span class="tid">GR-06</span><span class="ttitle">Fix nav "Work" link — /#work → /work/</span><span class="chip enh">Enhancement</span><span class="chip phase">Month 1 · High</span></div>
+    <div class="block what"><span class="lab">What</span>The nav currently has <code>href="/#work"</code> which scrolls the homepage to the work section. When a visitor is on /blog/ or /contact.html and clicks Work, they land on the homepage scrolled down — not on the dedicated /work/ case study listing. The /work/index.html page exists and is in the sitemap but is not the nav destination. This is a user experience and internal linking gap.</div>
+    <div class="block dev"><span class="lab">Fix</span>In <code>/components/nav.html</code>, change <code>href="/#work"</code> to <code>href="/work/"</code>. The homepage "See our work" CTA can keep its <code>#work</code> anchor for scroll behavior — that is appropriate on the homepage only.</div>
+    <div class="block qa"><span class="lab">Verify</span>From /blog/, click Work in nav → lands on /work/index.html. From /contact.html, same. Homepage internal "See our work" CTA still scrolls to the work section on the homepage.</div>
+  </div>
+
+  <div class="task enh" data-head="enh">
+    <div class="thead"><span class="tid">GR-07</span><span class="ttitle">Add og:title + og:image to all /projects/ pages</span><span class="chip enh">Enhancement</span><span class="chip phase">Month 1 · High</span></div>
+    <div class="block what"><span class="lab">What</span>All 5 /projects/ pages (index + 4 detail pages) are confirmed missing og:title and og:image. If anyone shares a project page on LinkedIn or Twitter/X, the preview card will have no image and use the page URL as the title — poor first impression for a studio selling technical credibility.</div>
+    <div class="block dev"><span class="lab">Fix</span>Add og:title matching the page &lt;title&gt;, og:description matching the meta description, og:url matching the canonical, og:image pointing to a relevant cover image (can reuse /assets/images/blog/ images or site OG image), og:type="website", and twitter:card/title/description/image to each /projects/ page. Also add BreadcrumbList JSON-LD (Projects → [page name]).</div>
+    <div class="block qa"><span class="lab">Verify</span>LinkedIn Post Inspector shows a rich card with image for https://tboxsolutionz.com/projects/emushrif.html.</div>
+  </div>
+
+  <div class="task enh" data-head="enh">
+    <div class="thead"><span class="tid">GR-08</span><span class="ttitle">Fix blog article back-link — "← Insights" → "← Blog"</span><span class="chip enh">Enhancement</span><span class="chip phase">Month 1</span></div>
+    <div class="block what"><span class="lab">What</span>Blog article pages have a back-link that reads "← Insights" — a holdover from when the blog section was titled "Insights". The blog listing page was correctly renamed to "Blog" but this breadcrumb text was missed. Minor but visible to every reader.</div>
+    <div class="block dev"><span class="lab">Fix</span>In all 6 blog article HTML files, find the back-link (class <code>ba-back</code>) and change "← Insights" to "← Blog".</div>
+    <div class="block qa"><span class="lab">Verify</span>Open any blog article. Back-link reads "← Blog" and navigates to /blog/.</div>
+  </div>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">GR-09</span><span class="ttitle">Self-host devicons — remove external CDN from /projects/ pages</span><span class="chip gen">Technical</span><span class="chip phase">Month 1</span></div>
+    <div class="block what"><span class="lab">What</span>All 5 /projects/ pages load <code>cdn.jsdelivr.net/devicons</code> — an external stylesheet that violates the site's own "no external CDN requests" rule (documented in the Guide tab). If jsdelivr is slow or down, tech-stack icons on project pages break. More practically: each external request adds a DNS lookup + TCP handshake to page load time.</div>
+    <div class="block dev"><span class="lab">Fix</span>Download the devicon CSS and font files, place in <code>/assets/devicons/</code>, update the link tags on all 5 project pages to use <code>/assets/devicons/devicon.min.css</code>.</div>
+    <div class="block qa"><span class="lab">Verify</span>Load /projects/emushrif.html with DevTools Network tab open. Zero requests to cdn.jsdelivr.net. Tech-stack icons render identically.</div>
+  </div>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">GR-10</span><span class="ttitle">Delete draft files before/after upload</span><span class="chip gen">Hygiene</span><span class="chip phase">Before upload</span></div>
+    <div class="block what"><span class="lab">What</span>Three files must not be uploaded to cPanel: <code>/work/smart-infra-platform copy.html</code>, <code>/work/us-neobank copy.html</code> (draft duplicates — would be publicly accessible and create duplicate content), and <code>/TBox-Website-TypeA.html</code> (old prototype in root — publicly accessible at tboxsolutionz.com/TBox-Website-TypeA.html).</div>
+    <div class="block dev"><span class="lab">Fix</span>Delete all three files locally before uploading, or exclude them via cPanel's File Manager after upload. Also confirm they are not in sitemap.xml (they are not — verified).</div>
+    <div class="block qa"><span class="lab">Verify</span><code>curl -I https://tboxsolutionz.com/TBox-Website-TypeA.html</code> → 404. Same for the two copy files.</div>
+  </div>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">GR-11</span><span class="ttitle">GA4 custom events — contact form + CTA tracking</span><span class="chip gen">Analytics</span><span class="chip phase">Month 1</span></div>
+    <div class="block what"><span class="lab">What</span>Page views alone are vanity metrics. What matters is whether visitors take action. Track: (1) contact form submission, (2) "Book a call" / "Start a project" CTA clicks, (3) case study opens, (4) blog article scroll depth (25/50/75/100%), (5) email link clicks (mailto:), (6) LinkedIn profile clicks. These six events tell you whether the site converts.</div>
+    <div class="block dev"><span class="lab">Implementation</span>If using Plausible: use <code>plausible('FormSubmit')</code> etc in JS event listeners — dead simple. If using GA4: <code>gtag('event', 'form_submit', {...})</code>. Add listeners to the contact form submit event, each primary CTA button, and outbound link clicks. Scroll depth can be tracked with an IntersectionObserver on an element at 75% down each article.</div>
+    <div class="block qa"><span class="lab">Verify</span>Submit a test form → event appears in analytics dashboard. Click a CTA → event fires. Open Plausible/GA4 Goals report and confirm conversion rate is calculable.</div>
+  </div>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">GR-12</span><span class="ttitle">Validate structured data — Rich Results Test</span><span class="chip gen">Technical SEO</span><span class="chip phase">Month 1</span></div>
+    <div class="block what"><span class="lab">What</span>Run Google's Rich Results Test on: (1) homepage (Organization schema), (2) any blog article (Article schema + BreadcrumbList). Confirm no errors or warnings. Rich results eligibility — author cards, article dates — require clean structured data validation.</div>
+    <div class="block dev"><span class="lab">Tool</span>search.google.com/test/rich-results — paste each URL and review. Also run the Schema Markup Validator at validator.schema.org for the JSON-LD blocks directly.</div>
+    <div class="block qa"><span class="lab">Verify</span>Zero errors. Article schema shows headline, datePublished, author. Organization schema shows name, url, logo.</div>
+  </div>
+
+  <!-- MONTHS 2-3 -->
+  <h3 class="head"><span class="dot" style="background:var(--blue)"></span>Months 2–3 — Content expansion + conversion</h3>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">GR-13</span><span class="ttitle">Contact form backend — Formspree integration (PL-13)</span><span class="chip feat">Feature</span><span class="chip phase">Months 2–3 · High</span></div>
+    <div class="block what"><span class="lab">What</span>The contact form currently uses mailto: — it opens the visitor's email client instead of submitting silently. This is a conversion killer. Most people expect a form to work like a form. Also tracked as PL-13.</div>
+    <div class="block dev"><span class="lab">Fix</span>Formspree free tier. Set <code>action="https://formspree.io/f/[id]"</code> and <code>method="POST"</code>. Submissions go to dilawer.official44@gmail.com. Optionally redirect to a thank-you message after submission. 15 minutes of work.</div>
+    <div class="block qa"><span class="lab">Verify</span>Submit test form. Email arrives at dilawer.official44@gmail.com within 60 seconds. No email client window opens.</div>
+  </div>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">GR-14</span><span class="ttitle">Publish 2 new blog articles — maintain cadence</span><span class="chip feat">Content</span><span class="chip phase">Months 2–3</span></div>
+    <div class="block what"><span class="lab">What</span>6 articles is a start, not a content moat. Google rewards consistent publishing cadence. The goal is not volume — it is topical authority. Two articles per month targeting specific founder pain points compounds over 6 months into a meaningful organic channel. See the US &amp; Europe tab for topic cluster recommendations.</div>
+    <div class="block dev"><span class="lab">Process</span>Each article: (1) target one high-intent keyword phrase a US/EU founder would search, (2) 1,200–2,000 words, (3) full meta tags + Article JSON-LD + og:image, (4) internal link to at least one existing article and one case study, (5) add to sitemap.xml, (6) update blog/index.html card grid.</div>
+    <div class="block qa"><span class="lab">Verify</span>GSC shows impressions for the target keyword within 4–6 weeks of publishing.</div>
+  </div>
+
+  <div class="task enh" data-head="enh">
+    <div class="thead"><span class="tid">GR-15</span><span class="ttitle">Internal linking audit — connect blog → case studies</span><span class="chip enh">Enhancement</span><span class="chip phase">Months 2–3</span></div>
+    <div class="block what"><span class="lab">What</span>Internal links pass PageRank and signal topic relevance to Google. Currently blog articles have minimal internal links to case studies (confirmed: most articles link back to /blog/ only). When an article about mobile app development mentions "a project we built", it should link to /work/impause.html or /work/spendlio.html — this is a direct SEO signal and a conversion touch point.</div>
+    <div class="block dev"><span class="lab">Approach</span>Review each of the 6 blog articles. Add 1–2 contextual internal links per article to relevant case studies in /work/ or /projects/. Anchor text should be descriptive (not "click here" — use "our Impause mobile app" etc). Also add "Related reading" links between articles with overlapping topics.</div>
+    <div class="block qa"><span class="lab">Verify</span>No case study page is more than 2 clicks from any blog article. Screaming Frog crawl shows improved internal link depth.</div>
+  </div>
+
+  <div class="task enh" data-head="enh">
+    <div class="thead"><span class="tid">GR-16</span><span class="ttitle">Homepage trust signals — testimonials + Clutch widget</span><span class="chip enh">Enhancement</span><span class="chip phase">Months 2–3</span></div>
+    <div class="block what"><span class="lab">What</span>The homepage has a testimonials carousel but no third-party validation signals. US and European buyers — especially first-time agency engagements — look for social proof outside the vendor's own website. A Clutch profile badge ("Top Developer 2026") or G2 widget next to testimonials adds credibility that self-hosted testimonials cannot.</div>
+    <div class="block dev"><span class="lab">Steps</span>1. Create/claim TBox profile on Clutch.co. 2. Request 3–5 reviews from past clients. 3. Once verified, add Clutch badge widget to the homepage testimonials section or footer. This also creates a backlink from Clutch's high-authority domain.</div>
+    <div class="block qa"><span class="lab">Verify</span>Clutch profile shows verified reviews. Badge renders on homepage. Clutch badge link passes (rel="noopener" but not rel="nofollow" — Clutch links are valid backlinks).</div>
+  </div>
+
+  <!-- MONTHS 4-6 -->
+  <h3 class="head"><span class="dot" style="background:var(--accent-2)"></span>Months 4–6 — Authority + landing page expansion</h3>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">GR-17</span><span class="ttitle">Commercial landing pages — service + industry pages</span><span class="chip feat">New pages</span><span class="chip phase">Months 4–6 · High</span></div>
+    <div class="block what"><span class="lab">What</span>The current homepage targets broad positioning ("AI-Native Engineering Studio"). Founders searching for specific help ("fractional CTO for startup", "AI development company fintech") will not find a relevant match. Commercial landing pages with specific intent convert at 3–5× the rate of homepages. See the US &amp; Europe tab for the prioritised page list.</div>
+    <div class="block dev"><span class="lab">Approach</span>Build pages under /services/ or /for/ that target specific services and verticals. Each page: 800–1,200 words, a problem statement, approach, relevant case studies, and a CTA. These pages compound over time — the longer they are live, the more authority they accumulate.</div>
+    <div class="block qa"><span class="lab">Verify</span>GSC shows impressions for target commercial keywords within 6–8 weeks. Conversion rate from these pages vs. homepage measured in analytics.</div>
+  </div>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">GR-18</span><span class="ttitle">Dedicated /about page</span><span class="chip feat">New page</span><span class="chip phase">Months 4–6</span></div>
+    <div class="block what"><span class="lab">What</span>Currently "about" content is an inline section on the homepage. US and European buyers — particularly institutional clients and startup accelerators — expect a standalone /about page with founder story, team, company history, values, and why TBox exists. It is also a common search query: "TBox Solutionz about", "who is Dilawer Hussain TBox". An /about page lets this content rank independently. Also tracked as PL-01.</div>
+    <div class="block dev"><span class="lab">Content</span>Founder story → what problem TBox solves → team → values → clients served. Include founder photo, LinkedIn link, and a clear "work with us" CTA. Add BreadcrumbList JSON-LD + full meta. Add to nav and sitemap.</div>
+    <div class="block qa"><span class="lab">Verify</span>GSC shows "tboxsolutionz about" and "Dilawer Hussain" queries routing to /about.html within 4–6 weeks.</div>
+  </div>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">GR-19</span><span class="ttitle">Add 2 new case studies — /work/ and /projects/ expansion</span><span class="chip feat">Content</span><span class="chip phase">Months 4–6</span></div>
+    <div class="block what"><span class="lab">What</span>Case studies are the highest-converting content on any agency/studio site. They prove capability in a way no service description can. Each new case study also creates internal linking opportunities and can rank for "[client name] + technology" queries. The current 6 case studies are strong — adding 2 more per quarter compounds the portfolio signal.</div>
+    <div class="block dev"><span class="lab">Format</span>Follow the existing /work/ case study pattern: problem → approach → architecture decisions → outcome with metrics. 600–1,000 words minimum. Include a /projects/ companion technical deep-dive for the architecture detail. Add to sitemap and blog listing where relevant.</div>
+    <div class="block qa"><span class="lab">Verify</span>New case study linked from /work/index.html. Internal links from at least one blog article. Added to sitemap.xml.</div>
+  </div>
+
+  <!-- ONGOING -->
+  <h3 class="head"><span class="dot" style="background:var(--slate)"></span>Ongoing — Compound activities</h3>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">GR-20</span><span class="ttitle">Monthly GSC review — rankings, impressions, 404s</span><span class="chip gen">Monitoring</span><span class="chip phase">Ongoing</span></div>
+    <div class="block what"><span class="lab">What</span>Monthly: (1) Check Coverage report for new 404s — any spike means a redirect was missed or a URL changed without a redirect. (2) Check Performance report for queries where you rank positions 8–20 — these are your fastest-win ranking opportunities (improve the page, add internal links, they move to top 5). (3) Check Core Web Vitals report — any regressions?</div>
+    <div class="block dev"><span class="lab">Actionable output</span>One monthly action per review: either fix a 404, improve a page ranking 8–20, or add internal links to a page that gained impressions. Compound over 12 months.</div>
+    <div class="block qa"><span class="lab">Signal</span>After 90 days: organic impressions should be ≥ pre-migration baseline. After 6 months: impressions should be 2–3× baseline driven by blog content.</div>
+  </div>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">GR-21</span><span class="ttitle">Quarterly content refresh — update existing articles</span><span class="chip gen">Content</span><span class="chip phase">Ongoing</span></div>
+    <div class="block what"><span class="lab">What</span>Google rewards freshness for content that covers changing topics (AI, mobile development, startup tech — all of TBox's subjects change fast). Refreshing an existing article — updated statistics, new section, revised recommendation — is more efficient than writing a new one. The article already has authority; you are compounding it.</div>
+    <div class="block dev"><span class="lab">Process</span>Every 3 months: review each article's GSC click-through rate. The lowest performers get a content refresh — add a new section, update any dated statistics, improve the introduction. Update the <code>article:published_time</code> / <code>datePublished</code> to the refresh date.</div>
+    <div class="block qa"><span class="lab">Signal</span>Refreshed articles typically see a 20–40% impressions lift within 4–6 weeks of recrawl.</div>
+  </div>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">GR-22</span><span class="ttitle">Technical SEO audit — semi-annual crawl</span><span class="chip gen">Technical</span><span class="chip phase">Ongoing · every 6 months</span></div>
+    <div class="block what"><span class="lab">What</span>Every 6 months: run a Screaming Frog crawl of the entire site. Check for: broken internal links, missing alt tags on new images, pages with thin content (&lt;300 words), redirect chains (A → B → C instead of A → C), and any pages that have drifted out of the sitemap. This is the technical debt prevention step.</div>
+    <div class="block dev"><span class="lab">Tool</span>Screaming Frog (free up to 500 URLs, which covers the current site). Export: broken links, redirect chains, pages missing title/description. Fix the same day.</div>
+    <div class="block qa"><span class="lab">Verify</span>Zero broken internal links. Zero redirect chains longer than 1 hop. All pages in sitemap have a corresponding crawled URL.</div>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- US & EUROPE GROWTH STRATEGY                                   -->
+  <!-- ============================================================ -->
+  <h2 class="sprint" id="us"><span class="num">🌍</span> US &amp; Europe Growth Strategy</h2>
+  <p class="sprint-sub">Attracting qualified founders, CTOs, and startup decision-makers from the United States and Europe. These are not launch actions — they are 6–18 month organic growth initiatives.</p>
+
+  <div class="hero" style="background: linear-gradient(120deg, #1e3a5f 0%, #1d4ed8 55%, #2563eb 100%); box-shadow: 0 12px 40px rgba(29,78,216,.30);">
+    <h1>International Growth — US &amp; Europe</h1>
+    <p>TBox is positioned as an AI-Native Engineering Studio. The target audience — US/EU founders, CTOs, product leaders — does not search for "software agency Pakistan." They search for the capability they need: "build AI agent", "fractional CTO startup", "MVP development partner". The strategy is to be the answer to those searches, then convert through demonstrated technical credibility.</p>
+    <div class="meta">
+      <span>Primary target: US founders + CTOs</span>
+      <span>Secondary: UK, Germany, Netherlands, Nordics</span>
+      <span>Audience: Series A and below, 5–50 person companies</span>
+      <span>Signal: technical credibility over volume</span>
+    </div>
+  </div>
+
+  <!-- FOUNDATION -->
+  <h3 class="head"><span class="dot" style="background:var(--danger)"></span>1 · Foundation — analytics + monitoring setup</h3>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">US-01</span><span class="ttitle">Enable country + city reporting in analytics</span><span class="chip gen">Analytics</span><span class="chip phase">Week 1</span></div>
+    <div class="block what"><span class="lab">What</span>You need to confirm that US and European traffic actually arrives before building for it. Plausible and GA4 both provide country-level breakdowns by default. Also enable city-level reporting — in the US, the cities that matter most for startup founders are San Francisco, New York, Austin, Seattle, Boston, Miami. In Europe: London, Berlin, Amsterdam, Stockholm, Paris. Knowing which cities send traffic tells you where to focus community presence.</div>
+    <div class="block dev"><span class="lab">Setup</span>In Plausible: Countries and Cities reports are on by default. In GA4: Audience → Geo → Location. Set up a GSC filter by country (filter to US + UK + DE + NL) to see which queries international visitors use — these will differ from Pakistani queries.</div>
+    <div class="block qa"><span class="lab">Baseline</span>After 30 days live: document % of traffic from US, UK, EU. This is your baseline. Goal: US+EU share should grow month over month as content strategy builds authority in those markets.</div>
+  </div>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">US-02</span><span class="ttitle">Structured data validation — confirmed clean</span><span class="chip gen">Technical SEO</span><span class="chip phase">Verified post-launch</span></div>
+    <div class="block what"><span class="lab">Status</span>Organization JSON-LD and WebSite JSON-LD are implemented on the homepage. Article JSON-LD is implemented on all 6 blog articles. BreadcrumbList is on case study and careers pages. No SearchAction schema exists currently (this is acceptable — SearchAction only helps if the site has a search function, which it does not). Run the Rich Results Test after launch to confirm no errors have emerged from the live environment.</div>
+    <div class="block qa"><span class="lab">Verify</span>search.google.com/test/rich-results on homepage and one blog article post-launch. Zero errors. Screaming Frog structured data export shows consistent patterns.</div>
+  </div>
+
+  <!-- CONTENT STRATEGY -->
+  <h3 class="head"><span class="dot" style="background:var(--blue)"></span>2 · Content Strategy — topical authority clusters</h3>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">US-03</span><span class="ttitle">Topic cluster 1 — AI Product Engineering</span><span class="chip feat">Content cluster</span><span class="chip phase">Months 2–4 · Highest priority</span></div>
+    <div class="block what"><span class="lab">Why this cluster</span>AI is TBox's primary positioning differentiator. US founders searching for AI development help use queries like "how to build an AI agent for my business", "LLM integration for SaaS", "AI automation for operations". These are high-intent, founder-specific searches with low competition from enterprise vendors (who target enterprise, not startups). TBox can own this space for the startup segment.</div>
+    <div class="block dev"><span class="lab">Recommended articles</span>
+      <ul>
+        <li>"How to Choose Between OpenAI, Anthropic, and Open-Source LLMs for Your Product" — decision framework for non-technical founders</li>
+        <li>"AI Agents vs. Traditional Automation: When Agents Actually Make Sense" — extends the existing AI agents article</li>
+        <li>"The Real Cost of Adding AI to Your SaaS Product in 2026" — commercial-intent, high value</li>
+        <li>"How We Built [Client] AI Feature: Technical Architecture" — /projects/ companion to a case study</li>
+        <li>"LLM Integration Checklist: What Engineers Miss" — linkable asset, attracts developer audience who recommend TBox to founders</li>
+      </ul>
+    </div>
+    <div class="block qa"><span class="lab">Pillar page</span>Once 4+ articles exist in this cluster, create a pillar page at <code>/services/ai-development/</code> that links to all of them. The pillar page targets "AI development for startups" — a commercial landing page, not a blog post.</div>
+  </div>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">US-04</span><span class="ttitle">Topic cluster 2 — Startup Engineering Leadership</span><span class="chip feat">Content cluster</span><span class="chip phase">Months 3–5</span></div>
+    <div class="block what"><span class="lab">Why this cluster</span>"Fractional CTO" is a growing search category. US founders who need technical leadership but can't afford a full-time CTO are exactly TBox's audience. This cluster also builds personal authority for Dilawer Hussain as a thought leader — which compounds into speaking invitations, podcast appearances, and inbound referrals.</div>
+    <div class="block dev"><span class="lab">Recommended articles</span>
+      <ul>
+        <li>"What Does a Fractional CTO Actually Do Day-to-Day?" — high search volume, clears up misconceptions</li>
+        <li>"When to Hire a Fractional CTO vs. a Dev Agency" — comparison article, captures decision-stage founders</li>
+        <li>"How to Evaluate a Technical Co-Founder Before You Hire One" — builds authority, attracts early-stage founders</li>
+        <li>"The Engineering Decisions That Kill Startups (And How to Avoid Them)" — thought leadership, highly shareable</li>
+      </ul>
+    </div>
+    <div class="block qa"><span class="lab">Pillar page</span>Commercial landing page at <code>/services/fractional-cto/</code> targeting "fractional CTO for startups". Links to all cluster articles.</div>
+  </div>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">US-05</span><span class="ttitle">Topic cluster 3 — Mobile Product Development</span><span class="chip feat">Content cluster</span><span class="chip phase">Months 4–6</span></div>
+    <div class="block what"><span class="lab">Why this cluster</span>TBox has proven mobile work (Impause, BetterBack, Spendlio). The blog already has two mobile articles. Extend this into a cluster that targets founders at the "I need to build a mobile app" decision stage — before they choose a vendor.</div>
+    <div class="block dev"><span class="lab">Recommended articles</span>
+      <ul>
+        <li>"How to Brief a Mobile App Development Agency" — pre-purchase intent, captures founders before they shortlist vendors</li>
+        <li>"Expo vs React Native CLI in 2026: Which Should You Choose?" — developer-facing, attracts technical co-founders</li>
+        <li>"App Store Submission: What Founders Always Get Wrong" — practical, shareable</li>
+        <li>"Offline-First Architecture for Mobile Apps" — technical, links to Spendlio /projects/ page</li>
+      </ul>
+    </div>
+    <div class="block qa"><span class="lab">Pillar page</span><code>/services/mobile-app-development/</code> targeting "mobile app development for startups". Contains overview + links to cluster articles + relevant case studies.</div>
+  </div>
+
+  <div class="callout" style="margin-top:4px;">
+    <span class="ic">💡</span>
+    <div><strong>On isolated blog posts vs. clusters:</strong> The current 6 articles are good standalone pieces but they do not yet form clusters — they cover 6 different topics rather than going deep on 2–3. Google's helpful content system rewards <em>topical authority</em>: a site that covers one subject comprehensively outranks a site with one article on many subjects. The clusters above are the fastest path to ranking for commercial terms in competitive markets like the US.</div>
+  </div>
+
+  <!-- COMMERCIAL LANDING PAGES -->
+  <h3 class="head"><span class="dot" style="background:var(--accent-2)"></span>3 · Commercial Landing Pages — prioritised by business impact</h3>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">US-06</span><span class="ttitle">Commercial page: /services/ai-development/ — AI Development for Startups</span><span class="chip feat">New page</span><span class="chip phase">Priority 1 · Months 3–4</span></div>
+    <div class="block what"><span class="lab">Why first</span>This is TBox's primary positioning. "AI development company for startups" has commercial intent and lower competition from boutique agencies than from enterprise vendors. A founder searching this query is ready to hire — the page just needs to demonstrate credibility and make the CTA obvious. Expected highest business impact of any single page addition.</div>
+    <div class="block dev"><span class="lab">Page structure</span>Hero: what you build + for whom. Problem: why most AI projects fail. Approach: TBox's specific process (prototype → validate → productionise). Capabilities: LLM integration, AI agents, fine-tuning, RAG, automation. Case studies: link to relevant /work/ pages. FAQ: common founder questions. CTA: book a discovery call.</div>
+    <div class="block qa"><span class="lab">Verify</span>GSC impressions for "AI development startup" and "AI agent development" within 8 weeks.</div>
+  </div>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">US-07</span><span class="ttitle">Commercial page: /services/fractional-cto/ — Fractional CTO Services</span><span class="chip feat">New page</span><span class="chip phase">Priority 2 · Months 3–4</span></div>
+    <div class="block what"><span class="lab">Why second</span>"Fractional CTO" is a growing, high-value search category. The buyer has budget and intent — they are not browsing, they are evaluating vendors. This page also positions Dilawer Hussain as a person (not just a company) which builds trust with US/EU buyers who prefer working with a named expert over an anonymous agency.</div>
+    <div class="block dev"><span class="lab">Page structure</span>What a fractional CTO does at TBox. When it makes sense (vs. full-time hire, vs. dev agency). What's included (technical strategy, architecture reviews, team hiring, vendor selection). Engagement models (advisory, part-time, project-based). Founder testimonials specific to the leadership track. CTA: 30-min intro call.</div>
+    <div class="block qa"><span class="lab">Verify</span>GSC impressions for "fractional CTO" and "fractional CTO startup" within 8 weeks.</div>
+  </div>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">US-08</span><span class="ttitle">Commercial page: /services/mvp-development/ — MVP Development for Startups</span><span class="chip feat">New page</span><span class="chip phase">Priority 3 · Months 4–5</span></div>
+    <div class="block what"><span class="lab">Why third</span>"MVP development" is the broadest startup intent query. High search volume, highly competitive — but competition is mostly low-quality content farms. A well-written page from a studio with real case studies can rank in the top 10 within 3–6 months. Also creates a natural hub linking to the SaaS MVP scoping blog article.</div>
+    <div class="block dev"><span class="lab">Note</span>Avoid generic "we build MVPs fast and cheap" positioning — that's exactly what everyone else says and it attracts price-sensitive clients who churn. Instead: "we scope aggressively so you don't build the wrong thing" — positions scoping expertise as the differentiator, which filters for better clients.</div>
+    <div class="block qa"><span class="lab">Verify</span>GSC impressions for "MVP development agency" and "startup MVP development" within 10 weeks.</div>
+  </div>
+
+  <div class="callout warn" style="margin-top:4px;">
+    <span class="ic">⚠</span>
+    <div><strong>On industry-specific pages (Healthcare, FinTech, Logistics):</strong> These were suggested as high-priority but I recommend against building them before the core service pages above. Reasons: (1) TBox does not yet have verified case studies in Healthcare or Logistics — a page without proof is unconvincing; (2) these verticals have compliance complexity (HIPAA, GDPR) that requires careful positioning; (3) the audience for vertical pages is narrower than service pages, so the ROI per page is lower. Build these after Months 6 once you have 1–2 confirmed clients in a specific vertical. The one exception: FinTech — TBox has the US Neobank case study. <code>/services/ai-development-fintech/</code> or <code>/work/fintech/</code> is defensible and worth building in Month 5.</div>
+  </div>
+
+  <!-- AUTHORITY BUILDING -->
+  <h3 class="head"><span class="dot" style="background:var(--warn)"></span>4 · Authority Building — recommended only</h3>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">US-09</span><span class="ttitle">Clutch.co — claim profile + request client reviews</span><span class="chip gen">Authority</span><span class="chip phase">Month 1 · High impact</span></div>
+    <div class="block what"><span class="lab">Why</span>Clutch is the primary third-party review platform that US and European startup founders use to vet development agencies. A verified Clutch profile with 3+ reviews is one of the highest-ROI authority building activities available — it creates a backlink from a DA 70+ domain, appears in Google's featured snippets for "[agency type] reviews", and provides a trust signal that no amount of homepage copy can replicate.</div>
+    <div class="block dev"><span class="lab">Steps</span>1. Claim/create profile at clutch.co. 2. Complete all profile sections (services, focus, minimum project size, team size). 3. Email 5 past clients asking for a Clutch review (Clutch sends a questionnaire — takes clients ~10 minutes). 4. Embed Clutch rating widget on homepage and contact page once reviews are live.</div>
+    <div class="block qa"><span class="lab">Target</span>3 verified reviews minimum. "Top Developer" badge eligibility (requires 5+ reviews).</div>
+  </div>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">US-10</span><span class="ttitle">LinkedIn — founder thought leadership content</span><span class="chip gen">Authority</span><span class="chip phase">Month 1 onwards · High impact</span></div>
+    <div class="block what"><span class="lab">Why</span>LinkedIn is where US and European startup founders, VCs, and CTOs spend professional time. A consistent LinkedIn presence from Dilawer Hussain — sharing the same technical insights as the blog, but in shorter LinkedIn-native format — drives direct inbound and also signals authority to Google (LinkedIn posts rank). This is the highest-ROI channel for direct founder outreach without paid advertising.</div>
+    <div class="block dev"><span class="lab">Cadence</span>2–3 posts per week minimum to build momentum. Formats that perform: (1) short technical insight with a concrete example, (2) "here's what I'd do differently" from a real project, (3) "we helped [type of company] do X — here's how", (4) contrarian takes on AI hype vs. reality. Never pure promotion. Link to blog articles in first comment, not the post itself (LinkedIn suppresses outbound links in posts).</div>
+    <div class="block qa"><span class="lab">Signal</span>After 60 days: 3+ inbound DMs from founders per month. After 90 days: blog articles getting referral traffic from LinkedIn in analytics.</div>
+  </div>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">US-11</span><span class="ttitle">Guest posts — 2 per quarter on high-authority startup publications</span><span class="chip gen">Authority</span><span class="chip phase">Months 3–6</span></div>
+    <div class="block what"><span class="lab">Why</span>A single guest post on Hacker News (Show HN), Indie Hackers, or a publication like The Pragmatic Engineer can drive hundreds of targeted founder visits in a single day — more than months of SEO. More importantly, each guest post creates a backlink from a high-authority domain, which is the primary signal Google uses to determine whether your site deserves to rank for competitive queries.</div>
+    <div class="block dev"><span class="lab">Targets</span>Hacker News (Show HN for technical content, not promotion). Indie Hackers (startup founder audience, highly relevant). Dev.to (developer audience, finds technical co-founders). Smashing Magazine or CSS-Tricks for frontend/mobile content. The key is original insight — repurposing blog articles does not work. Pitches should lead with a specific, counter-intuitive claim backed by a real project example.</div>
+    <div class="block qa"><span class="lab">Signal</span>Each published guest post: referral traffic spike in analytics + backlink appearing in GSC.</div>
+  </div>
+
+  <div class="callout" style="margin-top:4px;">
+    <span class="ic">💡</span>
+    <div><strong>Rejected: Reddit and podcasts as near-term priorities.</strong> Reddit's software subreddits ban promotion aggressively — contribution requires 6+ months of genuine participation before any brand mention is tolerated. Worthwhile long-term but not a 6-month strategy. Podcasts are high-effort/low-immediate-return at this stage — prioritise after the site itself converts reliably. GoodFirms has lower domain authority and audience reach than Clutch; not worth the time until Clutch is saturated. Medium syndication is useful only after original content is indexed by Google first (avoid duplicate content penalties — wait 4 weeks then syndicate with canonical pointing back to tboxsolutionz.com).</div>
+  </div>
+
+  <!-- AI-NATIVE GROWTH OPPORTUNITIES -->
+  <h3 class="head"><span class="dot" style="background:var(--accent)"></span>5 · AI-Native Growth Opportunities — linkable assets</h3>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">US-12</span><span class="ttitle">Free tool: AI Readiness Assessment for Startups</span><span class="chip feat">Linkable asset</span><span class="chip phase">Months 5–6 · High potential</span></div>
+    <div class="block what"><span class="lab">What</span>A short (8–10 question) interactive assessment that tells a founder whether their startup is ready to integrate AI — and what to fix first if not. Questions cover: team size, existing data infrastructure, budget range, use case clarity, timeline. Output: a personalised readiness score with 3 specific recommendations. This tool is: (1) immediately useful to the target audience, (2) a natural backlink target ("found this tool, very useful"), (3) a lead capture mechanism (email to receive full report), (4) completely aligned with TBox's AI positioning.</div>
+    <div class="block dev"><span class="lab">Build</span>Pure JS — a multi-step form with scoring logic. No backend needed unless email capture is added. Host at <code>/tools/ai-readiness/</code>. Share on LinkedIn, Hacker News, Indie Hackers on launch day. Submit to Product Hunt.</div>
+    <div class="block qa"><span class="lab">Success metric</span>50+ unique tool completions per month within 3 months of launch. 5+ backlinks from other sites sharing the tool.</div>
+  </div>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">US-13</span><span class="ttitle">Free resource: MVP Scoping Worksheet (downloadable PDF)</span><span class="chip feat">Linkable asset</span><span class="chip phase">Month 3 · Low effort, high value</span></div>
+    <div class="block what"><span class="lab">What</span>A structured 1–2 page PDF that helps founders scope their MVP: user stories template, feature prioritisation matrix (must-have vs. nice-to-have), technical dependency map, timeline estimate inputs. This is low-effort to produce (it mirrors the SaaS MVP scoping blog article in structured form) and high-value to share. Founders bookmark and share practical tools. Host at <code>/resources/mvp-scoping-worksheet.pdf</code>. Gate with email capture for lead generation, or offer free — free generates more backlinks.</div>
+    <div class="block dev"><span class="lab">Promotion</span>Link from the existing SaaS MVP scoping blog article. Share in founder communities (Indie Hackers, Y Combinator-adjacent Slack groups, startup subreddits when relevant and helpful).</div>
+    <div class="block qa"><span class="lab">Success metric</span>200+ downloads per month. Referenced in at least 3 other publications or communities.</div>
+  </div>
+
+  <!-- MEASUREMENT -->
+  <h3 class="head"><span class="dot" style="background:var(--slate)"></span>6 · Measurement — what to actually track</h3>
+
+  <div class="task gen" data-head="gen">
+    <div class="thead"><span class="tid">US-14</span><span class="ttitle">Measurement framework — actionable metrics only</span><span class="chip gen">Analytics</span><span class="chip phase">Setup Month 1</span></div>
+    <div class="block what"><span class="lab">Track these</span>
+      <ul>
+        <li><strong>Contact form submissions</strong> — the only conversion metric that directly maps to revenue. Track weekly.</li>
+        <li><strong>CTA clicks</strong> ("Book a call", "Start a project") — intent signal before form submit.</li>
+        <li><strong>Country breakdown</strong> — % US + EU traffic growing or shrinking month over month.</li>
+        <li><strong>Case study page views</strong> — a proxy for purchase consideration (people reading case studies are evaluating you).</li>
+        <li><strong>Blog article scroll depth</strong> — are people reading or bouncing? &lt;30% scroll = weak article; &gt;70% = strong article. Double down on strong ones.</li>
+        <li><strong>GSC: queries ranked 8–20</strong> — your fastest-win ranking opportunities. Review monthly.</li>
+        <li><strong>GSC: impressions trend</strong> — post-migration recovery signal. Should recover to baseline within 60 days, then grow.</li>
+      </ul>
+    </div>
+    <div class="block dev"><span class="lab">Do not track</span>Raw page views (vanity). Bounce rate in isolation (meaningless without scroll depth). Social followers. Domain Authority score (a third-party metric, not a Google signal). Weekly rankings (too volatile to act on — track monthly averages instead).</div>
+    <div class="block qa"><span class="lab">Monthly review</span>One question: "Did the number of contact form submissions increase vs. last month?" If yes, what drove it. If no, what changed. Everything else is context for answering that question.</div>
+  </div>
+
+  <div class="footer">
+    TBox Solutionz · Website Tracker · updated 2026-07-25 · local preview at <code>http://localhost:4500</code>.
+    Open this file directly for localStorage-only state, or run <code>python3 tbox-site-tracker-server.py</code> for file-persisted state.
+  </div>
+
+</div><!-- /.wrap -->
+</div><!-- /.layout -->
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('themeToggle');
+    var saved = localStorage.getItem('tbox-site-theme');
+    if (saved) root.setAttribute('data-theme', saved);
+    function sync() {
+      var dark = root.getAttribute('data-theme') === 'dark';
+      btn.textContent = dark ? '☀️ Light' : '🌙 Dark';
+    }
+    sync();
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') === 'dark';
+      if (dark) { root.removeAttribute('data-theme'); localStorage.setItem('tbox-site-theme', 'light'); }
+      else { root.setAttribute('data-theme', 'dark'); localStorage.setItem('tbox-site-theme', 'dark'); }
+      sync();
+    });
+
+    var fbtns = document.querySelectorAll('.fbtn');
+    fbtns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        fbtns.forEach(function (x) { x.classList.remove('active'); });
+        b.classList.add('active');
+        var f = b.getAttribute('data-f');
+        document.querySelectorAll('.task').forEach(function (t) {
+          var head = t.getAttribute('data-head');
+          t.classList.toggle('hidden', f !== 'all' && head !== f);
+        });
+        if (window.__onFilter) window.__onFilter(f);
+      });
+    });
+  })();
+
+  // ---- Per-task checkboxes + persistence (localStorage + optional companion-script file) ----
+  (function () {
+    var KEY = 'tbox-site-checks-v1';
+    var SERVED = location.protocol === 'http:' || location.protocol === 'https:';
+    var state = {};
+    var checkboxes = [];
+
+    document.querySelectorAll('.task').forEach(function (t) {
+      var tid = t.querySelector('.tid');
+      if (!tid) return;
+      var id = tid.textContent.trim();
+      var thead = t.querySelector('.thead');
+      var cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.className = 'taskcheck';
+      cb.setAttribute('data-task', id);
+      cb.title = 'Mark ' + id + ' done';
+      cb.setAttribute('aria-label', 'Mark ' + id + ' done');
+      cb.dataset.def = t.querySelector('.chip.done') ? '1' : '0';
+      thead.insertBefore(cb, thead.firstChild);
+      checkboxes.push(cb);
+      cb.addEventListener('change', function () {
+        state[id] = cb.checked;
+        t.classList.toggle('done-checked', cb.checked);
+        save();
+        updateProgress();
+      });
+    });
+
+    function applyState() {
+      checkboxes.forEach(function (cb) {
+        var id = cb.getAttribute('data-task');
+        var on = (id in state) ? !!state[id] : (cb.dataset.def === '1');
+        cb.checked = on;
+        cb.closest('.task').classList.toggle('done-checked', on);
+      });
+      updateProgress();
+    }
+
+    function updateProgress() {
+      var total = checkboxes.length;
+      var done = checkboxes.filter(function (cb) { return cb.checked; }).length;
+      var el = document.getElementById('progressText');
+      if (el) el.innerHTML = '<b>' + done + '</b> of ' + total + ' done';
+      var tp = document.getElementById('topProgress');
+      if (tp) tp.innerHTML = '<b>' + done + '</b>/' + total;
+      if (window.__onStateSync) window.__onStateSync();
+    }
+
+    function save() {
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+      fetch('save-state', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(state)
+      }).catch(function () {});
+    }
+
+    function loadLocal() {
+      try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { return {}; }
+    }
+
+    function setMode() {
+      var note = document.getElementById('modeNote');
+      if (!note) return;
+      if (SERVED) {
+        note.innerHTML = '💾 Saving to <b>tbox-site-tracker-state.json</b> (file, via the companion script) and this browser.';
+      } else {
+        note.innerHTML = '💾 Saving to <b>this browser</b> only. For a persistent file, run <code>python3 tbox-site-tracker-server.py</code> in this folder and open the printed URL.';
+      }
+    }
+
+    fetch('tbox-site-tracker-state.json', { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (fileState) { state = fileState || {}; })
+      .catch(function () { state = loadLocal(); })
+      .then(function () { applyState(); setMode(); });
+
+    var be = document.getElementById('btnExport');
+    if (be) be.addEventListener('click', function () {
+      var blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'tbox-site-tracker-state.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+
+    var fi = document.getElementById('fileImport');
+    var bi = document.getElementById('btnImport');
+    if (bi && fi) {
+      bi.addEventListener('click', function () { fi.click(); });
+      fi.addEventListener('change', function () {
+        var f = fi.files[0]; if (!f) return;
+        var rd = new FileReader();
+        rd.onload = function () {
+          try { state = JSON.parse(rd.result) || {}; applyState(); save(); }
+          catch (e) { alert('That is not a valid state file.'); }
+        };
+        rd.readAsText(f);
+        fi.value = '';
+      });
+    }
+
+    var br = document.getElementById('btnReset');
+    if (br) br.addEventListener('click', function () {
+      if (!confirm('Reset all checkboxes to their defaults (only ✓ Shipped items checked)?')) return;
+      state = {};
+      applyState();
+      save();
+    });
+  })();
+
+  // ---- Tab switching: show one section at a time ----
+  (function () {
+    var wrap = document.querySelector('.wrap');
+    if (!wrap) return;
+    var kids = Array.prototype.slice.call(wrap.children);
+
+    var current = 'common';
+    kids.forEach(function (el) {
+      if (el.matches && el.matches('h2.sprint')) {
+        if (['sg', 'sh', 'ip', 'pl', 'sm', 'gr', 'us'].indexOf(el.id) !== -1) current = el.id;
+      }
+      if (el.classList && el.classList.contains('footer')) {
+        el.setAttribute('data-sprint', 'common');
+      } else {
+        el.setAttribute('data-sprint', current);
+      }
+    });
+
+    var navlinks = Array.prototype.slice.call(document.querySelectorAll('.topbar a.nav'));
+    navlinks.forEach(function (a) {
+      var tab = (a.getAttribute('href') || '').replace('#', '');
+      a.setAttribute('data-tab', tab);
+      a.addEventListener('click', function (e) { e.preventDefault(); showTab(tab); });
+    });
+
+    function showTab(which) {
+      kids.forEach(function (el) {
+        var s = el.getAttribute('data-sprint');
+        el.classList.toggle('tab-hidden', s !== 'common' && s !== which);
+      });
+      navlinks.forEach(function (a) {
+        a.classList.toggle('active', a.getAttribute('data-tab') === which);
+      });
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      try { localStorage.setItem('tbox-site-tab', which); } catch (e) {}
+      if (window.__onTab) window.__onTab(which);
+    }
+
+    var saved = 'sh';
+    try { saved = localStorage.getItem('tbox-site-tab') || 'sh'; } catch (e) {}
+    if (['sg', 'sh', 'ip', 'pl', 'sm', 'gr', 'us'].indexOf(saved) === -1) saved = 'sh';
+    showTab(saved);
+  })();
+
+  // ---- Left timeline rail ----
+  (function () {
+    var aside = document.getElementById('timeline');
+    if (!aside) return;
+    var body = document.getElementById('tlBody');
+    var SPRINT_NAME = { sg: 'Guide', sh: 'Shipped', ip: 'In Progress', pl: 'Planned', sm: 'SEO Migration', gr: 'Post-Launch Growth', us: 'US & Europe Strategy' };
+    var HEAD_NAME = { bug: 'Bug fixes', enh: 'Enhancements', feat: 'New pages & features', gen: 'General & SEO', crit: 'Critical issues', high: 'High priority', med: 'Medium priority', win: 'Wins — already fixed' };
+    var currentFilter = 'all';
+
+    function activeSprint() {
+      var a = document.querySelector('.topbar a.nav.active');
+      return (a && a.getAttribute('data-tab')) || 'sh';
+    }
+    function mainCheck(id) {
+      return document.querySelector('.taskcheck[data-task="' + id + '"]');
+    }
+
+    function build(which) {
+      body.innerHTML = '';
+      var head = document.createElement('div');
+      head.className = 'tl-head';
+      head.innerHTML = '<span>' + (SPRINT_NAME[which] || which) + '</span><span class="tl-count" id="tlCount"></span>';
+      body.appendChild(head);
+
+      if (which === 'sg') {
+        var note = document.createElement('div');
+        note.className = 'tl-empty';
+        note.textContent = 'Shared guide and state controls — no individual items here.';
+        body.appendChild(note);
+        return;
+      }
+
+      var list = document.createElement('div');
+      list.className = 'tl-list';
+      var tasks = Array.prototype.slice.call(document.querySelectorAll('.task[data-sprint="' + which + '"]'))
+        .filter(function (t) { return t.querySelector('.tid'); });
+      var lastHead = null;
+      tasks.forEach(function (t) {
+        var id = t.querySelector('.tid').textContent.trim();
+        var title = t.querySelector('.ttitle').textContent.trim();
+        var h = t.getAttribute('data-head');
+        if (h !== lastHead) {
+          var g = document.createElement('div');
+          g.className = 'tl-head-group';
+          g.setAttribute('data-head', h);
+          g.textContent = HEAD_NAME[h] || h;
+          list.appendChild(g);
+          lastHead = h;
+        }
+        var item = document.createElement('div');
+        item.className = 'tl-item';
+        item.setAttribute('data-task', id);
+        item.setAttribute('data-head', h);
+
+        var node = document.createElement('button');
+        node.type = 'button';
+        node.className = 'tl-node';
+        node.setAttribute('aria-label', 'Toggle ' + id + ' done');
+        node.addEventListener('click', function () { toggle(id); });
+
+        var titleBtn = document.createElement('button');
+        titleBtn.type = 'button';
+        titleBtn.className = 'tl-title';
+        titleBtn.title = id + ' · ' + title;
+        var idSpan = document.createElement('span');
+        idSpan.className = 'tl-id';
+        idSpan.textContent = id + ' ';
+        titleBtn.appendChild(idSpan);
+        titleBtn.appendChild(document.createTextNode(title));
+        titleBtn.addEventListener('click', function () { jumpTo(id); });
+
+        item.appendChild(node);
+        item.appendChild(titleBtn);
+        list.appendChild(item);
+      });
+      body.appendChild(list);
+    }
+
+    function toggle(id) {
+      var m = mainCheck(id);
+      if (!m) return;
+      m.checked = !m.checked;
+      m.dispatchEvent(new Event('change'));
+    }
+
+    function jumpTo(id) {
+      var card = Array.prototype.slice.call(document.querySelectorAll('.task')).filter(function (t) {
+        var x = t.querySelector('.tid');
+        return x && x.textContent.trim() === id;
+      })[0];
+      if (!card) return;
+      if (card.classList.contains('hidden')) {
+        var allBtn = document.querySelector('.fbtn[data-f="all"]');
+        if (allBtn) allBtn.click();
+      }
+      closeDrawer();
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.classList.remove('flash');
+      void card.offsetWidth;
+      card.classList.add('flash');
+    }
+
+    function syncChecks() {
+      var items = aside.querySelectorAll('.tl-item');
+      var total = 0, done = 0;
+      items.forEach(function (item) {
+        var m = mainCheck(item.getAttribute('data-task'));
+        var on = !!(m && m.checked);
+        item.classList.toggle('done', on);
+        var node = item.querySelector('.tl-node');
+        if (node) node.setAttribute('aria-pressed', on ? 'true' : 'false');
+        total++; if (on) done++;
+      });
+      var c = document.getElementById('tlCount');
+      if (c) c.textContent = done + ' / ' + total;
+    }
+
+    function applyFilter(f) {
+      aside.querySelectorAll('.tl-item, .tl-head-group').forEach(function (el) {
+        var h = el.getAttribute('data-head');
+        el.classList.toggle('tl-off', f !== 'all' && h !== f);
+      });
+    }
+
+    var overlay = document.getElementById('tlOverlay');
+    var drawerBtn = document.getElementById('drawerBtn');
+    function openDrawer() { aside.classList.add('open'); if (overlay) overlay.classList.add('show'); }
+    function closeDrawer() { aside.classList.remove('open'); if (overlay) overlay.classList.remove('show'); }
+    if (drawerBtn) drawerBtn.addEventListener('click', openDrawer);
+    if (overlay) overlay.addEventListener('click', closeDrawer);
+
+    var TL_W_KEY = 'tbox-site-tlw', MIN_W = 190, MAX_W = 430;
+    (function () {
+      var w = parseInt(localStorage.getItem(TL_W_KEY) || '', 10);
+      if (w && w >= MIN_W && w <= MAX_W) document.documentElement.style.setProperty('--tl-w', w + 'px');
+    })();
+    var handle = document.getElementById('tlResize');
+    if (handle) {
+      var dragging = false;
+      handle.addEventListener('mousedown', function (e) {
+        dragging = true; aside.classList.add('resizing'); document.body.style.cursor = 'col-resize'; e.preventDefault();
+      });
+      window.addEventListener('mousemove', function (e) {
+        if (!dragging) return;
+        var w = Math.min(MAX_W, Math.max(MIN_W, e.clientX - aside.getBoundingClientRect().left));
+        document.documentElement.style.setProperty('--tl-w', w + 'px');
+      });
+      window.addEventListener('mouseup', function () {
+        if (!dragging) return;
+        dragging = false; aside.classList.remove('resizing'); document.body.style.cursor = '';
+        var cur = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tl-w'), 10);
+        if (cur) { try { localStorage.setItem(TL_W_KEY, cur); } catch (e) {} }
+      });
+    }
+
+    function taskLines(t, withHash) {
+      var id = t.querySelector('.tid') ? t.querySelector('.tid').textContent.trim() : '';
+      var ttl = t.querySelector('.ttitle') ? t.querySelector('.ttitle').textContent.trim() : '';
+      var chips = Array.prototype.map.call(t.querySelectorAll('.thead .chip'), function (c) { return c.textContent.trim(); });
+      var out = [(withHash ? '### ' : '') + (id ? id + ' · ' : '') + ttl + (chips.length ? '  [' + chips.join(' | ') + ']' : '')];
+      t.querySelectorAll('.block').forEach(function (b) {
+        var lab = b.querySelector('.lab'); var labText = lab ? lab.textContent.trim() : '';
+        var clone = b.cloneNode(true); var l2 = clone.querySelector('.lab'); if (l2) l2.remove();
+        out.push(labText + ': ' + clone.textContent.replace(/\s+/g, ' ').trim());
+      });
+      return out;
+    }
+    function taskText(t) { return taskLines(t, false).join('\n').trim() + '\n'; }
+    function sprintText(which) {
+      var h2 = document.getElementById(which);
+      var sub = '';
+      if (h2) {
+        var c = h2.cloneNode(true);
+        var n = c.querySelector('.num'); if (n) n.remove();
+        var cb = c.querySelector('.copybtn'); if (cb) cb.remove();
+        sub = c.textContent.trim();
+      }
+      var lines = ['# ' + (SPRINT_NAME[which] || which) + (sub ? ' — ' + sub : ''), ''];
+      var lastHead = null;
+      Array.prototype.slice.call(document.querySelectorAll('.task[data-sprint="' + which + '"]'))
+        .filter(function (t) { return t.querySelector('.tid'); })
+        .forEach(function (t) {
+          var h = t.getAttribute('data-head');
+          if (h !== lastHead) { lines.push('## ' + (HEAD_NAME[h] || h), ''); lastHead = h; }
+          taskLines(t, true).forEach(function (l) { lines.push(l); });
+          lines.push('');
+        });
+      return lines.join('\n').trim() + '\n';
+    }
+    function copyText(text, btn, compact) {
+      var orig = btn.getAttribute('data-orig') || btn.textContent;
+      btn.setAttribute('data-orig', orig);
+      function done() {
+        btn.textContent = compact ? '✓' : '✓ Copied';
+        btn.classList.add('copied');
+        clearTimeout(btn._t);
+        btn._t = setTimeout(function () { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+      }
+      function fallback() {
+        var ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(fallback);
+      } else { fallback(); }
+    }
+    document.querySelectorAll('h2.sprint').forEach(function (h) {
+      if (h.id === 'sg' || h.querySelector('.copybtn')) return;
+      var btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'copybtn'; btn.textContent = '⧉ Copy section';
+      btn.setAttribute('aria-label', 'Copy this section as text');
+      btn.addEventListener('click', function () { copyText(sprintText(h.id), btn, false); });
+      h.appendChild(btn);
+    });
+    document.querySelectorAll('.task').forEach(function (t) {
+      if (!t.querySelector('.tid') || t.querySelector('.taskcopy')) return;
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'taskcopy'; b.textContent = '⧉';
+      b.title = 'Copy this item'; b.setAttribute('aria-label', 'Copy this item as text');
+      b.addEventListener('click', function () { copyText(taskText(t), b, true); });
+      t.appendChild(b);
+    });
+
+    function highlightTlItem(id) {
+      aside.querySelectorAll('.tl-item').forEach(function (item) {
+        var on = item.getAttribute('data-task') === id;
+        item.classList.toggle('active', on);
+        if (on) {
+          var tlBody = document.getElementById('tlBody');
+          if (tlBody) {
+            var itemTop = item.offsetTop;
+            var itemH = item.offsetHeight;
+            var bodyScroll = tlBody.scrollTop;
+            var bodyH = tlBody.clientHeight;
+            if (itemTop < bodyScroll + 40 || itemTop + itemH > bodyScroll + bodyH - 40) {
+              tlBody.scrollTo({ top: itemTop - bodyH / 2 + itemH / 2, behavior: 'smooth' });
+            }
+          }
+        }
+      });
+    }
+
+    function findActiveTask() {
+      var tasks = Array.prototype.slice.call(document.querySelectorAll('.task:not(.tab-hidden):not(.hidden)'));
+      var topbarH = 70;
+      var best = null, bestTop = Infinity;
+      for (var i = 0; i < tasks.length; i++) {
+        var t = tasks[i];
+        if (!t.querySelector('.tid')) continue;
+        var r = t.getBoundingClientRect();
+        if (r.bottom < topbarH) continue; // fully above topbar
+        var distFromTop = Math.abs(r.top - topbarH);
+        if (distFromTop < bestTop) { bestTop = distFromTop; best = t; }
+        if (r.top > topbarH + 60) break; // first card comfortably below topbar wins
+      }
+      return best ? best.querySelector('.tid').textContent.trim() : null;
+    }
+
+    function setupScrollSpy() {
+      if (window.__spyHandler) window.removeEventListener('scroll', window.__spyHandler, true);
+      window.__spyHandler = function () { highlightTlItem(findActiveTask()); };
+      window.addEventListener('scroll', window.__spyHandler, { passive: true });
+      highlightTlItem(findActiveTask());
+    }
+
+    window.__onTab = function (which) { build(which); applyFilter(currentFilter); syncChecks(); setupScrollSpy(); };
+    window.__onFilter = function (f) { currentFilter = f; applyFilter(f); setupScrollSpy(); };
+    window.__onStateSync = syncChecks;
+
+    build(activeSprint());
+    applyFilter(currentFilter);
+    syncChecks();
+    setupScrollSpy();
+  })();
+</script>
+</body>
+</html>
