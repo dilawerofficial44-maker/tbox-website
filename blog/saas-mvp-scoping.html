@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Scope Your SaaS MVP Without Wasting Six Months — TBox Solutionz</title>
+  <meta name="description" content="Most SaaS MVPs fail not because the idea was wrong, but because the scope was. A framework for deciding what to build first — and what to cut without killing the product.">
+  <link rel="canonical" href="https://tboxsolutionz.com/blog/saas-mvp-scoping.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tboxsolutionz.com/blog/saas-mvp-scoping.html">
+  <meta property="og:title" content="How to Scope Your SaaS MVP Without Wasting Six Months">
+  <meta property="og:description" content="Most SaaS MVPs fail not because the idea was wrong, but because the scope was. A framework for deciding what to build first.">
+  <meta property="og:image" content="https://tboxsolutionz.com/assets/images/blog/saas-mvp.jpg">
+  <meta name="twitter:image" content="https://tboxsolutionz.com/assets/images/blog/saas-mvp.jpg">
+  <meta property="article:published_time" content="2026-06-19T15:20:00+05:00">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How to Scope Your SaaS MVP Without Wasting Six Months",
+    "datePublished": "2026-06-19T15:20:00+05:00",
+    "author": {
+      "@type": "Person",
+      "name": "Dilawer Hussain Hussain",
+      "jobTitle": "Founder & CEO",
+      "worksFor": { "@id": "https://tboxsolutionz.com/#organization" }
+    },
+    "image": "https://tboxsolutionz.com/assets/images/blog/saas-mvp.jpg",
+    "publisher": { "@id": "https://tboxsolutionz.com/#organization" },
+    "url": "https://tboxsolutionz.com/blog/saas-mvp-scoping.html"
+  }
+  </script>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .ba-hero { background: var(--bg-alt); border-bottom: 1px solid var(--border-band); padding: 3rem 0 2.5rem; }
+    .ba-back { display: inline-flex; align-items: center; gap: 0.375rem; font-family: var(--mono); font-size: 12px; color: var(--text-muted); text-decoration: none; margin-bottom: 1.25rem; letter-spacing: 0.02em; }
+    .ba-back:hover { color: var(--red); }
+    .bl-tag { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(224,27,27,0.08); color: var(--red); padding: 3px 8px; border-radius: 4px; font-weight: 500; margin-bottom: 1rem; }
+    .ba-hero h1 { font-size: clamp(1.6rem, 3vw, 2.25rem); letter-spacing: -0.03em; line-height: 1.2; max-width: 720px; margin-bottom: 1.5rem; }
+    .ba-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 1.25rem; }
+    .ba-author { display: flex; align-items: center; gap: 0.625rem; }
+    .ba-author img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+    .ba-author-name { font-size: 14px; font-weight: 600; display: block; }
+    .ba-author-role { font-size: 12px; color: #5A5855; display: block; }
+    .ba-meta-sep { color: var(--border-band); font-size: 18px; }
+    .ba-date, .ba-read { font-family: var(--mono); font-size: 12px; color: #5A5855; }
+    .ba-cover { background: var(--bg-alt); padding: 0 0 2.5rem; }
+    .ba-cover-img { width: 100%; max-height: 420px; object-fit: cover; border-radius: 14px; display: block; box-shadow: 0 4px 24px rgba(0,0,0,0.1); }
+    .ba-body { padding: 3.5rem 0 4rem; }
+    .ba-content { max-width: 720px; margin: 0 auto; }
+    .ba-content p { font-size: 16.5px; line-height: 1.75; color: #2C2A27; margin-bottom: 1.375rem; }
+    .ba-content h2 { font-size: 1.3rem; letter-spacing: -0.025em; margin-top: 2.5rem; margin-bottom: 0.875rem; }
+    .ba-content h3 { font-size: 1.05rem; font-weight: 600; margin-top: 1.75rem; margin-bottom: 0.5rem; }
+    .ba-content ul, .ba-content ol { padding-left: 1.5rem; margin-bottom: 1.375rem; }
+    .ba-content li { font-size: 16.5px; line-height: 1.7; color: #2C2A27; margin-bottom: 0.375rem; }
+    .ba-content strong { color: var(--text); }
+    .ba-callout { background: var(--bg-alt); border-left: 3px solid var(--red); padding: 1rem 1.25rem; border-radius: 0 8px 8px 0; margin: 1.75rem 0; }
+    .ba-callout p { margin-bottom: 0; font-size: 15.5px; }
+    .ba-share { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-band); }
+    .ba-share-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #5A5855; margin-bottom: 0.875rem; }
+    .ba-share-btns { display: flex; gap: 0.625rem; flex-wrap: wrap; }
+    .ba-share-btn { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.5rem 1rem; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; border: 1px solid var(--border-band); cursor: pointer; background: var(--bg-page); color: var(--text); transition: background 0.15s, border-color 0.15s; }
+    .ba-share-btn:hover { background: var(--bg-alt); border-color: var(--text-muted); }
+    .ba-share-btn.linkedin { background: #0A66C2; border-color: #0A66C2; color: #fff; }
+    .ba-share-btn.linkedin:hover { background: #084fa0; }
+    .ba-share-btn.xtwitter { background: #000; border-color: #000; color: #fff; }
+    .ba-share-btn.xtwitter:hover { background: #222; }
+    .ba-copy-toast { font-size: 12px; color: var(--red); opacity: 0; transition: opacity 0.2s; margin-left: 0.25rem; align-self: center; }
+    .ba-copy-toast.show { opacity: 1; }
+    .ba-author-card { margin-top: 2.5rem; padding: 1.75rem; border: 1px solid var(--border-band); border-radius: 16px; display: flex; gap: 1.5rem; align-items: flex-start; background: var(--bg-alt); }
+    .ba-author-card img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+    .ba-author-card-name { font-size: 16px; font-weight: 700; margin-bottom: 0.125rem; }
+    .ba-author-card-title { font-size: 13px; color: #5A5855; margin-bottom: 0.75rem; }
+    .ba-author-card-bio { font-size: 14px; color: #4A4845; line-height: 1.65; margin-bottom: 1rem; }
+    .ba-author-card .btn { font-size: 13px; padding: 0.5rem 1.125rem; }
+    .ba-cta { background: var(--text); color: #fff; padding: 3.5rem 0; text-align: center; }
+    .ba-cta h2 { font-size: clamp(1.4rem, 2.5vw, 1.9rem); letter-spacing: -0.03em; color: #fff; margin-bottom: 0.625rem; }
+    .ba-cta p { color: rgba(255,255,255,0.65); margin-bottom: 1.5rem; font-size: 15px; }
+    .ba-cta .btn-primary { background: var(--red); }
+    @media (max-width: 640px) { .ba-author-card { flex-direction: column; } .ba-share-btns { flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+  <main id="content">
+
+  <section class="ba-hero">
+    <div class="container">
+      <a href="/blog/" class="ba-back">← Insights</a>
+      <div><span class="bl-tag">Product Strategy</span></div>
+      <h1>How to Scope Your SaaS MVP Without Wasting Six Months</h1>
+      <div class="ba-meta">
+        <div class="ba-author">
+          <img src="/assets/images/founder.webp" alt="Dilawer Hussain">
+          <div>
+            <span class="ba-author-name">Dilawer Hussain</span>
+            <span class="ba-author-role">Founder & CEO, TBox Solutionz</span>
+          </div>
+        </div>
+        <span class="ba-meta-sep">·</span>
+        <time class="ba-date" datetime="2026-06-19">June 19, 2026</time>
+        <span class="ba-meta-sep">·</span>
+        <span class="ba-read">7 min read</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="ba-cover">
+    <div class="container">
+      <img src="/assets/images/blog/saas-mvp.jpg" alt="Startup team scoping a product on a whiteboard" class="ba-cover-img" loading="eager">
+    </div>
+  </div>
+
+  <div class="ba-body">
+    <div class="container">
+      <div class="ba-content">
+
+        <p>There's a consistent pattern in failed SaaS builds: the product was well-designed, the engineering was competent, and the problem it solved was real. It still failed — not because the idea was wrong, but because the scope was. The team built something too large to ship quickly, too small to demonstrate real value, or too comprehensive to learn anything specific from.</p>
+
+        <p>Scoping an MVP is the most technically complex non-technical decision a founder makes. It requires knowing what questions you're trying to answer, which features are load-bearing vs. decorative, and how to measure whether you've succeeded. Most teams are better at the product vision than they are at this scoping discipline — and the gap is where six months quietly disappear.</p>
+
+        <h2>What "minimum" actually means</h2>
+
+        <p>The M in MVP is the most abused letter in startup vocabulary. Teams interpret it as "the smallest thing we'd feel comfortable showing someone" — which usually means a nearly-complete product with most of the original feature list. That's not minimum viable; that's maximum viable at reduced polish.</p>
+
+        <p>Minimum means: the smallest set of features that allows a real user to do the one core thing your product does, well enough to generate an honest reaction. If you're building a scheduling tool, minimum means: a user can create a booking link and someone can book a time. Everything else — calendar sync variants, SMS reminders, team members, analytics — is post-MVP. An early user's opinion of the core flow is what you need. Their opinion of the reporting dashboard is not.</p>
+
+        <div class="ba-callout">
+          <p>A useful filter: if removing a feature doesn't break the core user journey, it shouldn't be in the MVP. Not "nice to have" vs. "must have" — but "load-bearing" vs. "additive."</p>
+        </div>
+
+        <h2>The three most common scoping mistakes</h2>
+
+        <h3>1. Building for the full persona instead of the early adopter</h3>
+        <p>Your target user at launch is not the same as your target user at Series A. Early adopters tolerate rough edges, value functionality over polish, and give useful feedback in exchange for early access to something that solves their problem. Building for a more demanding general audience before you've validated the core adds complexity that serves no current user. Define who you're building version 1 for — specifically — and scope for that person.</p>
+
+        <h3>2. Treating authentication and settings as simple</h3>
+        <p>Auth and settings consistently consume 2–3× more engineering time than estimated. Multi-provider auth, password reset flows, team roles, billing integration, email verification, session management — these aren't afterthoughts, and they can't be done halfway. If they're necessary for your MVP (they often are), budget for them honestly. If they can be simplified (e.g., single auth provider, no multi-seat at launch), explicitly decide to simplify rather than discovering complexity late.</p>
+
+        <h3>3. Building real-time when async will do</h3>
+        <p>Real-time features — live collaboration, instant notifications, presence indicators — require meaningfully more infrastructure complexity than async equivalents. Most SaaS products don't need real-time at MVP stage. If your core loop doesn't break when a user refreshes to see updates, build the async version first and add real-time as a deliberate upgrade decision based on user behavior data.</p>
+
+        <h2>A scoping framework that works</h2>
+
+        <p>Before writing a feature list, answer these questions in writing:</p>
+        <ol>
+          <li><strong>What is the single job the product does for the user?</strong> One sentence. If you need two sentences, that's scope for two MVPs.</li>
+          <li><strong>What would make a user's first session successful?</strong> Define the minimum satisfying outcome. Scope to enable that, nothing more.</li>
+          <li><strong>What assumption, if wrong, kills the product?</strong> Build to test that assumption first. Everything else is secondary to the validation experiment.</li>
+          <li><strong>What can be manual at launch?</strong> Operations that feel like they should be automated often don't need to be for the first 50 customers. Automate when the manual version breaks.</li>
+        </ol>
+
+        <h2>What to cut without killing the product</h2>
+
+        <p>Some features feel essential but aren't. In our experience, these are almost always safe to defer:</p>
+        <ul>
+          <li>Analytics and reporting dashboards (you don't have enough data to make them meaningful anyway)</li>
+          <li>Multi-seat and team management (get your first customers on single-seat accounts)</li>
+          <li>Advanced permissions and role-based access (default admin-or-member is enough)</li>
+          <li>Import/export and integrations (except the one integration that's in the core value proposition)</li>
+          <li>Email customization and white-labeling (relevant at scale, not at launch)</li>
+          <li>A mobile app when a responsive web app covers the same need</li>
+        </ul>
+
+        <h2>Knowing when you're ready to ship</h2>
+
+        <p>The readiness signal isn't completeness — it's that a real user, without guidance, can complete the core journey and tell you whether it solved their problem. If you need to explain the product for a user to understand its value, the MVP isn't done. If a user gets it without explanation but asks for a feature you don't have, that's useful signal that you're ready to ship and learn.</p>
+
+        <p>The honest version of MVP scoping requires resisting the instinct to add one more feature before launch. That instinct is almost always about confidence rather than the user — and shipping a smaller product that generates honest feedback is more valuable than shipping a larger product that generates polite feedback.</p>
+
+        <!-- Share -->
+        <div class="ba-share">
+          <p class="ba-share-label">Share this article</p>
+          <div class="ba-share-btns">
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Ftboxsolutionz.com%2Fblog%2Fsaas-mvp-scoping.html" target="_blank" rel="noopener noreferrer" class="ba-share-btn linkedin">LinkedIn</a>
+            <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Ftboxsolutionz.com%2Fblog%2Fsaas-mvp-scoping.html&text=How+to+Scope+Your+SaaS+MVP+Without+Wasting+Six+Months" target="_blank" rel="noopener noreferrer" class="ba-share-btn xtwitter">X / Twitter</a>
+            <button class="ba-share-btn" onclick="copyArticleLink(this)">Copy link</button>
+            <span class="ba-copy-toast" id="copy-toast">Link copied!</span>
+          </div>
+        </div>
+
+        <div class="ba-author-card">
+          <img src="/assets/images/founder.webp" alt="Dilawer Hussain">
+          <div>
+            <p class="ba-author-card-name">Dilawer Hussain</p>
+            <p class="ba-author-card-title">Founder & CEO, TBox Solutionz</p>
+            <p class="ba-author-card-bio">Dilawer Hussain leads TBox Solutionz, an AI-native engineering studio that has shipped 40+ products for founders and growth-stage companies. He writes about software engineering, product strategy, and building things that last.</p>
+            <a href="/contact.html" class="btn btn-primary">Contact Dilawer Hussain &rarr;</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="ba-cta">
+    <div class="container">
+      <h2>Ready to scope your MVP the right way?</h2>
+      <p>We run scoping workshops that produce a buildable spec in days, not months.</p>
+      <a href="/contact.html" class="btn btn-primary">Book a free call &rarr;</a>
+    </div>
+  </div>
+
+  </main>
+  <div id="footer-placeholder"></div>
+  <script src="/js/components.js" defer></script>
+  <script>
+    function copyArticleLink(btn) {
+      navigator.clipboard.writeText(window.location.href).then(function() {
+        var toast = document.getElementById('copy-toast');
+        toast.classList.add('show');
+        setTimeout(function() { toast.classList.remove('show'); }, 2500);
+      });
+    }
+  </script>
+</body>
+</html>
