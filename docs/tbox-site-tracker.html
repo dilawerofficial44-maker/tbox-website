@@ -354,6 +354,134 @@
     </ol>
   </details>
 
+  <!-- ============================ MAINTENANCE CYCLE ============================ -->
+  <details class="box" id="sg-maintenance" open>
+    <summary>Regular maintenance cycle</summary>
+    <p style="font-size:14px;color:#4A4845;line-height:1.6;margin-bottom:1.5rem;">Run the checks below on a regular cadence to keep the site fast, indexed correctly, and free of broken experiences. Each section lists the action, how to do it, and how often.</p>
+
+    <!-- PERFORMANCE -->
+    <b style="display:block;margin-bottom:0.625rem;font-size:15px;">⚡ Performance — Monthly</b>
+    <ol class="plist" style="margin-bottom:1.5rem;">
+      <li>Run <strong>PageSpeed Insights</strong> on <code>tboxsolutionz.com</code> for both Mobile and Desktop. Target: Mobile ≥ 85, Desktop 100. URL: <code>pagespeed.web.dev</code></li>
+      <li>Check <strong>Core Web Vitals</strong> in PSI: LCP &lt; 2.5s, CLS = 0, TBT &lt; 200ms. Flag any regressions.</li>
+      <li>Review <strong>image delivery</strong> — any new images added should be WebP, ≤ 150 KB. Convert with <code>cwebp -q 82 input.jpg -o output.webp</code>.</li>
+      <li>Verify <strong>cache headers</strong> are working: open DevTools → Network → reload → confirm <code>styles.css</code> and image files return <code>Cache-Control: max-age=31536000</code>.</li>
+      <li>Check <strong>new blog images</strong> — whenever a new article is published, make sure its hero image is WebP and referenced correctly.</li>
+    </ol>
+
+    <!-- SEO -->
+    <b style="display:block;margin-bottom:0.625rem;font-size:15px;">🔍 SEO — Monthly</b>
+    <ol class="plist" style="margin-bottom:1.5rem;">
+      <li>Open <strong>Google Search Console</strong> → Coverage report. Confirm all sitemap URLs are Indexed. Investigate any "Excluded" or "Error" entries.</li>
+      <li>Check <strong>Core Web Vitals</strong> report in Search Console (separate from PSI — this is real user data). Fix any URLs in the "Poor" bucket.</li>
+      <li>Submit <strong>sitemap</strong> after any new page is added: Search Console → Sitemaps → resubmit <code>tboxsolutionz.com/sitemap.xml</code>.</li>
+      <li>Verify <strong>sitemap.xml</strong> is up to date — every live page has an entry with a current <code>lastmod</code> date. Pages removed from the site should be removed from the sitemap.</li>
+      <li>Review <strong>meta descriptions</strong> on any newly added pages — each must be unique, 120–160 characters, include a primary keyword.</li>
+      <li>Check <strong>canonical tags</strong> on all new pages — the canonical URL must exactly match the live URL (no trailing slash mismatch, no http vs https).</li>
+      <li>Run a <strong>broken link check</strong> — use a free tool like <code>deadlinkchecker.com</code> or the W3C Link Checker on the homepage. Fix any 404s found from internal links.</li>
+      <li>Review <strong>GA4 dashboard</strong> — check for unexpected traffic drops on key pages. Confirm <code>contact_form_submit</code> event is firing on form submissions.</li>
+    </ol>
+
+    <!-- REPUTATION / PUBLIC RECORD -->
+    <b style="display:block;margin-bottom:0.625rem;font-size:15px;">⭐ Reputation &amp; Public Record — Monthly</b>
+    <ol class="plist" style="margin-bottom:1.5rem;">
+      <li>Check <strong>Clutch profile</strong> — review count, rating, and that the TBox listing links correctly to <code>tboxsolutionz.com</code>. Request reviews from recent clients.</li>
+      <li>Check <strong>Google Business Profile</strong> (if set up) — confirm address, phone, website URL, and opening hours are accurate.</li>
+      <li>Search <strong>"TBox Solutionz"</strong> on Google — review the Knowledge Panel, any featured snippets, and the first page results. Flag any incorrect information.</li>
+      <li>Review <strong>LinkedIn company page</strong> — confirm website URL, company size, and description are current.</li>
+      <li>Check <strong>Formspree submissions</strong> dashboard monthly — confirm no legitimate leads were caught in spam. Free tier limit is 50/month; upgrade if nearing limit.</li>
+    </ol>
+
+    <!-- QA CHECKLIST -->
+    <b style="display:block;margin-bottom:0.625rem;font-size:15px;">🧪 QA Checklist — Run after every deploy</b>
+    <p style="font-size:13px;color:#5A5855;margin-bottom:0.75rem;">Test on both a real mobile device (or Chrome DevTools at 375px) and a desktop browser. Mark each item pass/fail. If anything fails, do not leave it — fix before closing the session.</p>
+
+    <b style="display:block;margin:0.75rem 0 0.375rem;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:#888;">Navigation &amp; Global</b>
+    <ul class="plist" style="list-style:disc;padding-left:1.25rem;margin-bottom:1rem;">
+      <li>Top nav renders on every page — logo, all links, "Book a call" CTA button visible.</li>
+      <li>Active nav link is highlighted (underline + red color) on the current page.</li>
+      <li>Mobile hamburger menu opens and closes correctly at ≤ 768px.</li>
+      <li>All nav links route to the correct destination (Services/Work/Process/About scroll to homepage sections; Blog/Careers/Contact load separate pages).</li>
+      <li>Footer renders on every page — links, social icons, copyright year correct.</li>
+      <li>No horizontal scroll on any page at 375px or 1280px.</li>
+    </ul>
+
+    <b style="display:block;margin:0.75rem 0 0.375rem;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:#888;">Homepage — Desktop &amp; Mobile</b>
+    <ul class="plist" style="list-style:disc;padding-left:1.25rem;margin-bottom:1rem;">
+      <li>Hero headline and "Start a project" CTA visible above the fold on both breakpoints.</li>
+      <li>Hero visual (animated tabs: Discover / Prototype / Build / Scale) cycles correctly. Tab highlight moves.</li>
+      <li>Trusted-by logo strip scrolls / displays all logos without overflow.</li>
+      <li>Services section: all 6 service cards visible, icons render, no text truncation.</li>
+      <li>Work section: all case study cards display with correct image, title, and tags. Cards link to correct <code>/work/</code> pages.</li>
+      <li>How We Work section: all 4 steps aligned consistently on mobile (equal left padding). SVG icons visible.</li>
+      <li>About section: founder photo loads, stats (30+ team, 200+ products, 11 years) correct.</li>
+      <li>Testimonials carousel: cards display, left/right arrows work, dot navigation works.</li>
+      <li>CTA banner at bottom renders with correct background and button.</li>
+    </ul>
+
+    <b style="display:block;margin:0.75rem 0 0.375rem;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:#888;">Contact Page</b>
+    <ul class="plist" style="list-style:disc;padding-left:1.25rem;margin-bottom:1rem;">
+      <li>Form fields visible: Name, Email, Company, Project Type (dropdown), Budget (dropdown), Message.</li>
+      <li>reCAPTCHA widget renders (shows "I'm not a robot" checkbox).</li>
+      <li>Try submitting with empty fields — form should block and show validation errors.</li>
+      <li>Try submitting without checking reCAPTCHA — form should block with reCAPTCHA error.</li>
+      <li>Submit a real test — confirm submission appears in Formspree dashboard and email arrives at <code>info@tboxsolutionz.com</code>.</li>
+      <li>Success card shows after valid submission — form hides, thank-you message visible.</li>
+    </ul>
+
+    <b style="display:block;margin:0.75rem 0 0.375rem;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:#888;">Blog</b>
+    <ul class="plist" style="list-style:disc;padding-left:1.25rem;margin-bottom:1rem;">
+      <li>Blog listing at <code>/blog/</code> shows all 6 articles with cover images, titles, tags, and read-time.</li>
+      <li>Cover images load (WebP format) — no broken image icons.</li>
+      <li>Each article card links to the correct article page.</li>
+      <li>On an article page: hero image loads, "← Blog" back-link works, author photo loads, related content section visible.</li>
+      <li>Blog article pages render readable on mobile — font size not too small, no overflow.</li>
+    </ul>
+
+    <b style="display:block;margin:0.75rem 0 0.375rem;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:#888;">Work / Case Studies</b>
+    <ul class="plist" style="list-style:disc;padding-left:1.25rem;margin-bottom:1rem;">
+      <li>Work listing at <code>/work/</code> shows all published case study cards.</li>
+      <li>Each case study page loads — hero, stats bar, body content, back link functional.</li>
+      <li>No broken images on any case study page.</li>
+    </ul>
+
+    <b style="display:block;margin:0.75rem 0 0.375rem;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:#888;">Careers Page</b>
+    <ul class="plist" style="list-style:disc;padding-left:1.25rem;margin-bottom:1rem;">
+      <li>Page loads at <code>/careers</code> (no .html needed — Apache redirect in place).</li>
+      <li>Open roles display correctly. CTA links work.</li>
+    </ul>
+
+    <b style="display:block;margin:0.75rem 0 0.375rem;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:#888;">Cross-cutting Checks</b>
+    <ul class="plist" style="list-style:disc;padding-left:1.25rem;margin-bottom:1rem;">
+      <li>Open browser DevTools Console on homepage — zero JS errors.</li>
+      <li>Check Network tab — no 404 requests for CSS, JS, images, or fonts.</li>
+      <li>View page source on homepage — confirm <code>og:title</code>, <code>og:image</code>, <code>canonical</code> tags present.</li>
+      <li>Paste homepage URL into <strong>opengraph.xyz</strong> — confirm preview image and title render correctly.</li>
+      <li>Test on Safari mobile (if available) — CSS grid and animations should work identically.</li>
+      <li>Confirm 404 page loads at <code>tboxsolutionz.com/nonexistent-page</code> — custom 404 should show, not a server error.</li>
+    </ul>
+
+    <!-- CADENCE SUMMARY -->
+    <b style="display:block;margin:1rem 0 0.5rem;font-size:15px;">📅 Recommended cadence</b>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead><tr style="background:var(--bg-alt,#f9f9f9);">
+        <th style="text-align:left;padding:6px 10px;border:1px solid #e0e0e0;">Task</th>
+        <th style="text-align:left;padding:6px 10px;border:1px solid #e0e0e0;">Frequency</th>
+        <th style="text-align:left;padding:6px 10px;border:1px solid #e0e0e0;">Who</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="padding:6px 10px;border:1px solid #e0e0e0;">Full QA checklist</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">After every deploy</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">Dev</td></tr>
+        <tr><td style="padding:6px 10px;border:1px solid #e0e0e0;">PageSpeed Insights audit</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">Monthly</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">Dev</td></tr>
+        <tr><td style="padding:6px 10px;border:1px solid #e0e0e0;">Google Search Console review</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">Monthly</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">Dev / Marketing</td></tr>
+        <tr><td style="padding:6px 10px;border:1px solid #e0e0e0;">Reputation check (Clutch, Google, LinkedIn)</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">Monthly</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">Marketing</td></tr>
+        <tr><td style="padding:6px 10px;border:1px solid #e0e0e0;">Formspree submissions review</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">Monthly</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">Sales</td></tr>
+        <tr><td style="padding:6px 10px;border:1px solid #e0e0e0;">New blog article (with WebP image)</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">Every 2–4 weeks</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">Marketing</td></tr>
+        <tr><td style="padding:6px 10px;border:1px solid #e0e0e0;">Sitemap <code>lastmod</code> update</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">On every content change</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">Dev</td></tr>
+        <tr><td style="padding:6px 10px;border:1px solid #e0e0e0;">GA4 traffic review</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">Weekly</td><td style="padding:6px 10px;border:1px solid #e0e0e0;">Marketing</td></tr>
+      </tbody>
+    </table>
+  </details>
+
   <!-- ============================ SHIPPED ============================ -->
   <h2 class="sprint" id="sh"><span class="num">✅</span> Shipped</h2>
   <p class="sprint-sub">Everything live on the site. Items start checked — uncheck anything that needs revisiting.</p>
@@ -1761,7 +1889,8 @@
         var sgSections = [
           { label: 'How the site is built', anchor: '.principles' },
           { label: 'File structure reference', anchor: '#sg-file-structure' },
-          { label: 'Third-party integrations', anchor: '#sg-integrations' }
+          { label: 'Third-party integrations', anchor: '#sg-integrations' },
+          { label: 'Regular maintenance cycle', anchor: '#sg-maintenance' }
         ];
         var sgList = document.createElement('div');
         sgList.className = 'tl-list';
