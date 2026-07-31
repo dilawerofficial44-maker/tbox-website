@@ -46,9 +46,9 @@
     background: color-mix(in srgb, var(--bg) 84%, transparent);
     border-bottom: 1px solid var(--border);
   }
-  .topbar .inner { max-width: 1360px; margin: 0 auto; padding: 10px 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-  .topbar .brand { font-weight: 800; letter-spacing: -.02em; font-size: 15px; }
-  .topbar a.nav { color: var(--muted); text-decoration: none; font-weight: 600; font-size: 13.5px; padding: 5px 11px; border-radius: 8px; }
+  .topbar .inner { max-width: 1360px; margin: 0 auto; padding: 8px 18px; display: flex; align-items: center; gap: 4px; flex-wrap: nowrap; }
+  .topbar .brand { font-weight: 800; letter-spacing: -.02em; font-size: 14px; white-space: nowrap; margin-right: 6px; }
+  .topbar a.nav { color: var(--muted); text-decoration: none; font-weight: 600; font-size: 12.5px; padding: 4px 8px; border-radius: 8px; white-space: nowrap; }
   .topbar a.nav:hover { color: var(--ink); background: var(--accent-soft); }
   .topbar .spacer { flex: 1; }
   .toggle { cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 5px 13px; font-size: 12.5px; font-weight: 600; }
@@ -202,6 +202,61 @@
   .task.done-checked { border-left-color: var(--good); opacity: .84; }
   .task.done-checked .ttitle { text-decoration: line-through; text-decoration-color: var(--good); }
   .task.done-checked .ttitle::after { content: " ✓"; color: var(--good); font-weight: 800; text-decoration: none; }
+  /* ---- search panel ---- */
+  .search-wrap { position: relative; display: flex; align-items: center; }
+  .search-input {
+    width: 140px; height: 30px; border: 1px solid var(--border); border-radius: 999px;
+    background: var(--surface); color: var(--ink); padding: 0 28px 0 12px;
+    font-size: 12.5px; font-family: inherit; outline: none; transition: border-color .15s, width .2s;
+  }
+  .search-input::placeholder { color: var(--muted); }
+  .search-input:focus { border-color: var(--accent); width: 190px; }
+  .search-clear {
+    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer; color: var(--muted); font-size: 14px;
+    display: none; line-height: 1; padding: 0;
+  }
+  .search-clear:hover { color: var(--ink); }
+
+  /* right panel */
+  .search-panel {
+    position: fixed; top: var(--topbar-h, 49px); right: 0;
+    height: calc(100vh - var(--topbar-h, 49px)); width: 360px; max-width: 92vw;
+    background: var(--surface); border-left: 1px solid var(--border);
+    box-shadow: -4px 0 32px rgba(22,33,59,.12);
+    z-index: 48; display: flex; flex-direction: column;
+    transform: translateX(100%); transition: transform .25s cubic-bezier(.4,0,.2,1);
+  }
+  .search-panel.open { transform: translateX(0); }
+  .sp-head {
+    display: flex; align-items: center; gap: 10px; padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--border); flex: 0 0 auto;
+  }
+  .sp-head-title { font-weight: 800; font-size: 14px; flex: 1; }
+  .sp-count { color: var(--muted); font-size: 12px; font-weight: 700; }
+  .sp-close {
+    background: none; border: 1px solid var(--border); border-radius: 8px;
+    width: 28px; height: 28px; cursor: pointer; font-size: 16px; color: var(--muted);
+    display: flex; align-items: center; justify-content: center; padding: 0;
+  }
+  .sp-close:hover { color: var(--ink); border-color: var(--accent); }
+  .sp-body { flex: 1 1 auto; overflow-y: auto; padding: 10px 12px 20px; }
+  .sp-empty { color: var(--muted); font-size: 13.5px; padding: 24px 8px; text-align: center; line-height: 1.6; }
+  .sp-result {
+    border: 1px solid var(--border); border-radius: 11px; padding: 12px 14px;
+    margin: 8px 0; cursor: pointer; background: var(--surface-2);
+    transition: border-color .12s, background .12s, box-shadow .12s;
+  }
+  .sp-result:hover { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 2px 10px rgba(79,70,229,.10); }
+  .sp-result-head { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-bottom: 5px; }
+  .sp-tid { font-family: var(--mono); font-size: 11.5px; font-weight: 700; background: var(--accent-soft); color: var(--accent); padding: 2px 7px; border-radius: 6px; }
+  .sp-title { font-weight: 700; font-size: 13.5px; line-height: 1.3; flex: 1; min-width: 0; }
+  .sp-desc { font-size: 12.5px; color: var(--muted); line-height: 1.5; margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .sp-desc mark { background: none; color: var(--accent); font-weight: 700; padding: 0; }
+  .sp-tab-hint { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-top: 6px; }
+  .sp-overlay { display: none; position: fixed; top: var(--topbar-h, 49px); left: 0; right: 0; bottom: 0; z-index: 47; }
+  .sp-overlay.show { display: block; }
+
   /* SEO Migration tab — task severity border colours */
   .task.crit { border-left-color: var(--danger); }
   .task.high { border-left-color: var(--warn); }
@@ -219,7 +274,7 @@
 <div class="topbar">
   <div class="inner">
     <button class="drawerbtn" id="drawerBtn" aria-label="Show item navigator">☰ Items</button>
-    <span class="brand">TBox Solutionz · Website Tracker</span>
+    <span class="brand">TBox Solutionz · Tracker</span>
     <a class="nav" href="#sg">Guide</a>
     <a class="nav" href="#sh">Shipped</a>
     <a class="nav" href="#ip">In Progress</a>
@@ -230,7 +285,23 @@
     <a class="nav" href="#an">Analytics</a>
     <span class="spacer"></span>
     <span class="topprog" id="topProgress" title="Overall progress"></span>
+    <div class="search-wrap">
+      <input class="search-input" id="searchInput" type="search" placeholder="🔍 Search tasks…" autocomplete="off" aria-label="Search tasks">
+      <button class="search-clear" id="searchClear" title="Clear search" aria-label="Clear search">✕</button>
+    </div>
     <span class="toggle" id="themeToggle">🌙 Dark</span>
+  </div>
+</div>
+
+<div class="sp-overlay" id="spOverlay"></div>
+<div class="search-panel" id="searchPanel" role="dialog" aria-label="Search results">
+  <div class="sp-head">
+    <span class="sp-head-title">Search results</span>
+    <span class="sp-count" id="spCount"></span>
+    <button class="sp-close" id="spClose" title="Close">✕</button>
+  </div>
+  <div class="sp-body" id="spBody">
+    <div class="sp-empty">Type to search tasks by title or description.</div>
   </div>
 </div>
 
@@ -305,7 +376,7 @@
       <li><code>/index.html</code> — Landing page (homepage)</li>
       <li><code>/contact.html</code> — Contact / Book a call page</li>
       <li><code>/blog/index.html</code> — Blog listing page</li>
-      <li><code>/blog/[slug].html</code> — Individual blog article pages (6 articles)</li>
+      <li><code>/blog/[slug].html</code> — Individual blog article pages (7 articles)</li>
       <li><code>/work/[project].html</code> — Case study detail pages (6 projects)</li>
       <li><code>/css/styles.css</code> — Global CSS variables and shared styles</li>
       <li><code>/js/components.js</code> — Nav + footer injection</li>
@@ -431,7 +502,7 @@
 
     <b style="display:block;margin:0.75rem 0 0.375rem;font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:#888;">Blog</b>
     <ul class="plist" style="list-style:disc;padding-left:1.25rem;margin-bottom:1rem;">
-      <li>Blog listing at <code>/blog/</code> shows all 6 articles with cover images, titles, tags, and read-time.</li>
+      <li>Blog listing at <code>/blog/</code> shows all 7 articles with cover images, titles, tags, and read-time.</li>
       <li>Cover images load (WebP format) — no broken image icons.</li>
       <li>Each article card links to the correct article page.</li>
       <li>On an article page: hero image loads, "← Blog" back-link works, author photo loads, related content section visible.</li>
@@ -542,7 +613,7 @@
 
   <div class="task feat done" data-head="feat">
     <div class="thead"><span class="tid">SH-09</span><span class="ttitle">Blog — listing page with featured article hero</span><span class="chip feat">New page</span><span class="chip done">✓ Shipped</span></div>
-    <div class="block what"><span class="lab">What</span>Blog listing page at <code>/blog/index.html</code>. Two-column hero: left = headline + sub-copy; right = "Latest article" featured card with real cover image, category pill, title, date, read time, and "Read article →" link. Below: 3-column grid of 6 article cards, each with a real Unsplash photo thumbnail, category tag, title, excerpt, author avatar, and date.</div>
+    <div class="block what"><span class="lab">What</span>Blog listing page at <code>/blog/index.html</code>. Two-column hero: left = headline + sub-copy; right = "Latest article" featured card with real cover image, category pill, title, date, read time, and "Read article →" link. Below: 3-column grid of 7 article cards, each with a real Unsplash photo thumbnail, category tag, title, excerpt, author avatar, and date.</div>
     <div class="block dev"><span class="lab">Notes</span>Original SVG placeholder thumbnails replaced with downloaded Unsplash JPEG images in <code>/assets/images/blog/</code>. All images are under the Unsplash free commercial license. Card hover adds a subtle zoom on the photo.</div>
     <div class="block qa"><span class="lab">Verify</span>Hero featured card visible on ≥1000px; hides on smaller screens. All 6 cards show photos. Cards link to correct article pages. Nav shows "Blog" link.</div>
   </div>
@@ -659,7 +730,7 @@
   </div>
 
   <div class="task gen done" data-head="gen">
-    <div class="thead"><span class="tid">SH-27</span><span class="ttitle">Article JSON-LD + article:published_time on all 6 blog articles</span><span class="chip gen">SEO</span><span class="chip done">✓ Shipped</span></div>
+    <div class="thead"><span class="tid">SH-27</span><span class="ttitle">Article JSON-LD + article:published_time on all 7 blog articles</span><span class="chip gen">SEO</span><span class="chip done">✓ Shipped</span></div>
     <div class="block what"><span class="lab">What</span>Each blog article now has a full <code>Article</code> JSON-LD block (headline, datePublished, author: Dilawer Hussain / Founder &amp; CEO, image, publisher) and <code>&lt;meta property="article:published_time"&gt;</code> with Pakistan Standard Time (UTC+5) timestamps ranging afternoon to evening across June–July 2026.</div>
     <div class="block qa"><span class="lab">Verify</span>Google Rich Results Test for any article URL should pass Article validation and display author + date in the preview.</div>
   </div>
@@ -1311,11 +1382,18 @@
     <div class="block qa"><span class="lab">Verify</span>No case study page is more than 2 clicks from any blog article. Screaming Frog crawl shows improved internal link depth.</div>
   </div>
 
-  <div class="task enh" data-head="enh">
-    <div class="thead"><span class="tid">GR-16</span><span class="ttitle">Homepage trust signals — testimonials + Clutch widget</span><span class="chip enh">Enhancement</span><span class="chip phase">Months 2–3</span></div>
+  <div class="task enh done" data-head="enh">
+    <div class="thead"><span class="tid">GR-16</span><span class="ttitle">Homepage trust signals — testimonials + Clutch widget</span><span class="chip enh">Enhancement</span><span class="chip done">✓ Done</span></div>
     <div class="block what"><span class="lab">What</span>The homepage has a testimonials carousel but no third-party validation signals. US and European buyers — especially first-time agency engagements — look for social proof outside the vendor's own website. A Clutch profile badge ("Top Developer 2026") or G2 widget next to testimonials adds credibility that self-hosted testimonials cannot.</div>
     <div class="block dev"><span class="lab">Steps</span>1. Create/claim TBox profile on Clutch.co. 2. Request 3–5 reviews from past clients. 3. Once verified, add Clutch badge widget to the homepage testimonials section or footer. This also creates a backlink from Clutch's high-authority domain.</div>
     <div class="block qa"><span class="lab">Verify</span>Clutch profile shows verified reviews. Badge renders on homepage. Clutch badge link passes (rel="noopener" but not rel="nofollow" — Clutch links are valid backlinks).</div>
+  </div>
+
+  <div class="task enh" data-head="enh">
+    <div class="thead"><span class="tid">GR-24</span><span class="ttitle">CTA audit — blog posts exit ramp review</span><span class="chip enh">CRO</span><span class="chip phase">Months 2–3</span></div>
+    <div class="block what"><span class="lab">What</span>Each blog article should end with a clear next step that moves the reader toward a commercial action — book a call, view a case study, or read a related article. Currently several posts end without a CTA, leaving organic traffic with no exit ramp into the funnel. A reader who finishes an article about mobile app development is a warm lead; an article that ends without a prompt wastes that moment.</div>
+    <div class="block dev"><span class="lab">Fix</span>Review all 6 blog posts. For each: (1) confirm there is a closing CTA section before </span>&lt;/article&gt;, (2) the CTA links to either /contact.html or a directly relevant case study, (3) the CTA copy is action-oriented ("See how we built X" or "Book a scoping call"). Add or update where missing. Time estimate: 30 minutes across all 6 posts.</div>
+    <div class="block qa"><span class="lab">Verify</span>Open each blog post and scroll to the bottom. Every article should end with a visible CTA block — not just a footer nav link. Check that the linked destination is relevant to the article topic.</div>
   </div>
 
   <!-- MONTHS 4-6 -->
@@ -1364,6 +1442,13 @@
     <div class="block what"><span class="lab">What</span>Every 6 months: run a Screaming Frog crawl of the entire site. Check for: broken internal links, missing alt tags on new images, pages with thin content (&lt;300 words), redirect chains (A → B → C instead of A → C), and any pages that have drifted out of the sitemap. This is the technical debt prevention step.</div>
     <div class="block dev"><span class="lab">Tool</span>Screaming Frog (free up to 500 URLs, which covers the current site). Export: broken links, redirect chains, pages missing title/description. Fix the same day.</div>
     <div class="block qa"><span class="lab">Verify</span>Zero broken internal links. Zero redirect chains longer than 1 hop. All pages in sitemap have a corresponding crawled URL.</div>
+  </div>
+
+  <div class="task enh" data-head="enh">
+    <div class="thead"><span class="tid">GR-23</span><span class="ttitle">Brand consistency sweep — external directory profiles</span><span class="chip enh">Brand</span><span class="chip phase">Month 1 · Quick win</span></div>
+    <div class="block what"><span class="lab">What</span>LinkedIn company page, Facebook, Clutch, Slintel, ZoomInfo, and similar third-party directories still describe TBox as a generic "software development company." These profiles surface in Google results and form a buyer's first impression before they even reach the website. Mismatched positioning undermines every other marketing effort — a founder who reads "AI-Native Engineering Studio" on the site and then sees "software development company" on Clutch experiences brand confusion.</div>
+    <div class="block dev"><span class="lab">Fix</span>Audit every external profile: (1) <strong>LinkedIn</strong> — company tagline and about section. (2) <strong>Facebook</strong> — page description. (3) <strong>Clutch</strong> — highest priority: (a) services mix currently shows "Custom Software Development 75%, AI Development 5%" — should be rebalanced to lead with AI/FinTech/SaaS, (b) focus areas currently list PHP, Redux, Swift, Kotlin, Python — add React Native, AI/LLM, FinTech, SaaS to reflect actual positioning, (c) company description should match site positioning "AI-Native Engineering Studio." (4) <strong>Slintel and ZoomInfo</strong> — claim/edit via their business portals. Update all to: "AI-Native Engineering Studio — FinTech, SaaS &amp; Mobile." Ensure logo is current on every platform.</div>
+    <div class="block qa"><span class="lab">Verify</span>Google "TBox Solutionz" — the top 5–10 results should all describe the company consistently. On Clutch specifically: services section leads with AI/FinTech, focus areas include React Native and AI, description matches site positioning. No result should describe TBox as a generic IT or software company.</div>
   </div>
 
 
@@ -1513,7 +1598,7 @@
 
   <div class="task gen" data-head="gen">
     <div class="thead"><span class="tid">US-02</span><span class="ttitle">Structured data validation — confirmed clean</span><span class="chip gen">Technical SEO</span><span class="chip phase">Verified post-launch</span></div>
-    <div class="block what"><span class="lab">Status</span>Organization JSON-LD and WebSite JSON-LD are implemented on the homepage. Article JSON-LD is implemented on all 6 blog articles. BreadcrumbList is on case study and careers pages. No SearchAction schema exists currently (this is acceptable — SearchAction only helps if the site has a search function, which it does not). Run the Rich Results Test after launch to confirm no errors have emerged from the live environment.</div>
+    <div class="block what"><span class="lab">Status</span>Organization JSON-LD and WebSite JSON-LD are implemented on the homepage. Article JSON-LD is implemented on all 7 blog articles. BreadcrumbList is on case study and careers pages. No SearchAction schema exists currently (this is acceptable — SearchAction only helps if the site has a search function, which it does not). Run the Rich Results Test after launch to confirm no errors have emerged from the live environment.</div>
     <div class="block qa"><span class="lab">Verify</span>search.google.com/test/rich-results on homepage and one blog article post-launch. Zero errors. Screaming Frog structured data export shows consistent patterns.</div>
   </div>
 
@@ -1600,8 +1685,8 @@
   <!-- AUTHORITY BUILDING -->
   <h3 class="head"><span class="dot" style="background:var(--warn)"></span>4 · Authority Building — recommended only</h3>
 
-  <div class="task gen" data-head="gen">
-    <div class="thead"><span class="tid">US-09</span><span class="ttitle">Clutch.co — claim profile + request client reviews</span><span class="chip gen">Authority</span><span class="chip phase">Month 1 · High impact</span></div>
+  <div class="task gen done" data-head="gen">
+    <div class="thead"><span class="tid">US-09</span><span class="ttitle">Clutch.co — claim profile + request client reviews</span><span class="chip gen">Authority</span><span class="chip done">✓ Done</span></div>
     <div class="block what"><span class="lab">Why</span>Clutch is the primary third-party review platform that US and European startup founders use to vet development agencies. A verified Clutch profile with 3+ reviews is one of the highest-ROI authority building activities available — it creates a backlink from a DA 70+ domain, appears in Google's featured snippets for "[agency type] reviews", and provides a trust signal that no amount of homepage copy can replicate.</div>
     <div class="block dev"><span class="lab">Steps</span>1. Claim/create profile at clutch.co. 2. Complete all profile sections (services, focus, minimum project size, team size). 3. Email 5 past clients asking for a Clutch review (Clutch sends a questionnaire — takes clients ~10 minutes). 4. Embed Clutch rating widget on homepage and contact page once reviews are live.</div>
     <div class="block qa"><span class="lab">Target</span>3 verified reviews minimum. "Top Developer" badge eligibility (requires 5+ reviews).</div>
@@ -1661,6 +1746,13 @@
     </div>
     <div class="block dev"><span class="lab">Do not track</span>Raw page views (vanity). Bounce rate in isolation (meaningless without scroll depth). Social followers. Domain Authority score (a third-party metric, not a Google signal). Weekly rankings (too volatile to act on — track monthly averages instead).</div>
     <div class="block qa"><span class="lab">Monthly review</span>One question: "Did the number of contact form submissions increase vs. last month?" If yes, what drove it. If no, what changed. Everything else is context for answering that question.</div>
+  </div>
+
+  <div class="task feat" data-head="feat">
+    <div class="thead"><span class="tid">US-15</span><span class="ttitle">Pricing transparency — packaging tiers + how engagements work</span><span class="chip feat">New content</span><span class="chip phase">Month 1 · High</span></div>
+    <div class="block what"><span class="lab">What</span>US and European buyers — particularly those who have never worked with a nearshore or offshore team — need to understand how an engagement begins before they will book a call. The absence of any pricing signal or engagement model explanation on the site forces prospects to guess, which increases drop-off. The goal is not to publish rates; it is to remove the "how does this even work?" objection before the first call. Competitors who explain their engagement model convert significantly better with cold traffic.</div>
+    <div class="block dev"><span class="lab">Approach</span>Add a "How we engage" section to the homepage or a dedicated /services page with 3 tiers: (1) Fixed-scope project (discovery → spec → build → handoff), (2) Embedded team extension (retainer, flexible scope, ongoing), (3) Fractional CTO / product advisory. For each: what it includes, typical timeline, who it is for. No hard numbers required — a "starting from" or "typically X–Y weeks" range is enough to qualify leads before the call. Add a FAQ below addressing: "Do you work with US timezones?", "What does onboarding look like?", "How do you handle IP ownership?"</div>
+    <div class="block qa"><span class="lab">Verify</span>A cold visitor who lands on the homepage can answer "how do I start working with TBox?" without emailing. The contact form CTA should follow directly below the engagement model section.</div>
   </div>
 
   <div class="footer">
@@ -2144,6 +2236,7 @@
       highlightTlItem(findActiveTask());
     }
 
+    if (window.__exposeHighlight) window.__exposeHighlight(highlightTlItem);
     window.__onTab = function (which) { build(which); applyFilter(currentFilter); syncChecks(); setupScrollSpy(); };
     window.__onFilter = function (f) { currentFilter = f; applyFilter(f); setupScrollSpy(); };
     window.__onStateSync = syncChecks;
@@ -2152,6 +2245,152 @@
     applyFilter(currentFilter);
     syncChecks();
     setupScrollSpy();
+  })();
+
+  // ---- Topbar height CSS var ----
+  (function () {
+    function setH() {
+      var tb = document.querySelector('.topbar');
+      if (tb) document.documentElement.style.setProperty('--topbar-h', tb.offsetHeight + 'px');
+    }
+    setH();
+    window.addEventListener('resize', setH);
+  })();
+
+  // ---- Search ----
+  (function () {
+    var SPRINT_LABEL = { sg: 'Guide', sh: 'Shipped', ip: 'In Progress', pl: 'Planned', sm: 'SEO Migration', gr: 'Growth Roadmap', us: 'US & Europe', an: 'Analytics' };
+    var TAB_IDS = ['sg', 'sh', 'ip', 'pl', 'sm', 'gr', 'us', 'an'];
+
+    var input   = document.getElementById('searchInput');
+    var clearBtn= document.getElementById('searchClear');
+    var panel   = document.getElementById('searchPanel');
+    var overlay = document.getElementById('spOverlay');
+    var body    = document.getElementById('spBody');
+    var count   = document.getElementById('spCount');
+    var closeBtn= document.getElementById('spClose');
+
+    function getTaskTab(task) {
+      var el = task;
+      while (el) {
+        el = el.previousElementSibling;
+        if (el && el.matches && el.matches('h2.sprint') && el.id && TAB_IDS.indexOf(el.id) !== -1) return el.id;
+      }
+      return 'sh';
+    }
+
+    function textOf(task) {
+      var titleEl = task.querySelector('.ttitle');
+      var title   = titleEl ? titleEl.textContent.trim() : '';
+      var desc    = [];
+      task.querySelectorAll('.block').forEach(function (b) {
+        var t = b.textContent.replace(/\s+/g, ' ').trim();
+        if (t) desc.push(t);
+      });
+      return { title: title, desc: desc.join(' ') };
+    }
+
+    function highlight(str, q) {
+      if (!q) return str;
+      var safe = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return str.replace(new RegExp('(' + safe + ')', 'gi'), '<mark>$1</mark>');
+    }
+
+    function statusChip(task) {
+      var done = task.classList.contains('done') || task.classList.contains('done-checked');
+      var chips = Array.prototype.slice.call(task.querySelectorAll('.thead .chip'));
+      var phase = '';
+      chips.forEach(function (c) {
+        if (c.classList.contains('phase')) phase = c.textContent.trim();
+      });
+      if (done) return '<span class="chip done" style="font-size:10.5px">✓ Done</span>';
+      if (phase) return '<span class="chip phase" style="font-size:10.5px">' + phase + '</span>';
+      return '';
+    }
+
+    function runSearch(q) {
+      q = q.trim();
+      clearBtn.style.display = q ? 'block' : 'none';
+      if (!q) { closePanel(); return; }
+      openPanel();
+
+      var tasks = Array.prototype.slice.call(document.querySelectorAll('.task')).filter(function (t) { return t.querySelector('.tid'); });
+      var ql = q.toLowerCase();
+      var results = tasks.filter(function (t) {
+        var d = textOf(t);
+        return d.title.toLowerCase().indexOf(ql) !== -1 || d.desc.toLowerCase().indexOf(ql) !== -1;
+      });
+
+      count.textContent = results.length + ' result' + (results.length !== 1 ? 's' : '');
+      if (!results.length) {
+        body.innerHTML = '<div class="sp-empty">No tasks matched "<strong>' + q.replace(/</g, '&lt;') + '</strong>".<br>Try a shorter word or different term.</div>';
+        return;
+      }
+
+      body.innerHTML = '';
+      results.forEach(function (task) {
+        var tid   = task.querySelector('.tid');
+        var d     = textOf(task);
+        var tab   = getTaskTab(task);
+
+        // excerpt: first 160 chars of desc containing the match
+        var desc  = d.desc;
+        var idx   = desc.toLowerCase().indexOf(ql);
+        if (idx > 80) desc = '…' + desc.slice(idx - 60);
+        if (desc.length > 180) desc = desc.slice(0, 180) + '…';
+
+        var el = document.createElement('div');
+        el.className = 'sp-result';
+        el.innerHTML =
+          '<div class="sp-result-head">' +
+            '<span class="sp-tid">' + (tid ? tid.textContent : '') + '</span>' +
+            '<span class="sp-title">' + highlight(d.title, q) + '</span>' +
+            statusChip(task) +
+          '</div>' +
+          '<div class="sp-desc">' + highlight(desc, q) + '</div>' +
+          '<div class="sp-tab-hint">in ' + (SPRINT_LABEL[tab] || tab) + '</div>';
+
+        el.addEventListener('click', function () {
+          // switch to that tab if not already active
+          var navLink = document.querySelector('.topbar a.nav[data-tab="' + tab + '"]');
+          var currentActive = document.querySelector('.topbar a.nav.active');
+          if (!currentActive || currentActive.getAttribute('data-tab') !== tab) {
+            if (navLink) navLink.click();
+          }
+          // wait a tick for tab re-render then scroll + flash
+          setTimeout(function () {
+            var taskId = task.querySelector('.tid') ? task.querySelector('.tid').textContent.trim() : '';
+            // find the now-visible task card (tab switch re-shows it)
+            var card = Array.prototype.slice.call(document.querySelectorAll('.task')).filter(function (t) {
+              var tidEl = t.querySelector('.tid');
+              return tidEl && tidEl.textContent.trim() === taskId;
+            })[0];
+            if (card) {
+              card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              card.classList.add('flash');
+              setTimeout(function () { card.classList.remove('flash'); }, 1200);
+              // highlight in left rail
+              if (window.highlightTlItem) window.highlightTlItem(taskId);
+            }
+            closePanel();
+          }, 80);
+        });
+
+        body.appendChild(el);
+      });
+    }
+
+    function openPanel()  { panel.classList.add('open'); overlay.classList.add('show'); }
+    function closePanel() { panel.classList.remove('open'); overlay.classList.remove('show'); }
+
+    input.addEventListener('input', function () { runSearch(input.value); });
+    input.addEventListener('keydown', function (e) { if (e.key === 'Escape') { input.value = ''; runSearch(''); input.blur(); } });
+    clearBtn.addEventListener('click', function () { input.value = ''; runSearch(''); input.focus(); });
+    closeBtn.addEventListener('click', closePanel);
+    overlay.addEventListener('click', closePanel);
+
+    // expose highlightTlItem globally for the result click handler
+    window.__exposeHighlight = function (fn) { window.highlightTlItem = fn; };
   })();
 </script>
 </body>
