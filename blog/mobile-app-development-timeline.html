@@ -41,7 +41,8 @@
     .ba-back { display: inline-flex; align-items: center; gap: 0.375rem; font-family: var(--mono); font-size: 12px; color: var(--text-muted); text-decoration: none; margin-bottom: 1.25rem; letter-spacing: 0.02em; }
     .ba-back:hover { color: var(--red); }
     .bl-tag { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(224,27,27,0.08); color: var(--red); padding: 3px 8px; border-radius: 4px; font-weight: 500; margin-bottom: 1rem; }
-    .ba-hero h1 { font-size: clamp(1.6rem, 3vw, 2.25rem); letter-spacing: -0.03em; line-height: 1.2; max-width: 720px; margin-bottom: 1.5rem; }
+    .ba-hero h1 { font-size: clamp(1.6rem, 3vw, 2.25rem); letter-spacing: -0.03em; line-height: 1.2; max-width: 720px; margin-bottom: 0.75rem; }
+    .ba-subtitle { font-size: 1.05rem; color: var(--text-muted); max-width: 680px; margin-bottom: 1.5rem; line-height: 1.55; }
     .ba-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 1.25rem; }
     .ba-author { display: flex; align-items: center; gap: 0.625rem; }
     .ba-author img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
@@ -56,8 +57,10 @@
     .ba-content p { font-size: 16.5px; line-height: 1.75; color: #2C2A27; margin-bottom: 1.375rem; }
     .ba-content h2 { font-size: 1.3rem; letter-spacing: -0.025em; margin-top: 2.5rem; margin-bottom: 0.875rem; }
     .ba-content h3 { font-size: 1.05rem; font-weight: 600; margin-top: 1.75rem; margin-bottom: 0.5rem; }
-    .ba-content ul, .ba-content ol { padding-left: 1.5rem; margin-bottom: 1.375rem; }
-    .ba-content li { font-size: 16.5px; line-height: 1.7; color: #2C2A27; margin-bottom: 0.375rem; }
+    .ba-content ul { list-style: disc !important; padding-left: 1.5rem; margin-bottom: 1.375rem; }
+    .ba-content ol { list-style: decimal !important; padding-left: 1.5rem; margin-bottom: 1.375rem; }
+    .ba-content ul ul { list-style: circle !important; margin-bottom: 0; }
+    .ba-content li { list-style: inherit !important; font-size: 16.5px; line-height: 1.7; color: #2C2A27; margin-bottom: 0.375rem; }
     .ba-content strong { color: var(--text); }
     .ba-callout { background: var(--bg-alt); border-left: 3px solid var(--red); padding: 1rem 1.25rem; border-radius: 0 8px 8px 0; margin: 1.75rem 0; }
     .ba-callout p { margin-bottom: 0; font-size: 15.5px; }
@@ -99,6 +102,7 @@
       <a href="/blog/" class="ba-back">← Blog</a>
       <div><span class="bl-tag">Mobile Development</span></div>
       <h1>The Real Mobile App Development Timeline in 2026 — Week by Week</h1>
+      <p class="ba-subtitle">A week-by-week breakdown of the six phases of mobile app development — and the most common reasons founders end up six weeks behind.</p>
       <div class="ba-meta">
         <div class="ba-author">
           <img src="/assets/images/founder.webp" alt="Dilawer Hussain">
