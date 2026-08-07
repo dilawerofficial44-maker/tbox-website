@@ -22,8 +22,7 @@
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#E01B1B">
   <link rel="preload" href="/assets/images/blog/ai-native-architecture.webp" as="image">
-  <link rel="preload" href="/css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="/css/styles.css"></noscript>
+  <link rel="stylesheet" href="/css/styles.css">
   <style>:root{--red:#e01b1b;--red-dark:#b81212;--black:#1a1a1a;--white:#fff;--bg-page:#fff;--bg-alt:#FBFAF9;--bg-dark:#15130F;--text:#161412;--text-muted:#66645F;--text-light:#6B6865;--border:#ECEAE7;--border-band:#EEECEA;--radius:14px;--max-width:1240px;--font:'IBM Plex Sans',system-ui,-apple-system,sans-serif;--mono:'IBM Plex Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:var(--font);background:var(--bg-page);color:var(--text);line-height:1.6;font-size:16px;overflow-x:hidden}img{max-width:100%;display:block}a{color:inherit;text-decoration:none}ul{list-style:none}#nav-placeholder{min-height:65px}.navbar{background:var(--bg-page);border-bottom:1px solid var(--border-band)}.container{max-width:var(--max-width);margin:0 auto;padding:0 3.5rem}</style>
   <style>
     .bl-hero {
@@ -120,7 +119,7 @@
       margin-bottom: 0.75rem;
     }
 
-    .bl-section { padding: 4rem 0 5rem; }
+    .bl-section { padding: 1.75rem 0 5rem; }
 
     .bl-grid {
       display: grid;
@@ -136,10 +135,18 @@
       display: flex;
       flex-direction: column;
       transition: box-shadow 0.2s, transform 0.2s;
+      position: relative;
+      cursor: pointer;
     }
     .bl-card:hover {
       box-shadow: 0 8px 32px rgba(0,0,0,0.1);
       transform: translateY(-2px);
+    }
+    /* Stretched link — makes the whole card clickable via the title anchor */
+    .bl-card-body h2 a::after {
+      content: '';
+      position: absolute;
+      inset: 0;
     }
 
     .bl-thumb {
@@ -248,6 +255,72 @@
     @media (max-width: 560px) {
       .bl-grid { grid-template-columns: 1fr; }
     }
+
+    /* Search */
+    .bl-search-bar {
+      padding: 0 0 1.75rem;
+    }
+    .bl-search-wrap {
+      position: relative;
+      max-width: 560px;
+    }
+    .bl-search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+      width: 18px;
+      height: 18px;
+    }
+    .bl-search-input {
+      width: 100%;
+      padding: 0.75rem 2.75rem 0.75rem 2.75rem;
+      border: 1px solid var(--border-band);
+      border-radius: 10px;
+      font-family: var(--font);
+      font-size: 15px;
+      background: var(--bg-page);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .bl-search-input:focus {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(224,27,27,0.08);
+    }
+    .bl-search-input::placeholder { color: var(--text-muted); }
+    .bl-search-input::-webkit-search-cancel-button { display: none; }
+    .bl-search-input::-ms-clear { display: none; }
+    .bl-search-clear {
+      position: absolute;
+      right: 0.875rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 0.25rem;
+      display: none;
+      line-height: 0;
+    }
+    .bl-search-clear:hover { color: var(--red); }
+    .bl-search-meta {
+      margin-top: 0.625rem;
+      font-size: 13px;
+      color: var(--text-muted);
+      min-height: 20px;
+    }
+    .bl-no-results {
+      display: none;
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 1rem;
+    }
+    .bl-no-results p { font-size: 15px; color: var(--text-muted); margin-top: 0.5rem; }
+    .bl-no-results strong { color: var(--text); }
   </style>
   <script type="application/ld+json">
   {
@@ -280,7 +353,7 @@
             </a>
             <div class="bl-featured-body">
               <span class="bl-tag">Software Architecture</span>
-              <h3><a href="/blog/ai-native-architecture.html">Why We Stopped Building AI Features—and Started Building AI-Native Architecture</a></h3>
+              <h3><a href="/blog/ai-native-architecture.html">How We Made Existing Software Operable by AI</a></h3>
               <div class="bl-featured-meta">
                 <time datetime="2026-08-02">Aug 2, 2026</time>
                 <span>·</span>
@@ -296,7 +369,19 @@
 
   <section class="bl-section">
     <div class="container">
-      <div class="bl-grid">
+
+      <div class="bl-search-bar">
+        <div class="bl-search-wrap">
+          <svg class="bl-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input id="bl-search" class="bl-search-input" type="search" placeholder="Search articles…" autocomplete="off" spellcheck="false">
+          <button id="bl-search-clear" class="bl-search-clear" aria-label="Clear search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <p id="bl-search-meta" class="bl-search-meta"></p>
+      </div>
+
+      <div class="bl-grid" id="bl-grid">
 
         <!-- Article 0 — newest -->
         <article class="bl-card">
@@ -308,8 +393,8 @@
               <span class="bl-tag">Software Architecture</span>
               <span class="bl-read-time">12 min read</span>
             </div>
-            <h2><a href="/blog/ai-native-architecture.html">Why We Stopped Building AI Features—and Started Building AI-Native Architecture</a></h2>
-            <p class="bl-excerpt">Lessons from redesigning an internal project planning platform into an API-first, agent-enabled engineering system. What changed, what worked, and what it means for how software gets designed.</p>
+            <h2><a href="/blog/ai-native-architecture.html">How We Made Existing Software Operable by AI</a></h2>
+            <p class="bl-excerpt">A real engineering case study on redesigning an internal platform into an API-first, agent-enabled system — without replacing the software or the team.</p>
             <div class="bl-card-footer">
               <div class="bl-author-mini">
                 <img src="/assets/images/founder.webp" alt="Dilawer Hussain" loading="lazy">
@@ -460,10 +545,10 @@
           <div class="bl-card-body">
             <div class="bl-card-meta">
               <span class="bl-tag">Engineering</span>
-              <span class="bl-read-time">5 min read</span>
+              <span class="bl-read-time">6 min read</span>
             </div>
-            <h2><a href="/blog/offshore-development-myths.html">What Founders Get Wrong About Offshore Development in 2026</a></h2>
-            <p class="bl-excerpt">The $20/hour comparison looks compelling on a spreadsheet. Here's what the spreadsheet doesn't capture — and how to evaluate any external engineering partner properly.</p>
+            <h2><a href="/blog/offshore-development-myths.html">Offshore Development Isn't the Problem. Bad Engagement Models Are.</a></h2>
+            <p class="bl-excerpt">Hourly rates don't determine software costs. Incentives, engineering discipline, communication, and accountability do. Here's what experienced founders actually evaluate.</p>
             <div class="bl-card-footer">
               <div class="bl-author-mini">
                 <img src="/assets/images/founder.webp" alt="Dilawer Hussain" loading="lazy">
@@ -474,12 +559,141 @@
           </div>
         </article>
 
+        <div class="bl-no-results" id="bl-no-results">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <p>No articles found for <strong id="bl-no-results-term"></strong></p>
+          <p style="margin-top:0.25rem;font-size:13px;">Try a different keyword or <button onclick="document.getElementById('bl-search').value='';document.getElementById('bl-search').dispatchEvent(new Event('input'));" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:13px;padding:0;">clear the search</button></p>
+        </div>
       </div>
+
+      <!-- Pagination — only rendered by JS when total articles > 9 -->
+      <nav class="bl-pagination" id="bl-pagination" aria-label="Blog pagination">
+        <button class="bl-page-btn" id="bl-prev" aria-label="Previous page">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          Previous
+        </button>
+        <span class="bl-page-info" id="bl-page-info">Page 1 of 2</span>
+        <button class="bl-page-btn" id="bl-next" aria-label="Next page">
+          Next
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </nav>
+
     </div>
   </section>
 
   </main>
   <div id="footer-placeholder"></div>
   <script src="/js/components.js" defer></script>
+  <script>
+    (function () {
+      var PER_PAGE   = 9;
+      var input      = document.getElementById('bl-search');
+      var clear      = document.getElementById('bl-search-clear');
+      var meta       = document.getElementById('bl-search-meta');
+      var noRes      = document.getElementById('bl-no-results');
+      var noTerm     = document.getElementById('bl-no-results-term');
+      var pagination = document.getElementById('bl-pagination');
+      var prevBtn    = document.getElementById('bl-prev');
+      var nextBtn    = document.getElementById('bl-next');
+      var pageInfo   = document.getElementById('bl-page-info');
+
+      var allCards = Array.from(document.querySelectorAll('#bl-grid .bl-card'));
+      var total    = allCards.length;
+      var currentPage = 1;
+      var activeCards = allCards.slice(); // cards currently visible (post-filter)
+
+      // Pre-index searchable text per card
+      var searchIndex = allCards.map(function (card) {
+        var title   = (card.querySelector('h2 a')        || {}).textContent || '';
+        var excerpt = (card.querySelector('.bl-excerpt')  || {}).textContent || '';
+        var tag     = (card.querySelector('.bl-tag')      || {}).textContent || '';
+        return (title + ' ' + excerpt + ' ' + tag).toLowerCase();
+      });
+
+      // ── Render current page from activeCards ──────────────────────
+      function renderPage() {
+        var isSearching = input.value.trim() !== '';
+        var pageCount   = Math.ceil(activeCards.length / PER_PAGE);
+
+        // Hide all, then show only the slice for this page
+        allCards.forEach(function (c) { c.style.display = 'none'; });
+
+        if (isSearching) {
+          // While searching: show all matched cards, no pagination
+          activeCards.forEach(function (c) { c.style.display = ''; });
+          pagination.style.display = 'none';
+        } else {
+          var start = (currentPage - 1) * PER_PAGE;
+          var end   = start + PER_PAGE;
+          activeCards.slice(start, end).forEach(function (c) { c.style.display = ''; });
+
+          // Show pagination only when needed
+          if (total > PER_PAGE) {
+            pagination.style.display = '';
+            prevBtn.disabled  = currentPage === 1;
+            nextBtn.disabled  = currentPage >= pageCount;
+            pageInfo.textContent = 'Page ' + currentPage + ' of ' + pageCount;
+          } else {
+            pagination.style.display = 'none';
+          }
+        }
+      }
+
+      // ── Search filter ──────────────────────────────────────────────
+      function filter(raw) {
+        var q = raw.trim().toLowerCase();
+        clear.style.display = q ? 'block' : 'none';
+
+        if (!q) {
+          activeCards = allCards.slice();
+          noRes.style.display = 'none';
+          meta.textContent    = '';
+          currentPage = 1;
+          renderPage();
+          return;
+        }
+
+        activeCards = allCards.filter(function (card, i) {
+          return searchIndex[i].includes(q);
+        });
+
+        if (activeCards.length === 0) {
+          noRes.style.display = 'block';
+          noTerm.textContent  = '"' + raw.trim() + '"';
+          meta.textContent    = '';
+          allCards.forEach(function (c) { c.style.display = 'none'; });
+          pagination.style.display = 'none';
+        } else {
+          noRes.style.display = 'none';
+          meta.textContent    = activeCards.length === total
+            ? 'Showing all ' + total + ' articles'
+            : 'Showing ' + activeCards.length + ' of ' + total + ' articles';
+          renderPage();
+        }
+      }
+
+      // ── Event listeners ───────────────────────────────────────────
+      input.addEventListener('input', function (e) { filter(e.target.value); });
+
+      clear.addEventListener('click', function () {
+        input.value = '';
+        input.focus();
+        filter('');
+      });
+
+      prevBtn.addEventListener('click', function () {
+        if (currentPage > 1) { currentPage--; renderPage(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      });
+
+      nextBtn.addEventListener('click', function () {
+        var pageCount = Math.ceil(activeCards.length / PER_PAGE);
+        if (currentPage < pageCount) { currentPage++; renderPage(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      });
+
+      // ── Initial render ────────────────────────────────────────────
+      renderPage();
+    })();
+  </script>
 </body>
 </html>
