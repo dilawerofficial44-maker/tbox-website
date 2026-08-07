@@ -1,30 +1,127 @@
-// ── GA4 bootstrap ────────────────────────────────────────────────────────────
-// Scripts injected via innerHTML/outerHTML don't execute, so GA4 must be
-// initialised here via createElement instead of inside nav.html.
-// Only runs on the live domain — localhost and staging never send events.
-if (window.location.hostname === 'tboxsolutionz.com') {
-  (function () {
-    var GA_ID = 'G-B90NNFGHY7';
+// ── Cookie consent + GA4 bootstrap ───────────────────────────────────────────
+// GA4 fires only after explicit consent. Consent is stored in localStorage
+// under 'tbox_cookie_consent' as 'accepted' or 'declined'.
+(function () {
+  var CONSENT_KEY = 'tbox_cookie_consent';
+  var GA_ID = 'G-B90NNFGHY7';
+  var ga4Loaded = false;
+
+  function loadGA4() {
+    if (ga4Loaded) return;
+    if (window.location.hostname !== 'tboxsolutionz.com') return;
+    ga4Loaded = true;
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     window.gtag = gtag;
     gtag('js', new Date());
     gtag('config', GA_ID, { send_page_view: true });
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(s);
+  }
 
-    // Delay GA4 script load until after page is interactive to avoid TBT impact
-    function loadGA4() {
-      var s = document.createElement('script');
-      s.async = true;
-      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
-      document.head.appendChild(s);
-    }
+  function dismissBanner(banner) {
+    banner.style.transform = 'translateY(120%)';
+    banner.style.opacity = '0';
+    setTimeout(function () { if (banner.parentNode) banner.parentNode.removeChild(banner); }, 400);
+  }
+
+  function showBanner() {
+    var banner = document.createElement('div');
+    banner.id = 'cookie-banner';
+    banner.setAttribute('role', 'dialog');
+    banner.setAttribute('aria-label', 'Cookie consent');
+    banner.innerHTML = [
+      '<div class="cb-inner">',
+        '<div class="cb-text">',
+          '<p class="cb-title">This site uses cookies</p>',
+          '<p class="cb-desc">We use Google Analytics to understand how visitors use this site. Analytics cookies are only set with your consent. See our <a href="/privacy.html">Privacy Policy</a> for details.</p>',
+        '</div>',
+        '<div class="cb-actions">',
+          '<button class="cb-btn cb-decline" id="cb-decline">Decline</button>',
+          '<button class="cb-btn cb-accept" id="cb-accept">Accept analytics</button>',
+        '</div>',
+      '</div>'
+    ].join('');
+
+    var style = document.createElement('style');
+    style.textContent = [
+      '#cookie-banner{',
+        'position:fixed;bottom:1.25rem;left:50%;transform:translateX(-50%) translateY(0);',
+        'z-index:9999;width:calc(100% - 2rem);max-width:720px;',
+        'background:#fff;border:1px solid #ECEAE7;border-radius:14px;',
+        'box-shadow:0 8px 32px rgba(0,0,0,0.12),0 2px 8px rgba(0,0,0,0.06);',
+        'font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;',
+        'transition:transform 0.35s cubic-bezier(0.4,0,0.2,1),opacity 0.35s ease;',
+      '}',
+      '.cb-inner{display:flex;align-items:center;gap:1.5rem;padding:1rem 1.25rem;flex-wrap:wrap;}',
+      '.cb-text{flex:1;min-width:200px;}',
+      '.cb-title{font-size:14px;font-weight:600;color:#161412;margin-bottom:0.25rem;}',
+      '.cb-desc{font-size:13px;color:#66645F;line-height:1.55;margin:0;}',
+      '.cb-desc a{color:#E01B1B;text-decoration:none;}',
+      '.cb-desc a:hover{text-decoration:underline;}',
+      '.cb-actions{display:flex;gap:0.625rem;flex-shrink:0;flex-wrap:wrap;}',
+      '.cb-btn{',
+        'font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;',
+        'font-size:13px;font-weight:500;border-radius:8px;',
+        'padding:0.5rem 1rem;cursor:pointer;border:none;white-space:nowrap;',
+        'transition:background 0.15s,color 0.15s;',
+      '}',
+      '.cb-decline{background:#F3F1EE;color:#161412;}',
+      '.cb-decline:hover{background:#E8E5E1;}',
+      '.cb-accept{background:#E01B1B;color:#fff;}',
+      '.cb-accept:hover{background:#b81212;}',
+      '@media(max-width:520px){',
+        '.cb-inner{flex-direction:column;align-items:flex-start;gap:0.875rem;}',
+        '.cb-actions{width:100%;}',
+        '.cb-btn{flex:1;text-align:center;}',
+      '}',
+      '@media(prefers-color-scheme:dark){',
+        '#cookie-banner{background:#1E1C18;border-color:#2E2B25;}',
+        '.cb-title{color:#F0EDE8;}',
+        '.cb-desc{color:#A09C95;}',
+        '.cb-decline{background:#2E2B25;color:#F0EDE8;}',
+        '.cb-decline:hover{background:#3A3730;}',
+      '}',
+    ].join('');
+    document.head.appendChild(style);
+    document.body.appendChild(banner);
+
+    document.getElementById('cb-accept').addEventListener('click', function () {
+      localStorage.setItem(CONSENT_KEY, 'accepted');
+      dismissBanner(banner);
+      if (document.readyState === 'complete') {
+        setTimeout(loadGA4, 500);
+      } else {
+        window.addEventListener('load', function () { setTimeout(loadGA4, 500); });
+      }
+    });
+    document.getElementById('cb-decline').addEventListener('click', function () {
+      localStorage.setItem(CONSENT_KEY, 'declined');
+      dismissBanner(banner);
+    });
+  }
+
+  // Bootstrap on consent state
+  var consent = localStorage.getItem(CONSENT_KEY);
+  if (consent === 'accepted') {
+    // Returning visitor who accepted — load GA4 after page interactive
     if (document.readyState === 'complete') {
       setTimeout(loadGA4, 1000);
     } else {
       window.addEventListener('load', function () { setTimeout(loadGA4, 1000); });
     }
-  })();
-}
+  } else if (!consent) {
+    // First visit — show banner after DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', showBanner);
+    } else {
+      showBanner();
+    }
+  }
+  // consent === 'declined' → do nothing, GA4 never loads
+})();
 
 async function loadComponent(id, path) {
   const el = document.getElementById(id);
