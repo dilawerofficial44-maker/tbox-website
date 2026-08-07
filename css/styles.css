@@ -781,3 +781,31 @@ section { padding: 7rem 0; }
   transition: top 0.1s;
 }
 .skip-link:focus { top: 1rem; }
+
+/* ── Related articles (PL-08) ─────────────────────────────────────────────── */
+.ra-section { margin: 3rem 0 2rem; }
+.ra-heading { font-size: 18px; font-weight: 700; margin-bottom: 1.25rem; letter-spacing: -0.01em; }
+.ra-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+.ra-card { display: flex; flex-direction: column; border: 1px solid var(--border-band); border-radius: 12px; overflow: hidden; text-decoration: none; color: inherit; transition: box-shadow 0.18s, transform 0.18s; background: var(--bg); }
+.ra-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
+.ra-img-wrap { aspect-ratio: 16/9; overflow: hidden; }
+.ra-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
+.ra-card:hover .ra-img-wrap img { transform: scale(1.03); }
+.ra-body { padding: 1rem 1.125rem 1.25rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.ra-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--red); font-weight: 500; }
+.ra-title { font-size: 14px; font-weight: 600; line-height: 1.45; margin: 0; color: var(--text); }
+.ra-meta { font-size: 12px; color: var(--text-muted, #888); margin-top: auto; padding-top: 0.5rem; }
+@media (max-width: 768px) {
+  .ra-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 1024px) and (min-width: 769px) {
+  .ra-grid { grid-template-columns: repeat(2, 1fr); }
+  .ra-grid .ra-card:last-child { display: none; }
+}
+
+/* ── Blog pagination (PL-07) ─────────────────────────────────────────────── */
+.bl-pagination { display: flex; align-items: center; justify-content: center; gap: 1.25rem; padding: 2rem 0 1rem; }
+.bl-page-btn { display: flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.1rem; border: 1px solid var(--border-band); border-radius: 8px; background: var(--bg); color: var(--text); font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s; }
+.bl-page-btn:hover:not(:disabled) { background: var(--red); border-color: var(--red); color: #fff; }
+.bl-page-btn:disabled { opacity: 0.35; cursor: default; pointer-events: none; }
+.bl-page-info { font-size: 13px; color: var(--text-muted, #888); min-width: 80px; text-align: center; }
