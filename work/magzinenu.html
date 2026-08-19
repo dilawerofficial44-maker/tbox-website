@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MagZine.nu Case Study — TBox Solutionz</title>
+  <meta name="description" content="How TBox Solutionz built and scaled MagZine.nu — the Netherlands' first and largest independent digital magazine kiosk — from a single iPad app to a multi-platform, white-label publishing ecosystem over a decade-long partnership.">
+  <link rel="canonical" href="https://tboxsolutionz.com/work/magzinenu.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tboxsolutionz.com/work/magzinenu.html">
+  <meta property="og:title" content="MagZine.nu — A Decade of Digital Publishing, Built by TBox">
+  <meta property="og:description" content="How TBox built the Netherlands' first digital magazine kiosk from scratch and evolved it into a full white-label publishing platform over 10 years.">
+  <meta property="og:image" content="https://tboxsolutionz.com/assets/images/og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MagZine.nu — A Decade of Digital Publishing, Built by TBox">
+  <meta name="twitter:description" content="How TBox built the Netherlands' first digital magazine kiosk from scratch and evolved it into a full white-label publishing platform over 10 years.">
+  <meta name="twitter:image" content="https://tboxsolutionz.com/assets/images/og-cover.jpg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://tboxsolutionz.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://tboxsolutionz.com/work/" },
+      { "@type": "ListItem", "position": 3, "name": "MagZine.nu", "item": "https://tboxsolutionz.com/work/magzinenu.html" }
+    ]
+  }
+  </script>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/assets/images/favicon-192.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#E01B1B">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    :root{--red:#e01b1b;--red-dark:#b81212;--black:#1a1a1a;--white:#fff;--bg-page:#fff;--bg-alt:#FBFAF9;--bg-dark:#15130F;--text:#161412;--text-muted:#66645F;--text-light:#6B6865;--border:#ECEAE7;--border-band:#EEECEA;--radius:14px;--max-width:1240px;--font:'IBM Plex Sans',system-ui,-apple-system,sans-serif;--mono:'IBM Plex Mono',monospace}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font);background:var(--bg-page);color:var(--text);line-height:1.6;font-size:16px;overflow-x:hidden}
+    img{max-width:100%;display:block}a{color:inherit;text-decoration:none}ul{list-style:none}
+    #nav-placeholder{min-height:65px}
+    .navbar{background:var(--bg-page);border-bottom:1px solid var(--border-band)}
+    .container{max-width:var(--max-width);margin:0 auto;padding:0 3.5rem}
+
+    /* ── Hero ── */
+    .cs-hero { background: var(--bg-alt); border-bottom: 1px solid var(--border-band); padding: 2.5rem 0 3rem; }
+    .cs-back { font-family: var(--mono); font-size: 12px; color: var(--text-muted); text-decoration: none; letter-spacing: 0.04em; display: inline-block; margin-bottom: 1.5rem; }
+    .cs-back:hover { color: var(--text); }
+    .cs-back::before { content: '← '; }
+    .cs-hero-inner { display: grid; grid-template-columns: 1fr 420px; gap: 4rem; align-items: center; }
+    .cs-hero-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    .cs-hero h1 { font-size: clamp(2rem, 3.5vw, 3rem); letter-spacing: -0.03em; margin-bottom: 1.25rem; line-height: 1.1; }
+    .cs-hero-desc { font-size: 17.5px; line-height: 1.65; color: #5C5A57; max-width: 600px; }
+    .cs-store-row { display: flex; align-items: center; gap: 0.75rem; margin-top: 1.75rem; flex-wrap: wrap; }
+
+    /* ── Magazine hero visual ── */
+    .mz-hero-visual {
+      position: relative;
+      height: 420px;
+      width: 100%;
+    }
+    .mz-ipad {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 300px;
+      height: 380px;
+      background: #1C1C1E;
+      border-radius: 24px;
+      border: 2px solid #3A3A3C;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.30), 0 8px 24px rgba(0,0,0,0.16);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .mz-ipad-bar {
+      height: 28px;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .mz-ipad-bar span {
+      width: 48px;
+      height: 4px;
+      background: #3A3A3C;
+      border-radius: 2px;
+    }
+    .mz-ipad-screen {
+      flex: 1;
+      background: #F2F2F7;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      overflow: hidden;
+    }
+    .mz-cover {
+      aspect-ratio: 3/4;
+      border-radius: 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .mz-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .mz-cover-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 60%);
+      padding: 0.5rem 0.4rem 0.4rem;
+    }
+    .mz-cover-title {
+      font-size: 9px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+    }
+    .mz-cover-price {
+      font-family: var(--mono);
+      font-size: 8px;
+      color: rgba(255,255,255,0.75);
+    }
+
+    /* Floating phone */
+    .mz-phone {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 150px;
+      background: #1C1C1E;
+      border-radius: 28px;
+      border: 2px solid #3A3A3C;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.28);
+      overflow: hidden;
+      z-index: 2;
+    }
+    .mz-phone-notch {
+      height: 20px;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .mz-phone-notch span {
+      width: 30px;
+      height: 4px;
+      background: #3A3A3C;
+      border-radius: 2px;
+    }
+    .mz-phone-screen {
+      background: #1C1C1E;
+      padding: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+    .mz-phone-row {
+      display: flex;
+      gap: 0.375rem;
+    }
+    .mz-phone-cover {
+      flex: 1;
+      aspect-ratio: 2/3;
+      background: var(--red);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+    .mz-phone-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    /* Floating badge */
+    .mz-badge {
+      position: absolute;
+      top: 20px;
+      left: -10px;
+      background: var(--red);
+      color: #fff;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(224,27,27,0.4);
+      z-index: 3;
+    }
+
+    /* ── Stats bar ── */
+    .cs-stats { border-bottom: 1px solid var(--border-band); }
+    .cs-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); min-height: 110px; }
+    .cs-stat { padding: 1.75rem 2rem; border-right: 1px solid var(--border-band); display: flex; flex-direction: column; justify-content: center; }
+    .cs-stat:first-child { padding-left: 0; }
+    .cs-stat:last-child { border-right: none; }
+    .cs-stat-value { font-size: clamp(1.3rem, 2.5vw, 2.1rem); font-weight: 600; color: var(--text); letter-spacing: -0.03em; line-height: 1; margin-bottom: 0.35rem; white-space: nowrap; }
+    .cs-stat-label { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+
+    /* ── Timeline banner ── */
+    .cs-timeline-banner {
+      background: var(--bg-dark);
+      padding: 2.5rem 0;
+      border-bottom: 1px solid #2A2822;
+      overflow: hidden;
+    }
+    .cs-timeline-inner {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .cs-timeline-inner::-webkit-scrollbar { display: none; }
+    .cs-tl-item {
+      flex-shrink: 0;
+      padding: 0 2.5rem;
+      border-right: 1px solid #2A2822;
+      min-width: 160px;
+    }
+    .cs-tl-item:last-child { border-right: none; }
+    .cs-tl-year {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--red);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+    }
+    .cs-tl-event {
+      font-size: 13px;
+      color: #C8C4BC;
+      line-height: 1.45;
+    }
+
+    /* ── Body ── */
+    .cs-body { padding: 5rem 0; }
+    .cs-layout { display: grid; grid-template-columns: 1fr 320px; gap: 5rem; align-items: start; }
+    .cs-main { min-width: 0; }
+    .cs-sidebar { min-width: 0; }
+
+    .cs-section { margin-bottom: 3.5rem; }
+    .cs-section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.75rem; }
+    .cs-section h2 { font-size: 1.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+    .cs-section p { font-size: 16px; line-height: 1.8; color: #4A4845; margin-bottom: 0.875rem; }
+    .cs-section p:last-child { margin-bottom: 0; }
+
+    /* Highlight block */
+    .cs-highlight { background: var(--bg-alt); border: 1px solid var(--border-band); border-left: 3px solid var(--red); border-radius: 12px; padding: 1.75rem 2rem; margin: 2.5rem 0; }
+    .cs-highlight-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--red); margin-bottom: 0.75rem; }
+    .cs-highlight p { font-size: 17px; line-height: 1.65; color: var(--text); font-weight: 500; margin-bottom: 0; }
+
+    /* Deliverables list */
+    .cs-deliverables { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+    .cs-deliverables li { display: flex; align-items: flex-start; gap: 0.875rem; font-size: 15.5px; color: #4A4845; line-height: 1.55; }
+    .cs-deliverables li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--red); flex-shrink: 0; margin-top: 0.55rem; }
+
+    /* Feature grid */
+    .cs-feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .cs-feature-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--border-band);
+      border-radius: 12px;
+      padding: 1.25rem 1.375rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .cs-feature-icon-svg {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 90px;
+      height: 90px;
+      opacity: 0.13;
+      color: var(--text);
+      pointer-events: none;
+    }
+    .cs-feature-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.375rem;
+    }
+    .cs-feature-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* Product split */
+    .cs-product-block {
+      border: 1px solid var(--border-band);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .cs-product-head {
+      background: var(--bg-alt);
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-band);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .cs-product-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--red);
+      letter-spacing: 0.08em;
+      background: rgba(224,27,27,0.07);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .cs-product-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .cs-product-body {
+      padding: 1.25rem 1.5rem;
+    }
+    .cs-product-body p {
+      font-size: 15px;
+      color: #4A4845;
+      line-height: 1.7;
+      margin-bottom: 0.875rem;
+    }
+    .cs-product-body p:last-child { margin-bottom: 0; }
+    .cs-product-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.875rem;
+    }
+    .cs-product-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.2rem 0.5rem;
+    }
+
+    /* PDF engine visual */
+    .cs-pdf-visual {
+      background: #1C1C1E;
+      border-radius: 14px;
+      padding: 1.75rem;
+      margin: 1.5rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .cs-pdf-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6C6A65;
+      margin-bottom: 1rem;
+    }
+    .cs-pdf-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+    .cs-pdf-item {
+      background: #2C2C2E;
+      border-radius: 8px;
+      padding: 0.875rem;
+      border: 1px solid #3A3A3C;
+    }
+    .cs-pdf-item-icon {
+      font-size: 18px;
+      margin-bottom: 0.4rem;
+      line-height: 1;
+    }
+    .cs-pdf-item-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #E0DDD8;
+      margin-bottom: 0.25rem;
+    }
+    .cs-pdf-item-desc {
+      font-size: 11px;
+      color: #6C6A65;
+      line-height: 1.45;
+    }
+
+    /* Context band */
+    .cs-context-band {
+      background: var(--bg-alt);
+      border-top: 1px solid var(--border-band);
+      border-bottom: 1px solid var(--border-band);
+      padding: 3.5rem 0;
+      margin-bottom: 3.5rem;
+    }
+    .cs-context-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+    .cs-context-item {
+      padding: 0 1.5rem;
+      border-left: 2px solid var(--border);
+    }
+    .cs-context-item:first-child { border-left: none; padding-left: 0; }
+    .cs-context-stat {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .cs-context-stat span { color: var(--red); }
+    .cs-context-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .cs-context-source {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-light);
+      margin-top: 0.4rem;
+    }
+
+    /* Sidebar */
+    .cs-sidebar-card { background: var(--bg-alt); border: 1px solid var(--border-band); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.25rem; }
+    .cs-sidebar-card-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.875rem; }
+    .cs-sidebar-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .cs-sidebar-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .cs-sidebar-row-key { color: var(--text-muted); }
+    .cs-sidebar-row-val { font-weight: 500; color: var(--text); text-align: right; max-width: 55%; }
+
+    /* Tech stack tags */
+    .cs-tech-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .cs-tech-tag { font-family: var(--mono); font-size: 11px; color: var(--text-muted); background: var(--bg-page); border: 1px solid var(--border); border-radius: 4px; padding: 0.2rem 0.5rem; }
+
+    /* Publisher chips in sidebar */
+    .cs-pub-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .cs-pub-item { display: flex; align-items: center; gap: 0.625rem; font-size: 13.5px; color: #4A4845; }
+    .cs-pub-item::before { content: ''; width: 4px; height: 4px; background: var(--red); border-radius: 50%; flex-shrink: 0; }
+
+    /* Screenshot strip */
+    .cs-screenshots {
+      border-bottom: 1px solid var(--border-band);
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .cs-screenshots::-webkit-scrollbar { display: none; }
+    .cs-screenshots-inner {
+      display: flex;
+      gap: 1rem;
+      padding: 1.75rem 3.5rem;
+    }
+    .cs-screenshots-inner img {
+      height: 260px;
+      width: auto;
+      border-radius: 10px;
+      flex-shrink: 0;
+      border: 1px solid var(--border-band);
+      object-fit: cover;
+    }
+    @media (max-width: 640px) {
+      .cs-screenshots-inner { padding: 1.25rem 1.5rem; }
+      .cs-screenshots-inner img { height: 180px; }
+    }
+
+    /* Video embed */
+    .cs-video-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 14px;
+      margin: 1.5rem 0;
+      background: #000;
+    }
+    .cs-video-wrap iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      border: 0;
+      border-radius: 14px;
+    }
+
+    /* CTA */
+    .cs-cta { background: var(--bg-dark); border-radius: 20px; padding: 3.5rem; text-align: center; margin-top: 5rem; }
+    .cs-cta h2 { color: #fff; font-size: clamp(1.5rem, 3vw, 2.25rem); margin-bottom: 0.875rem; letter-spacing: -0.025em; }
+    .cs-cta p { color: #9A968F; font-size: 16px; margin-bottom: 2rem; }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .cs-hero-inner { grid-template-columns: 1fr; }
+      .mz-hero-visual { height: 260px; margin-top: 1.5rem; }
+      .mz-ipad { width: 220px; height: 280px; right: 50%; transform: translateX(50%); }
+      .mz-phone { display: none; }
+      .mz-badge { left: auto; right: -10px; }
+      .cs-feature-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 900px) {
+      .cs-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .cs-sidebar { order: -1; }
+      .cs-stats-grid { grid-template-columns: 1fr 1fr; }
+      .cs-stat { border-bottom: 1px solid var(--border-band); }
+      .cs-stat:nth-child(2) { border-right: none; }
+      .cs-stat:nth-child(3), .cs-stat:nth-child(4) { border-bottom: none; }
+      .cs-context-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .cs-context-item { border-left: none; padding-left: 0; border-top: 2px solid var(--border); padding-top: 1rem; }
+      .cs-context-item:first-child { border-top: none; padding-top: 0; }
+      .cs-pdf-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .container { padding: 0 1.5rem; }
+      .cs-hero { padding: 2rem 0 2.5rem; }
+      .cs-feature-grid { grid-template-columns: 1fr; }
+      .cs-pdf-grid { grid-template-columns: 1fr; }
+      .cs-cta { padding: 2.5rem 1.5rem; }
+      .cs-stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="nav-placeholder"></div>
+
+  <main>
+
+  <!-- ── HERO ── -->
+  <section class="cs-hero">
+    <div class="container">
+      <a href="/work/" class="cs-back">Selected work</a>
+      <div class="cs-hero-inner">
+        <div>
+          <div class="cs-hero-meta">
+            <span class="work-tag">Digital Publishing</span>
+            <span class="work-tag">iOS</span>
+            <span class="work-tag">Android</span>
+            <span class="work-tag">iPad</span>
+            <span class="work-tag">White Label</span>
+            <span class="work-tag">10+ Years</span>
+          </div>
+          <h1>MagZine.nu — A Decade Powering Europe's Digital Magazine Kiosk</h1>
+          <p class="cs-hero-desc">Starting in 2012, TBox became the engineering backbone of MagZine.nu — the Netherlands' first and largest independent digital magazine kiosk. What began as a single iPad app grew into a multi-platform product suite spanning 400+ titles, a white-label publishing platform, and a subscription service — all built and maintained by TBox over ten years.</p>
+          <div class="cs-store-row">
+            <a href="https://apps.apple.com/nl/app/magzine/id397601440" target="_blank" rel="noopener" style="display:inline-block;line-height:0;">
+              <img src="/assets/badges/app-store.svg" alt="Download on the App Store" height="40" style="height:40px;width:auto;" loading="lazy">
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=com.magzine.nu" target="_blank" rel="noopener" style="display:inline-block;line-height:0;">
+              <img src="/assets/badges/google-play.png" alt="Get it on Google Play" height="60" style="height:60px;width:auto;margin-top:-10px;margin-bottom:-10px;" loading="lazy">
+            </a>
+          </div>
+        </div>
+
+        <!-- Hero visual — simulated iPad + phone showing magazine kiosk UI -->
+        <div class="mz-hero-visual">
+          <span class="mz-badge">#1 in the Netherlands</span>
+
+          <!-- iPad showing kiosk grid -->
+          <div class="mz-ipad">
+            <div class="mz-ipad-bar"><span></span></div>
+            <div class="mz-ipad-screen" style="display:flex;flex-direction:column;background:#F2F2F7;padding:0.5rem;gap:0.4rem;">
+              <!-- Nav bar mock -->
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:0.25rem 0.4rem;background:#fff;border-radius:6px;border:1px solid #E5E5EA;">
+                <span style="font-size:9px;font-weight:700;color:#E01B1B;letter-spacing:0.03em;">MagZine</span>
+                <span style="font-family:monospace;font-size:8px;color:#8E8E93;">🔍</span>
+              </div>
+              <!-- Category bar -->
+              <div style="display:flex;gap:0.3rem;overflow:hidden;">
+                <span style="font-size:8px;background:#E01B1B;color:#fff;padding:0.15rem 0.4rem;border-radius:3px;white-space:nowrap;">Alles</span>
+                <span style="font-size:8px;background:#E5E5EA;color:#636366;padding:0.15rem 0.4rem;border-radius:3px;white-space:nowrap;">Lifestyle</span>
+                <span style="font-size:8px;background:#E5E5EA;color:#636366;padding:0.15rem 0.4rem;border-radius:3px;white-space:nowrap;">Business</span>
+                <span style="font-size:8px;background:#E5E5EA;color:#636366;padding:0.15rem 0.4rem;border-radius:3px;white-space:nowrap;">Tech</span>
+              </div>
+              <!-- Magazine grid -->
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.3rem;flex:1;">
+                <div style="background:#C8102E;border-radius:5px;aspect-ratio:3/4;display:flex;align-items:flex-end;padding:4px;position:relative;overflow:hidden;">
+                  <div style="position:absolute;inset:0;background:linear-gradient(135deg,#C8102E,#8B0000);"></div>
+                  <span style="position:relative;font-size:7px;font-weight:800;color:#fff;line-height:1.1;text-shadow:0 1px 2px rgba(0,0,0,0.4);">QUEST</span>
+                </div>
+                <div style="background:#6B4C9A;border-radius:5px;aspect-ratio:3/4;display:flex;align-items:flex-end;padding:4px;position:relative;overflow:hidden;">
+                  <div style="position:absolute;inset:0;background:linear-gradient(135deg,#6B4C9A,#4A2E7A);"></div>
+                  <span style="position:relative;font-size:6px;font-weight:800;color:#fff;line-height:1.1;">HAPPINEZ</span>
+                </div>
+                <div style="background:#1A73E8;border-radius:5px;aspect-ratio:3/4;display:flex;align-items:flex-end;padding:4px;position:relative;overflow:hidden;">
+                  <div style="position:absolute;inset:0;background:linear-gradient(135deg,#1A73E8,#0D47A1);"></div>
+                  <span style="position:relative;font-size:6px;font-weight:800;color:#fff;line-height:1.1;">COMPUTER IDEE</span>
+                </div>
+                <div style="background:#2E7D32;border-radius:5px;aspect-ratio:3/4;display:flex;align-items:flex-end;padding:4px;position:relative;overflow:hidden;">
+                  <div style="position:absolute;inset:0;background:linear-gradient(135deg,#2E7D32,#1B5E20);"></div>
+                  <span style="position:relative;font-size:6px;font-weight:800;color:#fff;line-height:1.1;">4WD</span>
+                </div>
+                <div style="background:#BF360C;border-radius:5px;aspect-ratio:3/4;display:flex;align-items:flex-end;padding:4px;position:relative;overflow:hidden;">
+                  <div style="position:absolute;inset:0;background:linear-gradient(135deg,#BF360C,#870000);"></div>
+                  <span style="position:relative;font-size:6px;font-weight:800;color:#fff;line-height:1.1;">QUOTE 500</span>
+                </div>
+                <div style="background:#00695C;border-radius:5px;aspect-ratio:3/4;display:flex;align-items:flex-end;padding:4px;position:relative;overflow:hidden;">
+                  <div style="position:absolute;inset:0;background:linear-gradient(135deg,#00695C,#004D40);"></div>
+                  <span style="position:relative;font-size:6px;font-weight:800;color:#fff;line-height:1.1;">ZOOM.NL</span>
+                </div>
+              </div>
+              <!-- Bottom bar -->
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:0.25rem 0.4rem;background:#fff;border-radius:6px;border:1px solid #E5E5EA;">
+                <span style="font-size:7px;color:#636366;">400+ tijdschriften</span>
+                <span style="font-size:7px;color:#E01B1B;font-weight:600;">€0,99 – €4,95</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- iPhone floating left -->
+          <div class="mz-phone">
+            <div class="mz-phone-notch"><span></span></div>
+            <div class="mz-phone-screen">
+              <div style="background:#E01B1B;border-radius:4px;padding:0.4rem 0.5rem;margin-bottom:0.375rem;display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:9px;font-weight:800;color:#fff;">MagZine</span>
+                <span style="font-size:8px;color:rgba(255,255,255,0.7);">☰</span>
+              </div>
+              <div class="mz-phone-row">
+                <div class="mz-phone-cover" style="background:linear-gradient(135deg,#6B4C9A,#4A2E7A);"></div>
+                <div class="mz-phone-cover" style="background:linear-gradient(135deg,#C8102E,#8B0000);"></div>
+                <div class="mz-phone-cover" style="background:linear-gradient(135deg,#1A73E8,#0D47A1);"></div>
+              </div>
+              <div class="mz-phone-row">
+                <div class="mz-phone-cover" style="background:linear-gradient(135deg,#BF360C,#870000);"></div>
+                <div class="mz-phone-cover" style="background:linear-gradient(135deg,#2E7D32,#1B5E20);"></div>
+                <div class="mz-phone-cover" style="background:linear-gradient(135deg,#F57F17,#E65100);"></div>
+              </div>
+              <div style="margin-top:0.375rem;background:#2C2C2E;border-radius:4px;padding:0.4rem 0.5rem;">
+                <div style="font-size:8px;color:#9A9A9A;margin-bottom:0.2rem;">Mijn abonnement</div>
+                <div style="font-size:9px;color:#fff;font-weight:600;">€9,95 / maand</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS BAR ── -->
+  <section class="cs-stats">
+    <div class="container">
+      <div class="cs-stats-grid">
+        <div class="cs-stat">
+          <div class="cs-stat-value">10 yrs</div>
+          <div class="cs-stat-label">Technology partnership (2012–2022)</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">400+</div>
+          <div class="cs-stat-label">Dutch magazines on the platform</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">500K+</div>
+          <div class="cs-stat-label">Annual app downloads at peak</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">50K+</div>
+          <div class="cs-stat-label">Monthly subscribers &amp; PDF buyers</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SCREENSHOTS ── -->
+  <div class="cs-screenshots">
+    <div class="cs-screenshots-inner">
+      <img src="/assets/magzinenu/screen-dribbble-1.jpg" alt="MagZine.nu kiosk UI design" loading="lazy">
+      <img src="/assets/magzinenu/screen-dribbble-2.jpg" alt="MagZine.nu digital magazine kiosk" loading="lazy">
+      <img src="/assets/magzinenu/screen-dribbble-3.jpg" alt="MagZine.nu app interface" loading="lazy">
+    </div>
+  </div>
+
+  <!-- ── TIMELINE ── -->
+  <div class="cs-timeline-banner">
+    <div class="container">
+      <div class="cs-timeline-inner">
+        <div class="cs-tl-item">
+          <div class="cs-tl-year">2009</div>
+          <div class="cs-tl-event">Concept formed at a Dutch publishers' congress. iPad hadn't launched yet.</div>
+        </div>
+        <div class="cs-tl-item">
+          <div class="cs-tl-year">2010</div>
+          <div class="cs-tl-event">MagZine.nu launches. First digital magazine kiosk in the Netherlands. iPad-only.</div>
+        </div>
+        <div class="cs-tl-item">
+          <div class="cs-tl-year">2012</div>
+          <div class="cs-tl-event">TBox joins as technology partner. Full rebuild: iOS native app, clean architecture.</div>
+        </div>
+        <div class="cs-tl-item">
+          <div class="cs-tl-year">2013</div>
+          <div class="cs-tl-event">TBox ships iPhone version + Android app. Offline PDF, IAP, push notifications.</div>
+        </div>
+        <div class="cs-tl-item">
+          <div class="cs-tl-year">2014–15</div>
+          <div class="cs-tl-event">White-label platform built for publishers. AppVilla brand launched. First branded publisher apps ship.</div>
+        </div>
+        <div class="cs-tl-item">
+          <div class="cs-tl-year">2015</div>
+          <div class="cs-tl-event">MagZio launches — Spotify-style unlimited magazine subscription. 75+ titles, €9.95/month.</div>
+        </div>
+        <div class="cs-tl-item">
+          <div class="cs-tl-year">2016–22</div>
+          <div class="cs-tl-event">Ongoing development, publisher app rollouts, platform maintenance, feature evolution.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MARKET CONTEXT ── -->
+  <div class="cs-context-band">
+    <div class="container">
+      <div class="cs-context-grid">
+        <div class="cs-context-item">
+          <div class="cs-context-stat">8,419<span></span></div>
+          <div class="cs-context-desc">Magazine apps in Apple Newsstand by April 2013. MagZine.nu was among the earliest in Europe to serve the Dutch market natively.</div>
+          <div class="cs-context-source">Source: Apple Newsstand data, 2013</div>
+        </div>
+        <div class="cs-context-item">
+          <div class="cs-context-stat">58<span>%</span></div>
+          <div class="cs-context-desc">Of Dutch households owned a tablet within five years of the iPad launch — one of the highest adoption rates in Europe, making the Netherlands an ideal market for a digital kiosk.</div>
+          <div class="cs-context-source">Source: Industry research, 2015</div>
+        </div>
+        <div class="cs-context-item">
+          <div class="cs-context-stat">#1<span></span></div>
+          <div class="cs-context-desc">MagZine.nu was the largest independent digital magazine kiosk in the Netherlands, serving 400+ Dutch titles from a single platform — competing against Sanoma's own kiosk and global giants like Zinio.</div>
+          <div class="cs-context-source">Source: Bladendokter, 2019</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BODY ── -->
+  <section class="cs-body">
+    <div class="container">
+      <div class="cs-layout">
+
+        <!-- Main content -->
+        <div class="cs-main">
+
+          <!-- Brief -->
+          <div class="cs-section">
+            <p class="cs-section-label">The brief</p>
+            <h2>Building the future of Dutch publishing — before anyone else did</h2>
+            <p>The iPad launched in 2010. Wob ten Hoeve had been thinking about this moment since a Dutch publishers' congress in 2009. He saw it clearly: physical magazine distribution was entering a slow decline, and the publishers who moved first to digital would own the transition. MagZine.nu was his bet — the Netherlands' first independent digital magazine kiosk, positioned to serve publishers and readers equally.</p>
+            <p>By 2012, the platform needed to grow beyond its first-generation app. The kiosk had early traction and a compelling vision, but the technical foundation needed to be rebuilt for scale — cleaner architecture, richer features, and a platform capable of evolving as publishing itself evolved. That's when TBox came in.</p>
+          </div>
+
+          <div class="cs-highlight">
+            <p class="cs-highlight-label">The partnership</p>
+            <p>TBox became MagZine.nu's engineering partner in 2012 and stayed for over a decade. Not as a vendor who handed over code. As the team that owned the build, understood the product deeply, and evolved it through multiple major versions, a white-label product line, and a subscription service — all while the platform served hundreds of thousands of Dutch readers.</p>
+          </div>
+
+          <!-- Product 1 — Main app -->
+          <div class="cs-section">
+            <p class="cs-section-label">Product 01 — Main platform</p>
+            <h2>MagZine.nu: The Digital Kiosk</h2>
+            <p>The main MagZine.nu app was the flagship. TBox built it from the ground up for iPad, then extended it to iPhone and Android — making it one of the earliest fully multi-platform magazine experiences in the Netherlands. At peak, the app served over 400 Dutch-language titles and recorded 500,000+ annual downloads.</p>
+            <p>This wasn't a simple reader app. It was a full-featured magazine commerce platform — with online/offline download management, secure subscription flows, in-app purchase integrations, push notifications, and a reading experience polished to the standards of a consumer product that needed to compete with apps from major European publishers.</p>
+
+            <div class="cs-feature-grid">
+              <div class="cs-feature-card">
+                <svg class="cs-feature-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                <div class="cs-feature-title">Native iOS &amp; Android</div>
+                <div class="cs-feature-desc">Built natively for iPad from day one, then extended to iPhone and Android as the Dutch mobile market matured.</div>
+              </div>
+              <div class="cs-feature-card">
+                <svg class="cs-feature-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <div class="cs-feature-title">Offline PDF downloads</div>
+                <div class="cs-feature-desc">Readers downloaded full magazine issues locally. App-level download management with progress tracking and library organisation.</div>
+              </div>
+              <div class="cs-feature-card">
+                <svg class="cs-feature-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                <div class="cs-feature-title">In-app purchases &amp; subscriptions</div>
+                <div class="cs-feature-desc">Per-issue purchasing and annual subscription models — both via App Store billing and MagZine's own iDEAL / PayPal / card flow.</div>
+              </div>
+              <div class="cs-feature-card">
+                <svg class="cs-feature-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                <div class="cs-feature-title">Push notifications</div>
+                <div class="cs-feature-desc">New issue alerts, subscription reminders, and editorial highlights — driving re-engagement at scale.</div>
+              </div>
+              <div class="cs-feature-card">
+                <svg class="cs-feature-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <div class="cs-feature-title">Multilingual architecture</div>
+                <div class="cs-feature-desc">App built to support Dutch and English interface localisation, enabling international publisher partnerships.</div>
+              </div>
+              <div class="cs-feature-card">
+                <svg class="cs-feature-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <div class="cs-feature-title">Premium design &amp; UX</div>
+                <div class="cs-feature-desc">In 2013–2015, most iPad apps were functional at best. MagZine.nu was a flagship-grade consumer product — smooth transitions, intuitive navigation, thumbnail strip reader.</div>
+              </div>
+              <div class="cs-feature-card">
+                <svg class="cs-feature-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                <div class="cs-feature-title">REST API integration</div>
+                <div class="cs-feature-desc">Clean architecture connecting to MagZine's backend APIs for catalogue, authentication, purchases, and content delivery.</div>
+              </div>
+              <div class="cs-feature-card">
+                <svg class="cs-feature-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <div class="cs-feature-title">Performance-first</div>
+                <div class="cs-feature-desc">Magazine covers, previews, and full-issue downloads optimised for memory efficiency across older iPad hardware generations.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video -->
+          <div class="cs-section">
+            <p class="cs-section-label">Product in motion</p>
+            <h2>See MagZine.nu in action</h2>
+            <p>A look at the MagZine app — the kiosk, the reading experience, and the subscription flow that made it the leading digital magazine platform in the Netherlands.</p>
+            <div class="cs-video-wrap">
+              <iframe
+                src="https://www.youtube.com/embed/_tr9V_SqDOI"
+                title="MagZine.nu App — Product Demo"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                loading="lazy">
+              </iframe>
+            </div>
+          </div>
+
+          <!-- Product 2 — White label -->
+          <div class="cs-section">
+            <p class="cs-section-label">Product 02 — White-label platform</p>
+            <h2>AppVilla: One Engine, Many Brands</h2>
+            <p>As MagZine.nu grew, publishers didn't just want to be listed in the kiosk — they wanted their own branded app. A standalone product, carrying their masthead, published under their own App Store account. Wob ten Hoeve saw the opportunity: build a white-label product that could be instantly rebranded and deployed for any publisher, without duplicating engineering effort.</p>
+            <p>TBox built that product. The AppVilla platform was a configurable, white-labelled mobile application — one underlying codebase that could be dressed as any publisher's branded magazine app. Each deployment had its own in-app purchases, its own subscription products, its own backend API connections, and its own visual identity.</p>
+
+            <div class="cs-product-block">
+              <div class="cs-product-head">
+                <span class="cs-product-num">ARCHITECTURE</span>
+                <span class="cs-product-name">How the white-label system worked</span>
+              </div>
+              <div class="cs-product-body">
+                <p>A single, parameterised codebase driven by a publisher configuration layer. Swap the brand colours, logo, app name, App Store credentials, and backend API endpoints — and a fully branded standalone app was ready to publish. Each publisher's app appeared in the App Store under the publisher's own developer account and brand, with no visible connection to MagZine.</p>
+                <p>This architecture let TBox onboard new publishers rapidly, maintain a single codebase across all deployments, and ship feature updates to every publisher app simultaneously — while each publisher experienced their product as custom-built.</p>
+                <div class="cs-product-tags">
+                  <span class="cs-product-tag">Config-driven branding</span>
+                  <span class="cs-product-tag">Per-publisher IAP products</span>
+                  <span class="cs-product-tag">Isolated backend API endpoints</span>
+                  <span class="cs-product-tag">Separate App Store accounts</span>
+                  <span class="cs-product-tag">Shared core codebase</span>
+                  <span class="cs-product-tag">ePub + PDF dual-format</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PDF Engine -->
+          <div class="cs-section">
+            <p class="cs-section-label">Technical depth</p>
+            <h2>The PDF engine: open source, deeply extended</h2>
+            <p>Magazine reading on mobile is a demanding problem. A single issue can be a 50MB+ PDF with high-resolution images, complex layouts, and embedded links. The commercially licensed PDF frameworks used in the main MagZine app added cost at every deployment — a problem at white-label scale where each publisher app needed the same capability.</p>
+            <p>For AppVilla, TBox chose an open-source PDF library as the foundation — then invested significant engineering time building it into a production-grade reading engine. The result was a lighter, more cost-effective foundation with custom capabilities that matched and in some areas exceeded the commercial alternatives.</p>
+
+            <div class="cs-pdf-visual">
+              <div class="cs-pdf-label">Custom PDF engine capabilities — built by TBox</div>
+              <div class="cs-pdf-grid">
+                <div class="cs-pdf-item">
+                  <div class="cs-pdf-item-icon">🔍</div>
+                  <div class="cs-pdf-item-title">Full-text search</div>
+                  <div class="cs-pdf-item-desc">In-document search across all pages with highlighted result navigation.</div>
+                </div>
+                <div class="cs-pdf-item">
+                  <div class="cs-pdf-item-icon">✏️</div>
+                  <div class="cs-pdf-item-title">Page highlights</div>
+                  <div class="cs-pdf-item-desc">Readers could highlight sections on any PDF page — saved and persistent across sessions.</div>
+                </div>
+                <div class="cs-pdf-item">
+                  <div class="cs-pdf-item-icon">📝</div>
+                  <div class="cs-pdf-item-title">Annotations</div>
+                  <div class="cs-pdf-item-desc">Text annotations overlaid on PDF pages — sticky notes, markups, and margin notes.</div>
+                </div>
+                <div class="cs-pdf-item">
+                  <div class="cs-pdf-item-icon">🔗</div>
+                  <div class="cs-pdf-item-title">Embedded web URLs</div>
+                  <div class="cs-pdf-item-desc">Tappable links within magazine pages opening in-app browser or Safari.</div>
+                </div>
+                <div class="cs-pdf-item">
+                  <div class="cs-pdf-item-icon">🖼️</div>
+                  <div class="cs-pdf-item-title">Embedded images</div>
+                  <div class="cs-pdf-item-desc">High-res image overlays on PDF pages, supporting editorial art direction.</div>
+                </div>
+                <div class="cs-pdf-item">
+                  <div class="cs-pdf-item-icon">🗺️</div>
+                  <div class="cs-pdf-item-title">Embedded maps</div>
+                  <div class="cs-pdf-item-desc">Interactive map objects embedded within magazine pages — location-aware content.</div>
+                </div>
+                <div class="cs-pdf-item">
+                  <div class="cs-pdf-item-icon">▶️</div>
+                  <div class="cs-pdf-item-title">Embedded video</div>
+                  <div class="cs-pdf-item-desc">Video players embedded directly in PDF content — bringing editorial pages to life.</div>
+                </div>
+                <div class="cs-pdf-item">
+                  <div class="cs-pdf-item-icon">📖</div>
+                  <div class="cs-pdf-item-title">ePub reader</div>
+                  <div class="cs-pdf-item-desc">Dual-format support — ePub and PDF in the same app, serving both reflowable and fixed-layout content.</div>
+                </div>
+                <div class="cs-pdf-item">
+                  <div class="cs-pdf-item-icon">📴</div>
+                  <div class="cs-pdf-item-title">Fully offline</div>
+                  <div class="cs-pdf-item-desc">Issues downloaded to device storage — readable anywhere, no connection required.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 3 — MagZio -->
+          <div class="cs-section">
+            <p class="cs-section-label">Product 03 — Subscription service</p>
+            <h2>MagZio: The Spotify for Dutch Magazines</h2>
+            <p>In 2015, Spotify had proven that streaming subscription models could transform media consumption. Wob ten Hoeve applied the same logic to magazines: a flat monthly fee for unlimited reading across a curated catalogue. TBox built MagZio into the MagZine app as a subscription layer — €9.95 per month, 75+ titles, unlimited swapping.</p>
+            <p>The model was technically complex: a reading-time tracking engine that monitored minutes spent per publication and used that data to proportionally distribute subscription revenue to publishers — using cover price as a reference weighting. This publisher revenue engine was entirely custom, built by TBox.</p>
+            <div class="cs-product-tags" style="margin-top:0.75rem;">
+              <span class="cs-product-tag">€9.95/month</span>
+              <span class="cs-product-tag">75+ titles at launch</span>
+              <span class="cs-product-tag">Per-reading-minute revenue distribution</span>
+              <span class="cs-product-tag">Offline-capable</span>
+              <span class="cs-product-tag">30-day free trial flow</span>
+              <span class="cs-product-tag">Publisher revenue engine</span>
+            </div>
+          </div>
+
+          <!-- What TBox did -->
+          <div class="cs-section">
+            <p class="cs-section-label">What TBox delivered</p>
+            <h2>Ten years of engineering, front to back</h2>
+            <ul class="cs-deliverables">
+              <li>Built the MagZine.nu iPad app from scratch in 2012 — native iOS, clean API-first architecture, professional-grade magazine reading experience at a time when most iPad apps were primitive by comparison.</li>
+              <li>Shipped the iPhone and Android versions of the main app — expanding MagZine.nu's reach from tablet-only to every major mobile platform.</li>
+              <li>Designed and implemented the offline PDF download system — full issue downloads managed at the app level, readable without any network connection.</li>
+              <li>Integrated in-app purchase flows (App Store + Google Play) and annual subscription models, plus external payment flows via iDEAL, PayPal, and credit card.</li>
+              <li>Implemented push notification infrastructure for new issue alerts, subscription renewals, and editorial promotions.</li>
+              <li>Built the AppVilla white-label platform — a single configurable codebase that deployed as individually branded, publisher-specific apps across the App Store and Google Play.</li>
+              <li>Extended an open-source PDF library into a production-grade reading engine with full-text search, highlights, annotations, embedded URLs, images, maps, and video — alongside ePub support.</li>
+              <li>Built the MagZio subscription layer and the publisher revenue distribution engine — tracking reading time per magazine and computing proportional payouts.</li>
+              <li>Maintained, optimised, and evolved the platform continuously across a decade — handling App Store policy changes, new iOS/Android API requirements, and evolving publisher needs.</li>
+            </ul>
+          </div>
+
+          <div class="cs-highlight">
+            <p class="cs-highlight-label">What this partnership represents</p>
+            <p>At the time MagZine.nu was being built, iPad apps with this level of polish were genuinely rare in Europe. The digital magazine market was contested by global platforms — Zinio, Newsstand, Blendle — and most publishers outsourced their digital products to whoever was cheapest. MagZine.nu chose depth over convenience. TBox was there for every version of that choice, for ten years, across three products, on four platforms.</p>
+          </div>
+
+          <!-- Why it mattered -->
+          <div class="cs-section">
+            <p class="cs-section-label">What this demonstrates</p>
+            <h2>Engineering trust earns a decade, not a contract</h2>
+            <p>Short engagements are easy to win. Long ones have to be earned, repeatedly, every year. The MagZine.nu partnership lasted over ten years not because of a contract, but because TBox consistently delivered at the standard the product required.</p>
+            <p>That meant rebuilding the architecture when the original didn't scale. It meant building a PDF engine from scratch because the licensed alternative cost too much at white-label volumes. It meant tracking reading time per magazine and computing revenue splits that publishers trusted enough to base their business on. And it meant staying current — through every iOS major release, every App Store policy change, every shift in the Dutch digital publishing landscape.</p>
+            <p>MagZine.nu didn't stay the largest independent digital kiosk in the Netherlands by accident. It stayed there because the engineering underneath it was built to last.</p>
+          </div>
+
+        </div><!-- /.cs-main -->
+
+        <!-- Sidebar -->
+        <aside class="cs-sidebar">
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Engagement details</p>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Client</span>
+              <span class="cs-sidebar-row-val">B&amp;W e-projects / MagZine.nu</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Industry</span>
+              <span class="cs-sidebar-row-val">Digital Publishing</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Region</span>
+              <span class="cs-sidebar-row-val">Netherlands · Europe</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Duration</span>
+              <span class="cs-sidebar-row-val">2012 – 2022 (10+ years)</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Model</span>
+              <span class="cs-sidebar-row-val">Long-term technology partner</span>
+            </div>
+          </div>
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Platforms built</p>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">MagZine iOS (iPad)</span>
+              <span class="cs-sidebar-row-val">Built from scratch</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">MagZine iOS (iPhone)</span>
+              <span class="cs-sidebar-row-val">Extended</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">MagZine Android</span>
+              <span class="cs-sidebar-row-val">Built from scratch</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">AppVilla (white-label)</span>
+              <span class="cs-sidebar-row-val">Built from scratch</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">MagZio subscription</span>
+              <span class="cs-sidebar-row-val">Built from scratch</span>
+            </div>
+          </div>
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Technology stack</p>
+            <div class="cs-tech-tags">
+              <span class="cs-tech-tag">iOS (Objective-C)</span>
+              <span class="cs-tech-tag">Swift</span>
+              <span class="cs-tech-tag">Android (Java)</span>
+              <span class="cs-tech-tag">PDFKit</span>
+              <span class="cs-tech-tag">Open-source PDF engine</span>
+              <span class="cs-tech-tag">ePub rendering</span>
+              <span class="cs-tech-tag">StoreKit / IAP</span>
+              <span class="cs-tech-tag">Google Play Billing</span>
+              <span class="cs-tech-tag">Push notifications (APNS)</span>
+              <span class="cs-tech-tag">REST APIs</span>
+              <span class="cs-tech-tag">iDEAL integration</span>
+              <span class="cs-tech-tag">Offline storage</span>
+            </div>
+          </div>
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Featured publishers</p>
+            <div class="cs-pub-list">
+              <div class="cs-pub-item">Quest</div>
+              <div class="cs-pub-item">Happinez</div>
+              <div class="cs-pub-item">Computer Idee</div>
+              <div class="cs-pub-item">Quote 500</div>
+              <div class="cs-pub-item">Women's Health</div>
+              <div class="cs-pub-item">4WD Magazine</div>
+              <div class="cs-pub-item">Zoom.nl</div>
+              <div class="cs-pub-item">MacWorld NL</div>
+              <div class="cs-pub-item">New Skool Media</div>
+              <div class="cs-pub-item">F&amp;L Publishing Group</div>
+              <div class="cs-pub-item">Erdee Media Groep</div>
+              <div class="cs-pub-item">400+ titles total</div>
+            </div>
+          </div>
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Key metrics</p>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">App rating</span>
+              <span class="cs-sidebar-row-val">5 / 5 ★</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Peak downloads</span>
+              <span class="cs-sidebar-row-val">500K+ / year</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Monthly subscribers</span>
+              <span class="cs-sidebar-row-val">50K+</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Magazines available</span>
+              <span class="cs-sidebar-row-val">400+</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Partnership length</span>
+              <span class="cs-sidebar-row-val">10+ years</span>
+            </div>
+          </div>
+
+        </aside>
+
+      </div><!-- /.cs-layout -->
+
+      <!-- CTA -->
+      <div class="cs-cta">
+        <h2>Ready to build something that lasts?</h2>
+        <p>We don't do short engagements for the sake of it. The best work — the kind that earns a decade of trust — starts with an honest conversation about what you're actually building.</p>
+        <a href="/contact.html" class="btn-primary" style="display:inline-flex;align-items:center;gap:0.5rem;background:var(--red);color:#fff;font-family:var(--font);font-size:15px;font-weight:600;padding:0.875rem 2rem;border-radius:10px;text-decoration:none;transition:background 0.15s;">
+          Start a conversation →
+        </a>
+      </div>
+
+    </div><!-- /.container -->
+  </section>
+
+  </main>
+
+  <div id="footer-placeholder"></div>
+  <script src="/js/components.js" defer></script>
+</body>
+</html>
