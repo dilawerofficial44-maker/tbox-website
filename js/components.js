@@ -1,11 +1,21 @@
 // ── Cookie consent + GA4 bootstrap ───────────────────────────────────────────
-// GA4 fires only after explicit consent. Consent is stored in localStorage
-// under 'tbox_cookie_consent' as 'accepted' or 'declined'.
+// Strategy: EU/UK visitors see a consent banner (GDPR/UK GDPR).
+// Everyone else gets GA4 immediately — no banner, no friction.
+// Geo result is cached in localStorage (30 days) so the lookup API
+// is only called once per browser, never on return visits.
 (function () {
   var CONSENT_KEY = 'tbox_cookie_consent';
-  var GA_ID = 'G-B90NNFGHY7';
-  var ga4Loaded = false;
+  var GEO_KEY     = 'tbox_geo';           // stores {r:'eu'|'other', t:<timestamp>}
+  var GEO_TTL     = 30 * 86400 * 1000;   // 30 days in ms
+  var GA_ID       = 'G-B90NNFGHY7';
+  var ga4Loaded   = false;
 
+  // EU member states + UK (ISO 3166-1 alpha-2)
+  var EU_UK = { GB:1,AT:1,BE:1,BG:1,CY:1,CZ:1,DE:1,DK:1,EE:1,
+                ES:1,FI:1,FR:1,GR:1,HR:1,HU:1,IE:1,IT:1,LT:1,
+                LU:1,LV:1,MT:1,NL:1,PL:1,PT:1,RO:1,SE:1,SI:1,SK:1 };
+
+  // ── GA4 loader ────────────────────────────────────────────────────────────
   function loadGA4() {
     if (ga4Loaded) return;
     if (window.location.hostname !== 'tboxsolutionz.com') return;
@@ -21,6 +31,16 @@
     document.head.appendChild(s);
   }
 
+  // Fire GA4 after the page is fully loaded (never blocks rendering)
+  function scheduleGA4() {
+    if (document.readyState === 'complete') {
+      loadGA4();
+    } else {
+      window.addEventListener('load', loadGA4);
+    }
+  }
+
+  // ── Banner (shown only to EU/UK first-timers) ──────────────────────────────
   function dismissBanner(banner) {
     banner.style.transform = 'translateY(120%)';
     banner.style.opacity = '0';
@@ -91,11 +111,7 @@
     document.getElementById('cb-accept').addEventListener('click', function () {
       localStorage.setItem(CONSENT_KEY, 'accepted');
       dismissBanner(banner);
-      if (document.readyState === 'complete') {
-        setTimeout(loadGA4, 500);
-      } else {
-        window.addEventListener('load', function () { setTimeout(loadGA4, 500); });
-      }
+      scheduleGA4();
     });
     document.getElementById('cb-decline').addEventListener('click', function () {
       localStorage.setItem(CONSENT_KEY, 'declined');
@@ -103,24 +119,85 @@
     });
   }
 
-  // Bootstrap on consent state
-  var consent = localStorage.getItem(CONSENT_KEY);
-  if (consent === 'accepted') {
-    // Returning visitor who accepted — load GA4 after page interactive
-    if (document.readyState === 'complete') {
-      setTimeout(loadGA4, 1000);
-    } else {
-      window.addEventListener('load', function () { setTimeout(loadGA4, 1000); });
+  // ── EU/UK path: respect stored consent, or show banner ────────────────────
+  function handleEuUk() {
+    var consent = localStorage.getItem(CONSENT_KEY);
+    if (consent === 'accepted') {
+      scheduleGA4();
+    } else if (consent !== 'declined') {
+      // No decision yet — show banner after DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showBanner);
+      } else {
+        showBanner();
+      }
     }
-  } else if (!consent) {
-    // First visit — show banner after DOM is ready
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', showBanner);
-    } else {
-      showBanner();
-    }
+    // 'declined' → GA4 never loads
   }
-  // consent === 'declined' → do nothing, GA4 never loads
+
+  // ── Non-EU/UK path: load GA4 freely, no banner ────────────────────────────
+  function handleOther() {
+    scheduleGA4();
+  }
+
+  // ── Geo detection ─────────────────────────────────────────────────────────
+  // 1. Check localStorage cache first (zero network cost on return visits).
+  // 2. On miss: call ipapi.co for the country code (plain-text, ~80 bytes).
+  //    A 3 s timeout falls back to non-EU/UK so GA4 isn't blocked forever.
+  // 3. On API error: treat as EU/UK (safer default — compliant).
+  // 4. Cache result for 30 days.
+
+  var cached = null;
+  try {
+    var raw = localStorage.getItem(GEO_KEY);
+    if (raw) {
+      var parsed = JSON.parse(raw);
+      if (parsed && (Date.now() - parsed.t) < GEO_TTL) {
+        cached = parsed.r; // 'eu' or 'other'
+      } else {
+        localStorage.removeItem(GEO_KEY); // expired
+      }
+    }
+  } catch (e) {
+    localStorage.removeItem(GEO_KEY);
+  }
+
+  if (cached === 'eu') {
+    handleEuUk();
+  } else if (cached === 'other') {
+    handleOther();
+  } else {
+    // First visit — detect geo. Everything is async; page rendering is unblocked.
+    var settled = false;
+
+    var timer = setTimeout(function () {
+      if (settled) return;
+      settled = true;
+      // Timed out — don't cache, retry next visit
+      handleOther();
+    }, 3000);
+
+    fetch('https://ipapi.co/country/', { cache: 'no-store' })
+      .then(function (res) { return res.text(); })
+      .then(function (code) {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        code = (code || '').trim().toUpperCase();
+        var isEuUk = !!EU_UK[code];
+        try {
+          localStorage.setItem(GEO_KEY, JSON.stringify({ r: isEuUk ? 'eu' : 'other', t: Date.now() }));
+        } catch (e) {}
+        if (isEuUk) { handleEuUk(); } else { handleOther(); }
+      })
+      .catch(function () {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        // API failed — don't cache, treat as EU/UK to stay compliant
+        handleEuUk();
+      });
+  }
 })();
 
 async function loadComponent(id, path) {

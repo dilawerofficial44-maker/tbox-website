@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guapify — TBox Solutionz</title>
+  <meta name="description" content="How TBox built Guapify from scratch — a WordPress-powered financial literacy platform for the Black community, built and maintained by TBox Solutionz.">
+  <link rel="canonical" href="https://tboxsolutionz.com/work/guapify.html">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tboxsolutionz.com/work/guapify.html">
+  <meta property="og:title" content="Guapify — TBox Solutionz">
+  <meta property="og:description" content="How TBox built Guapify from scratch — a WordPress-powered financial literacy platform for the Black community, built and maintained by TBox Solutionz.">
+  <meta property="og:image" content="https://tboxsolutionz.com/assets/guapify/hero-community.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Guapify — TBox Solutionz">
+  <meta name="twitter:description" content="How TBox built Guapify from scratch — a WordPress-powered financial literacy platform for the Black community, built and maintained by TBox Solutionz.">
+  <meta name="twitter:image" content="https://tboxsolutionz.com/assets/guapify/hero-community.webp">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://tboxsolutionz.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://tboxsolutionz.com/work/" },
+      { "@type": "ListItem", "position": 3, "name": "Guapify", "item": "https://tboxsolutionz.com/work/guapify.html" }
+    ]
+  }
+  </script>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/assets/images/favicon-192.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#E01B1B">
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>:root{--red:#e01b1b;--red-dark:#b81212;--black:#1a1a1a;--white:#fff;--bg-page:#fff;--bg-alt:#FBFAF9;--bg-dark:#15130F;--text:#161412;--text-muted:#66645F;--text-light:#6B6865;--border:#ECEAE7;--border-band:#EEECEA;--radius:14px;--max-width:1240px;--font:'IBM Plex Sans',system-ui,-apple-system,sans-serif;--mono:'IBM Plex Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:var(--font);background:var(--bg-page);color:var(--text);line-height:1.6;font-size:16px;overflow-x:hidden}img{max-width:100%;display:block}a{color:inherit;text-decoration:none}ul{list-style:none}#nav-placeholder{min-height:65px}.navbar{background:var(--bg-page);border-bottom:1px solid var(--border-band)}.container{max-width:var(--max-width);margin:0 auto;padding:0 3.5rem}</style>
+  <style>
+    /* ── Hero ── */
+    .cs-hero { background: var(--bg-alt); border-bottom: 1px solid var(--border-band); padding: 2.5rem 0 3rem; }
+    .cs-hero-label { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .cs-back { font-family: var(--mono); font-size: 12px; color: var(--text-muted); text-decoration: none; letter-spacing: 0.04em; }
+    .cs-back:hover { color: var(--text); }
+    .cs-back::before { content: '← '; }
+    .cs-client-badge { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; background: #1a1816; color: #fff; padding: 4px 10px; border-radius: 4px; }
+    .cs-hero-inner { display: grid; grid-template-columns: 1fr auto; gap: 3rem; align-items: center; }
+    .cs-hero h1 { font-size: clamp(2rem, 4vw, 3.25rem); letter-spacing: -0.03em; margin-bottom: 1.25rem; max-width: 720px; }
+    .cs-hero-meta { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem; }
+    .cs-hero-desc { font-size: 18px; line-height: 1.6; color: #5C5A57; max-width: 620px; }
+
+    /* Browser mockup stack */
+    .cs-browser-stack { position: relative; width: 560px; height: 520px; flex-shrink: 0; }
+    .cs-browser-card { position: absolute; width: 460px; border-radius: 12px; overflow: hidden; border: 1px solid #e0ddd9; background: #f5f3f0; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1), box-shadow 0.6s ease, opacity 0.6s ease, left 0.6s cubic-bezier(0.4,0,0.2,1), top 0.6s cubic-bezier(0.4,0,0.2,1); }
+    .cs-browser-card.pos-front { left: 0; top: 120px; transform: rotate(0deg); z-index: 3; box-shadow: 0 16px 48px rgba(0,0,0,0.18); opacity: 1; }
+    .cs-browser-card.pos-mid  { left: 50px; top: 58px; transform: rotate(3deg); z-index: 2; box-shadow: 0 8px 28px rgba(0,0,0,0.12); opacity: 0.88; }
+    .cs-browser-card.pos-back { left: 100px; top: 0;  transform: rotate(6deg); z-index: 1; box-shadow: 0 4px 16px rgba(0,0,0,0.08); opacity: 0.72; }
+    .cs-browser-bar { background: #111; padding: 10px 14px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #222; }
+    .cs-browser-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .cs-browser-dot:nth-child(1) { background: #ff6058; }
+    .cs-browser-dot:nth-child(2) { background: #ffbd2e; }
+    .cs-browser-dot:nth-child(3) { background: #28c940; }
+    .cs-browser-url { flex: 1; background: #222; border-radius: 4px; height: 16px; margin-left: 10px; display: flex; align-items: center; padding: 0 10px; }
+    .cs-browser-url span { font-family: var(--mono); font-size: 9px; color: #888; white-space: nowrap; overflow: hidden; }
+    .cs-browser-img { width: 100%; height: 280px; display: block; object-fit: cover; object-position: top center; }
+
+    .cs-visit-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--text); color: #fff; border-radius: 8px; padding: 10px 18px; font-size: 14px; font-weight: 500; text-decoration: none; transition: opacity 0.2s; margin-top: 1.75rem; }
+    .cs-visit-btn:hover { opacity: 0.8; }
+    .cs-visit-btn svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Screenshots strip */
+    .cs-screenshots { padding: 3.5rem 0; border-bottom: 1px solid var(--border-band); background: var(--bg-alt); }
+    .cs-screenshots-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 1.5rem; }
+    .cs-screenshots-track { display: flex; gap: 1.25rem; overflow-x: auto; scrollbar-width: none; padding-bottom: 0.5rem; }
+    .cs-screenshots-track::-webkit-scrollbar { display: none; }
+    .cs-screenshot-item { flex-shrink: 0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.10); border: 1px solid var(--border-band); }
+    .cs-screenshot-item img { height: 220px; width: auto; max-width: none; display: block; }
+
+    /* Stats */
+    .cs-stats { border-bottom: 1px solid var(--border-band); }
+    .cs-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); min-height: 110px; }
+    .cs-stat { padding: 1.75rem 2rem; border-right: 1px solid var(--border-band); display: flex; flex-direction: column; justify-content: center; }
+    .cs-stat:first-child { padding-left: 0; }
+    .cs-stat:last-child { border-right: none; }
+    .cs-stat-value { font-size: clamp(1.3rem, 2.5vw, 2.1rem); font-weight: 600; color: var(--text); letter-spacing: -0.03em; line-height: 1; margin-bottom: 0.35rem; white-space: nowrap; }
+    .cs-stat-label { font-size: 14px; color: var(--text-muted); line-height: 1.4; }
+
+    /* Body */
+    .cs-body { padding: 5rem 0; }
+    .cs-layout { display: grid; grid-template-columns: 1fr 320px; gap: 5rem; align-items: start; }
+    .cs-main { min-width: 0; }
+    .cs-sidebar { min-width: 0; }
+
+    .cs-section { margin-bottom: 3.5rem; }
+    .cs-section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.75rem; }
+    .cs-section h2 { font-size: 1.5rem; margin-bottom: 1rem; letter-spacing: -0.02em; }
+    .cs-section p { font-size: 16px; line-height: 1.75; color: #4A4845; margin-bottom: 0.875rem; }
+    .cs-section p:last-child { margin-bottom: 0; }
+
+    /* Phase timeline */
+    .cs-phases { display: flex; flex-direction: column; gap: 0; margin-top: 1.25rem; }
+    .cs-phase { display: flex; gap: 1.25rem; padding: 1.25rem 0; border-bottom: 1px solid var(--border); }
+    .cs-phase:last-child { border-bottom: none; }
+    .cs-phase-num { font-family: var(--mono); font-size: 18px; color: var(--red); font-weight: 600; min-width: 36px; padding-top: 0; line-height: 1.4; }
+    .cs-phase-content { flex: 1; }
+    .cs-phase-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 0.25rem; }
+    .cs-phase-desc { font-size: 14px; color: #4A4845; line-height: 1.55; }
+
+    .cs-highlight { background: var(--bg-alt); border: 1px solid var(--border-band); border-left: 3px solid var(--red); border-radius: 12px; padding: 1.75rem 2rem; margin: 2.5rem 0; }
+    .cs-highlight-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--red); margin-bottom: 0.75rem; }
+    .cs-highlight p { font-size: 17px; line-height: 1.65; color: var(--text); font-weight: 500; margin-bottom: 0; }
+
+    /* Features table */
+    .cs-features-table { width: 100%; border-collapse: collapse; margin-top: 1.25rem; overflow-x: auto; }
+    .cs-features-table th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); text-align: left; padding: 0.625rem 1rem; border: 1px solid var(--border-band); background: var(--bg-alt); font-weight: 500; }
+    .cs-features-table th:first-child { width: 26%; }
+    .cs-features-table td { padding: 0.75rem 1rem; border: 1px solid var(--border-band); vertical-align: top; line-height: 1.55; }
+    .cs-features-table td:first-child { font-weight: 600; color: var(--text); font-size: 13px; }
+    .cs-features-table td:last-child { font-size: 14px; color: #4A4845; }
+    .cs-features-table tr:hover td { background: var(--bg-alt); }
+
+    /* Founder callout */
+    .cs-founder-callout { background: #0f0f0d; border-radius: 12px; padding: 2rem 2.25rem; margin: 2rem 0; display: flex; align-items: flex-start; gap: 1.75rem; }
+    .cs-founder-callout-icon { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; flex-shrink: 0; border: 2px solid #333; }
+    .cs-founder-callout-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .cs-founder-callout-text { flex: 1; }
+    .cs-founder-callout-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #666; margin-bottom: 0.5rem; }
+    .cs-founder-callout-quote { font-size: 16px; font-weight: 500; color: #fff; line-height: 1.55; }
+    .cs-founder-callout-attr { font-size: 13px; color: #555; margin-top: 0.5rem; }
+
+    /* Sidebar */
+    .cs-sidebar-card { background: var(--bg-alt); border: 1px solid var(--border-band); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.25rem; }
+    .cs-sidebar-card-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.875rem; }
+    .cs-sidebar-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .cs-sidebar-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .cs-sidebar-row-key { color: var(--text-muted); }
+    .cs-sidebar-row-val { font-weight: 500; color: var(--text); text-align: right; max-width: 60%; }
+
+    /* Stack chips */
+    .cs-stack-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.25rem; }
+    .cs-stack-chip { font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em; background: #EEECEA; color: var(--text-muted); padding: 3px 8px; border-radius: 4px; }
+
+    /* CTA */
+    .cs-cta { background: var(--bg-dark); border-radius: 20px; padding: 3.5rem; text-align: center; margin-top: 5rem; }
+    .cs-cta h2 { color: #fff; font-size: clamp(1.5rem, 3vw, 2.25rem); margin-bottom: 0.875rem; letter-spacing: -0.025em; }
+    .cs-cta p { color: #9A968F; font-size: 16px; margin-bottom: 2rem; }
+
+    @media (max-width: 900px) {
+      .cs-hero-inner { grid-template-columns: 1fr; }
+      .cs-browser-stack { width: 360px; height: 310px; margin-top: 2rem; }
+      .cs-browser-card { width: 290px; }
+      .cs-browser-card.pos-front { left: 0; top: 70px; }
+      .cs-browser-card.pos-mid  { left: 35px; top: 33px; }
+      .cs-browser-card.pos-back { left: 70px; top: 0; }
+      .cs-browser-img { height: 175px; }
+      .cs-layout { grid-template-columns: 1fr; gap: 3rem; }
+      .cs-sidebar { order: -1; }
+      .cs-stats-grid { grid-template-columns: 1fr 1fr; }
+      .cs-stat { border-bottom: 1px solid var(--border-band); }
+      .cs-stat:nth-child(2) { border-right: none; }
+      .cs-stat:nth-child(3), .cs-stat:nth-child(4) { border-bottom: none; }
+      .cs-founder-callout { flex-direction: column; gap: 1rem; }
+    }
+    @media (max-width: 640px) {
+      .cs-hero { padding: 3.5rem 0 2.5rem; }
+      .cs-stats-grid { grid-template-columns: 1fr 1fr; }
+      .cs-cta { padding: 2.5rem 1.5rem; }
+      .cs-screenshot-item img { height: 160px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV — injected by components.js -->
+  <div id="nav-placeholder"></div>
+  <main>
+
+  <!-- ── HERO ── -->
+  <section id="content" class="cs-hero">
+    <div class="container">
+      <div class="cs-hero-label">
+        <a href="/#work" class="cs-back">Selected work</a>
+        <span class="cs-client-badge">Client engagement</span>
+      </div>
+      <div class="cs-hero-inner">
+        <div>
+          <div class="cs-hero-meta">
+            <span class="work-tag">FinTech</span>
+            <span class="work-tag">WordPress</span>
+            <span class="work-tag">Community Platform</span>
+            <span class="work-tag">Media &amp; Publishing</span>
+            <span class="work-tag">Long-term Partnership</span>
+          </div>
+          <h1>Guapify — Financial literacy platform built for the Black community</h1>
+          <p class="cs-hero-desc">CJ Harris had a clear mission — make wealth-building conversations more accessible for the Black community. TBox built the entire platform from the ground up: a feature-rich WordPress site with live stock data, community membership, news aggregation, financial tools, video, payments, and ongoing feature expansion.</p>
+          <a href="https://guapify.com" target="_blank" rel="noopener" class="cs-visit-btn">
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Visit guapify.com
+          </a>
+        </div>
+        <div class="cs-browser-stack" id="guapify-stack">
+          <div class="cs-browser-card pos-back">
+            <div class="cs-browser-bar">
+              <span class="cs-browser-dot"></span><span class="cs-browser-dot"></span><span class="cs-browser-dot"></span>
+              <div class="cs-browser-url"><span>guapify.com</span></div>
+            </div>
+            <img class="cs-browser-img" src="/assets/guapify/counting-money.jpg" alt="Guapify resources section" width="960" height="640" loading="lazy">
+          </div>
+          <div class="cs-browser-card pos-mid">
+            <div class="cs-browser-bar">
+              <span class="cs-browser-dot"></span><span class="cs-browser-dot"></span><span class="cs-browser-dot"></span>
+              <div class="cs-browser-url"><span>guapify.com</span></div>
+            </div>
+            <img class="cs-browser-img" src="/assets/guapify/friends.webp" alt="Guapify community" width="960" height="640" loading="lazy">
+          </div>
+          <div class="cs-browser-card pos-front">
+            <div class="cs-browser-bar">
+              <span class="cs-browser-dot"></span><span class="cs-browser-dot"></span><span class="cs-browser-dot"></span>
+              <div class="cs-browser-url"><span>guapify.com</span></div>
+            </div>
+            <img class="cs-browser-img" src="/assets/guapify/hero-community.webp" alt="Guapify hero" width="544" height="680" loading="lazy">
+          </div>
+        </div>
+        <script>
+          (function(){
+            const cards = Array.from(document.querySelectorAll('#guapify-stack .cs-browser-card'));
+            const pos = ['pos-front','pos-mid','pos-back'];
+            let state = [0,1,2];
+            setInterval(function(){
+              state = state.map(function(p){ return (p+2)%3; });
+              cards.forEach(function(card,i){
+                card.className = 'cs-browser-card ' + pos[state[i]];
+              });
+            }, 2000);
+          })();
+        </script>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SCREENSHOTS ── -->
+  <section class="cs-screenshots">
+    <div class="container">
+      <p class="cs-screenshots-label">Site screenshots</p>
+      <div class="cs-screenshots-track">
+        <div class="cs-screenshot-item">
+          <img src="/assets/guapify/hero-community.webp" alt="Guapify homepage hero" width="544" height="680" loading="lazy">
+        </div>
+        <div class="cs-screenshot-item">
+          <img src="/assets/guapify/friends.webp" alt="Guapify community section" width="960" height="640" loading="lazy">
+        </div>
+        <div class="cs-screenshot-item">
+          <img src="/assets/guapify/counting-money.jpg" alt="Guapify financial resources" width="960" height="640" loading="lazy">
+        </div>
+        <div class="cs-screenshot-item">
+          <img src="/assets/guapify/news-1.jpg" alt="Guapify Guap News section" width="980" height="630" loading="lazy">
+        </div>
+        <div class="cs-screenshot-item">
+          <img src="/assets/guapify/news-2.jpg" alt="Guapify articles feed" width="1024" height="388" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATS BAR ── -->
+  <section class="cs-stats">
+    <div class="container">
+      <div class="cs-stats-grid">
+        <div class="cs-stat">
+          <div class="cs-stat-value">0 → 1</div>
+          <div class="cs-stat-label">Built end-to-end from scratch</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">34</div>
+          <div class="cs-stat-label">Stocks in the live market ticker</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">5</div>
+          <div class="cs-stat-label">Social platforms integrated</div>
+        </div>
+        <div class="cs-stat">
+          <div class="cs-stat-value">Ongoing</div>
+          <div class="cs-stat-label">Long-term maintenance &amp; feature additions</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BODY ── -->
+  <section class="cs-body">
+    <div class="container">
+      <div class="cs-layout">
+
+        <div class="cs-main">
+
+          <div class="cs-section">
+            <p class="cs-section-label">The product</p>
+            <h2>A platform where money is discussed openly — built for a community that needed a seat at the table.</h2>
+            <p>Guapify is a financial literacy and community platform founded by CJ Harris — a media executive whose career spanned HBO, BET, and CNBC. His insight was direct: financial understanding shouldn't be gated behind advisors and jargon. The Black community, in particular, deserves a space where wealth-building conversations happen in plain language, through trusted voices, with real tools.</p>
+            <p>The site brings together live market data, curated financial news, educational resources, grant discovery, a members-only paid community, and a direct connection to CJ's voice and perspective — all under one roof. It is content platform, community hub, and financial education resource in one.</p>
+          </div>
+
+          <div class="cs-founder-callout">
+            <div class="cs-founder-callout-icon">
+              <img src="/assets/guapify/logo-full.png" alt="Guapify" width="48" height="48">
+            </div>
+            <div class="cs-founder-callout-text">
+              <p class="cs-founder-callout-label">Founder · CJ Harris</p>
+              <p class="cs-founder-callout-quote">"I'm not here as a financial advisor or a guru. I'm here as a curator of conversations, a connector to credible voices, and an advocate for financial clarity in the Black community."</p>
+              <p class="cs-founder-callout-attr">— CJ Harris, Founder &amp; CEO, Guapify · Former executive at HBO, BET, CNBC</p>
+            </div>
+          </div>
+
+          <div class="cs-section">
+            <p class="cs-section-label">What TBox built</p>
+            <h2>Every feature on the platform — built from scratch and maintained over time</h2>
+            <p>TBox handled the full build of Guapify from nothing — architecture decisions, feature implementation, design, and ongoing development. The platform required a broader technical footprint than a typical WordPress site, integrating live financial data, community infrastructure, payment handling, content feeds, and media embeds into a cohesive experience.</p>
+            <div class="cs-phases">
+              <div class="cs-phase">
+                <span class="cs-phase-num">01</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">WordPress platform build &amp; custom theme</p>
+                  <p class="cs-phase-desc">Architected and built the site on WordPress with Elementor for flexible page composition. The dark-themed design reflects Guapify's premium positioning — clean typography, strong contrast, and a layout that works across devices. LiteSpeed Cache was configured for performance, keeping page loads fast despite the content-heavy structure.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">02</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Live stock market ticker</p>
+                  <p class="cs-phase-desc">Integrated TradingView's widget to display a curated live ticker of 34 stocks — including Black-owned companies (Urban One/UONE, Broadway Financial/BYFC, Carver Bancorp/CARV) alongside major consumer brands. The selection was deliberate: stocks the community recognises and has a stake in, not a generic S&P feed.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">03</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Paid community &amp; membership (Mighty Networks)</p>
+                  <p class="cs-phase-desc">Integrated the Mighty Networks (mn.co) community platform to power Guapify's paid membership — where subscribers can join discussions, access exclusive content, and participate in the community CJ has built. The integration handles authentication, subscription state, and routing between the public site and the gated community seamlessly.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">04</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Guap News — content aggregation engine</p>
+                  <p class="cs-phase-desc">Built a news aggregation system that pulls Black business, culture, and finance articles from external sources and surfaces them in the "Guap News" section. The feed is curated and rendered in a card layout, with links back to original publishers. A separate Resources section applies the same pattern to grants, tools, and financial resources for Black entrepreneurs.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">05</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Mortgage calculator tool</p>
+                  <p class="cs-phase-desc">Built a custom mortgage calculator — a practical tool that lets users input total loan amount, down payment, interest rate, and amortization period to estimate monthly payments. Financial tools like this turn the site from an information resource into something users return to for active decision-making.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">06</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Video &amp; YouTube integration</p>
+                  <p class="cs-phase-desc">Embedded YouTube video content on the homepage and throughout the site, supporting CJ's content-creator presence on his channel. Video is central to how Guapify builds trust — letting the founder speak directly to the community without requiring a separate platform.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">07</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Social sharing &amp; multi-platform presence</p>
+                  <p class="cs-phase-desc">Integrated social sharing across YouTube, Instagram, TikTok, LinkedIn, and Threads — allowing content to flow from the platform to social, and driving community members back to the site. The social layer is woven into the header, footer, and CTA sections rather than treated as an afterthought.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">08</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">SEO &amp; Google Ads infrastructure</p>
+                  <p class="cs-phase-desc">Set up the technical SEO foundation — structured metadata, canonical tags, sitemap, and clean URL architecture — along with Google Ads tracking. The content-heavy nature of the site (regular news articles and resources) gives Guapify strong organic crawl surface that compounds over time.</p>
+                </div>
+              </div>
+              <div class="cs-phase">
+                <span class="cs-phase-num">09</span>
+                <div class="cs-phase-content">
+                  <p class="cs-phase-title">Ongoing maintenance &amp; feature additions</p>
+                  <p class="cs-phase-desc">The relationship with Guapify didn't end at launch. TBox continues to support the platform — maintaining uptime, adding new features as CJ's vision evolves, updating content structures, and expanding the platform's capabilities. This is a long-term partnership, not a handoff.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cs-section">
+            <p class="cs-section-label">Technical breakdown</p>
+            <h2>A production stack with more moving parts than it looks like from the outside</h2>
+            <table class="cs-features-table">
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th>Implementation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Platform</td>
+                  <td>WordPress with Elementor page builder. Custom theme and component library built around Guapify's brand identity — dark palette, green accents, high-contrast typography.</td>
+                </tr>
+                <tr>
+                  <td>Performance</td>
+                  <td>LiteSpeed Cache with server-level caching, JS/CSS minification, lazy-loaded images, and CDN asset delivery for fast global page loads.</td>
+                </tr>
+                <tr>
+                  <td>Stock ticker</td>
+                  <td>TradingView widget displaying 34 curated stocks including Black-owned public companies (UONE, BYFC, CARV) and major brands the community engages with daily.</td>
+                </tr>
+                <tr>
+                  <td>Community &amp; membership</td>
+                  <td>Mighty Networks (guapify.mn.co) — paid membership community with sign-in flow integrated into the main site's navigation. Handles subscription state and routes authenticated users to the gated community.</td>
+                </tr>
+                <tr>
+                  <td>News aggregation</td>
+                  <td>RSS/feed-based content aggregation pulling Black business and finance articles into a curated "Guap News" section with card layout, source attribution, and external links.</td>
+                </tr>
+                <tr>
+                  <td>Financial tools</td>
+                  <td>Custom mortgage calculator with inputs for loan amount, down payment, interest rate, and amortization period — converting the site into an active decision-support tool.</td>
+                </tr>
+                <tr>
+                  <td>Video</td>
+                  <td>YouTube video embeds integrated on the homepage and content sections, supporting CJ's video content strategy without requiring a separate platform.</td>
+                </tr>
+                <tr>
+                  <td>Social integration</td>
+                  <td>Multi-platform social sharing and follow links across YouTube, Instagram, TikTok, LinkedIn, and Threads — woven into site navigation, section footers, and CTAs.</td>
+                </tr>
+                <tr>
+                  <td>SEO infrastructure</td>
+                  <td>Full technical SEO setup — structured metadata, Open Graph tags, canonical URLs, XML sitemap, and clean permalink architecture. Google Ads conversion tracking integrated.</td>
+                </tr>
+                <tr>
+                  <td>Resources section</td>
+                  <td>Aggregated grants, funding opportunities, and financial tools for Black entrepreneurs — curated and surfaced alongside editorial content using the same feed-based architecture as Guap News.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="cs-highlight">
+            <p class="cs-highlight-label">What this engagement represents</p>
+            <p>Guapify is the kind of project TBox is built for — a founder with a strong vision, a complex feature set, and a real community who depends on the platform working. We didn't just configure a WordPress theme. We built a media and community platform with live financial data, paid membership, content infrastructure, and financial tools that serve a specific audience with specific needs. And we've kept it running and evolving since day one.</p>
+          </div>
+
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="cs-sidebar">
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Project info</p>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Client</span>
+              <span class="cs-sidebar-row-val">Guapify (CJ Harris)</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Industry</span>
+              <span class="cs-sidebar-row-val">FinTech · Media · Community</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">TBox role</span>
+              <span class="cs-sidebar-row-val">Full build + long-term partner</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Engagement</span>
+              <span class="cs-sidebar-row-val">0 → 1 build &amp; ongoing</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Status</span>
+              <span class="cs-sidebar-row-val">Live · active</span>
+            </div>
+          </div>
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Tech stack</p>
+            <div class="cs-stack-chips">
+              <span class="cs-stack-chip">WordPress</span>
+              <span class="cs-stack-chip">Elementor</span>
+              <span class="cs-stack-chip">LiteSpeed Cache</span>
+              <span class="cs-stack-chip">TradingView</span>
+              <span class="cs-stack-chip">Mighty Networks</span>
+              <span class="cs-stack-chip">RSS Aggregation</span>
+              <span class="cs-stack-chip">YouTube API</span>
+              <span class="cs-stack-chip">Google Ads</span>
+              <span class="cs-stack-chip">PHP / MySQL</span>
+              <span class="cs-stack-chip">Custom JS</span>
+            </div>
+          </div>
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">Features delivered</p>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Live stock ticker</span>
+              <span class="cs-sidebar-row-val">34 stocks</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Community platform</span>
+              <span class="cs-sidebar-row-val">Mighty Networks</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">News aggregation</span>
+              <span class="cs-sidebar-row-val">Guap News</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Financial tools</span>
+              <span class="cs-sidebar-row-val">Mortgage calculator</span>
+            </div>
+            <div class="cs-sidebar-row">
+              <span class="cs-sidebar-row-key">Social channels</span>
+              <span class="cs-sidebar-row-val">YouTube, IG, TikTok, LinkedIn, Threads</span>
+            </div>
+          </div>
+
+          <div class="cs-sidebar-card">
+            <p class="cs-sidebar-card-label">About the founder</p>
+            <p style="font-size:13px;line-height:1.6;color:#4A4845;">CJ Harris is a media executive who built his career at HBO, BET, and CNBC. He founded Guapify to bring financial clarity to the Black community — not as a financial advisor, but as a curator of conversations and a connector to credible voices. Guapify is his platform for that mission.</p>
+          </div>
+        </aside>
+
+      </div>
+
+      <!-- CTA -->
+      <div class="cs-cta">
+        <h2>Want to build something with this kind of technical depth?</h2>
+        <p>From content platforms to community infrastructure — TBox builds products that work in the real world and stay working.</p>
+        <a href="/contact.html" class="btn btn-primary">Start a conversation</a>
+      </div>
+
+    </div>
+  </section>
+
+  </main>
+
+  <div id="footer-placeholder"></div>
+  <script src="/js/components.js" defer></script>
+</body>
+</html>
