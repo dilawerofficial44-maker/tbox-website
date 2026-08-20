@@ -470,6 +470,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 11. Related articles — renders 2–3 cards before the author card on blog pages
   (function () {
     const catalog = [
+      { slug: 'do-you-need-an-mcp-server',           title: 'Do You Actually Need an MCP Server?',                       tag: 'Software Architecture', img: '/assets/images/blog/mcp-architecture.webp',       date: 'Aug 20, 2026',  read: '8 min' },
       { slug: 'ai-native-architecture',              title: 'How We Made Existing Software Operable by AI',              tag: 'Software Architecture', img: '/assets/images/blog/ai-native-architecture.webp',  date: 'Aug 2, 2026',   read: '12 min' },
       { slug: 'founder-stack-building-products-ai-era', title: 'The Founder Stack: Building Successful Products in the AI Era', tag: 'Product Strategy',    img: '/assets/images/blog/founder-stack.webp',          date: 'Jul 31, 2026',  read: '7 min' },
       { slug: 'mobile-app-stack-2026',               title: 'Building a Mobile App in 2026: Native vs. Cross-Platform',   tag: 'Mobile Development',  img: '/assets/images/blog/mobile-stack.webp',           date: 'Jul 17, 2026',  read: '6 min' },
