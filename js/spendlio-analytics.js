@@ -13,9 +13,19 @@
                 LU:1,LV:1,MT:1,NL:1,PL:1,PT:1,RO:1,SE:1,SI:1,SK:1 };
 
   // ── GA4 loader ──────────────────────────────────────────────────────────────
+  // Headless/automated browsers (SEO audit tools, uptime monitors, scrapers)
+  // execute JS and would otherwise be counted as visitors. Real crawlers such
+  // as Googlebot don't run GA at all, so this only drops automation traffic.
+  function isAutomated() {
+    var ua = navigator.userAgent || '';
+    return navigator.webdriver === true ||
+      /HeadlessChrome|Lighthouse|PhantomJS|Puppeteer|Playwright|bot\/|\bbot\b|crawl|spider/i.test(ua);
+  }
+
   function loadGA4() {
     if (ga4Loaded) return;
     if (window.location.hostname !== 'tboxsolutionz.com') return;
+    if (isAutomated()) return;
     ga4Loaded = true;
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
