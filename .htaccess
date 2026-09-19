@@ -13,6 +13,16 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 RewriteCond %{HTTP_HOST} ^www\.tboxsolutionz\.com$ [NC]
 RewriteRule ^ https://tboxsolutionz.com%{REQUEST_URI} [L,R=301]
 
+# ─── Extensionless URLs → .html (AA-01) ──────────────────────────────────────
+# External/legacy links point at /contact, /about, /blog/<slug> with no .html.
+# These 404'd while still receiving real traffic. Generic rule: if the request
+# has no matching file/dir but <path>.html exists, 301 to it. Placed before the
+# /projects/ catch-all so /projects/<slug> reaches the real page, not the index.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+RewriteRule ^(.+?)/?$ /$1.html [L,R=301]
+
 # ─── SEO Migration redirects ──────────────────────────────────────────────────
 
 # /projects/* unknown slugs → /projects/  (listing page)
