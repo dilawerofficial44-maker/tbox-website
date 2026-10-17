@@ -1,0 +1,51 @@
+name: Deploy to production
+
+# Runs on every push to main (including merged PRs and edits made on github.com).
+# Can also be triggered by hand from the Actions tab.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Never run two deploys at once; a newer push waits for the current one.
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Upload to cPanel via FTPS
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # Uploads only files that changed since the last deploy (tracked by a
+      # state file on the server) and removes files you deleted from the repo.
+      - name: Sync files to server
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          port: ${{ secrets.FTP_PORT }}
+          protocol: ftps
+          # cPanel certs often don't match ftp.<domain>; "loose" still encrypts.
+          security: loose
+          local-dir: ./
+          server-dir: ${{ secrets.FTP_REMOTE_ROOT }}/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/.claude/**
+            **/.DS_Store
+            .env*
+            deploy.sh
+            HANDOVER.md
+            docs/**
+            prompts/**
+            README.md

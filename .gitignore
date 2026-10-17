@@ -20,3 +20,7 @@ package-lock.json
 pnpm-lock.yaml
 yarn.lock
 .claude/.env.deploy
+
+# Local deploy credentials / handover notes (contain secrets)
+.env.deploy
+HANDOVER.md
