@@ -78,3 +78,8 @@ ErrorDocument 404 /404.html
   ExpiresByType application/json        "access plus 1 hour"
   ExpiresByType application/manifest+json "access plus 1 week"
 </IfModule>
+
+# ─── Hide GitHub Actions FTP deploy state file ────────────────────────────────
+<Files ".ftp-deploy-sync-state.json">
+  Require all denied
+</Files>
