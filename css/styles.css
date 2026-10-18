@@ -686,7 +686,10 @@ section { padding: 7rem 0; }
 
   .contact-card { grid-template-columns: 1fr; gap: 2rem; }
 
-  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  /* Brand row on top, then the three link columns side by side */
+  .footer-grid { grid-template-columns: repeat(3, 1fr); gap: 2.5rem 2rem; align-items: start; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-brand-desc { max-width: 36rem; }
 }
 
 /* =============================================
@@ -763,7 +766,13 @@ section { padding: 7rem 0; }
   .team-card:only-child { flex-basis: 100%; }
 
   /* Footer */
-  .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+  /* Brand text spans the full width; Company and Services sit in two columns;
+     Connect gets its own full-width row with the links inline */
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem 1.5rem; }
+  .footer-brand-desc { max-width: none; }
+  .footer-col:last-child { grid-column: 1 / -1; }
+  .footer-col:last-child ul { flex-direction: row; flex-wrap: wrap; gap: 0.7rem 1.5rem; }
+  .footer-col-title { margin-bottom: 1rem; }
   .footer-bottom { flex-direction: column; align-items: flex-start; }
 
   /* Logos — same row but scrollable, tighter spacing, smaller logos */
