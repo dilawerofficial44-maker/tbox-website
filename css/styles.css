@@ -664,6 +664,27 @@ section { padding: 7rem 0; }
 @media (max-width: 900px) {
   section { padding: 5rem 0; }
 
+  /* Collapse the nav into the menu button here: the full link row no longer fits
+     beside the logo below ~900px (it touched the logo, then overflowed the page) */
+  .navbar-nav {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: var(--white);
+    padding: 1.5rem 3.5rem;
+    border-bottom: 1px solid var(--border);
+    gap: 1.25rem;
+    z-index: 999;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .navbar-nav.open { display: flex; }
+  .navbar-cta { margin-left: 0; }
+  .nav-toggle { display: flex; }
+
   .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
   .hero-visual { max-width: 480px; }
 
@@ -686,7 +707,10 @@ section { padding: 7rem 0; }
 
   .contact-card { grid-template-columns: 1fr; gap: 2rem; }
 
-  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  /* Brand row on top, then the three link columns side by side */
+  .footer-grid { grid-template-columns: repeat(3, 1fr); gap: 2.5rem 2rem; align-items: start; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-brand-desc { max-width: 36rem; }
 }
 
 /* =============================================
@@ -697,25 +721,7 @@ section { padding: 7rem 0; }
   /* body prefix: pages inline a critical .container rule after this stylesheet, which would otherwise win */
   body .container { padding: 0 1.25rem; }
 
-  /* Sticky nav on mobile */
-  .navbar-nav {
-    display: none;
-    flex-direction: column;
-    align-items: flex-start;
-    position: fixed;
-    top: 64px;
-    left: 0;
-    right: 0;
-    background: var(--white);
-    padding: 1.5rem 1.25rem;
-    border-bottom: 1px solid var(--border);
-    gap: 1.25rem;
-    z-index: 999;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-  }
-  .navbar-nav.open { display: flex; }
-  .navbar-cta { margin-left: 0; }
-  .nav-toggle { display: flex; }
+  .navbar-nav { padding: 1.5rem 1.25rem; }
 
   /* Hero */
   .hero-visual { display: none; }
@@ -763,7 +769,13 @@ section { padding: 7rem 0; }
   .team-card:only-child { flex-basis: 100%; }
 
   /* Footer */
-  .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+  /* Brand text spans the full width; Company and Services sit in two columns;
+     Connect gets its own full-width row with the links inline */
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem 1.5rem; }
+  .footer-brand-desc { max-width: none; }
+  .footer-col:last-child { grid-column: 1 / -1; }
+  .footer-col:last-child ul { flex-direction: row; flex-wrap: wrap; gap: 0.7rem 1.5rem; }
+  .footer-col-title { margin-bottom: 1rem; }
   .footer-bottom { flex-direction: column; align-items: flex-start; }
 
   /* Logos — same row but scrollable, tighter spacing, smaller logos */
