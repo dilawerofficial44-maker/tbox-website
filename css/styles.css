@@ -664,6 +664,27 @@ section { padding: 7rem 0; }
 @media (max-width: 900px) {
   section { padding: 5rem 0; }
 
+  /* Collapse the nav into the menu button here: the full link row no longer fits
+     beside the logo below ~900px (it touched the logo, then overflowed the page) */
+  .navbar-nav {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: var(--white);
+    padding: 1.5rem 3.5rem;
+    border-bottom: 1px solid var(--border);
+    gap: 1.25rem;
+    z-index: 999;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .navbar-nav.open { display: flex; }
+  .navbar-cta { margin-left: 0; }
+  .nav-toggle { display: flex; }
+
   .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
   .hero-visual { max-width: 480px; }
 
@@ -700,25 +721,7 @@ section { padding: 7rem 0; }
   /* body prefix: pages inline a critical .container rule after this stylesheet, which would otherwise win */
   body .container { padding: 0 1.25rem; }
 
-  /* Sticky nav on mobile */
-  .navbar-nav {
-    display: none;
-    flex-direction: column;
-    align-items: flex-start;
-    position: fixed;
-    top: 64px;
-    left: 0;
-    right: 0;
-    background: var(--white);
-    padding: 1.5rem 1.25rem;
-    border-bottom: 1px solid var(--border);
-    gap: 1.25rem;
-    z-index: 999;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-  }
-  .navbar-nav.open { display: flex; }
-  .navbar-cta { margin-left: 0; }
-  .nav-toggle { display: flex; }
+  .navbar-nav { padding: 1.5rem 1.25rem; }
 
   /* Hero */
   .hero-visual { display: none; }
