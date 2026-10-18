@@ -50,7 +50,7 @@
     .proj-grid-section { padding: 4rem 0 6rem; }
     .proj-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 1.5rem;
     }
 
@@ -74,12 +74,13 @@
 
     .proj-card-top {
       display: flex;
+      flex-wrap: wrap;
       align-items: flex-start;
       justify-content: space-between;
       gap: 1rem;
       margin-bottom: 1.25rem;
     }
-    .proj-card-identity { display: flex; align-items: center; gap: .75rem; }
+    .proj-card-identity { display: flex; align-items: center; gap: .75rem; min-width: 0; }
     .proj-card-icon {
       width: 56px; height: 56px;
       border-radius: 13px;
@@ -197,7 +198,10 @@
     .proj-icon-pill i { font-size: 16px; line-height: 1; }
 
     @media (max-width: 800px) {
-      .proj-grid { grid-template-columns: 1fr; }
+      .proj-grid { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .proj-card { padding: 1.5rem; }
     }
   </style>
   <script type="application/ld+json">

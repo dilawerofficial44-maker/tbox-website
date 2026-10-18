@@ -88,12 +88,12 @@
     }
     .lp-grid {
       display: grid;
-      grid-template-columns: 220px 1fr;
+      grid-template-columns: 220px minmax(0, 1fr);
       gap: 4rem;
       align-items: start;
     }
     @media (max-width: 768px) {
-      .lp-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .lp-grid { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
       .lp-toc { display: none; }
       .container { padding: 0 1.5rem; }
       .lp-hero { padding: 2.5rem 0 2rem; }
