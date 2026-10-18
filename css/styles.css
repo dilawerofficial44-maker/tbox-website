@@ -693,7 +693,8 @@ section { padding: 7rem 0; }
    ============================================= */
 @media (max-width: 640px) {
   section { padding: 4rem 0; }
-  .container { padding: 0 1.25rem; }
+  /* body prefix: pages inline a critical .container rule after this stylesheet, which would otherwise win */
+  body .container { padding: 0 1.25rem; }
 
   /* Sticky nav on mobile */
   .navbar-nav {
@@ -722,6 +723,7 @@ section { padding: 7rem 0; }
 
   /* Services */
   .services-grid { grid-template-columns: 1fr; }
+  .service-card { padding: 1.5rem 1.25rem; }
 
   /* Work */
   .work-grid { grid-template-columns: 1fr; }
