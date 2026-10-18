@@ -508,12 +508,22 @@
   <script>
     (function(){
       const carousel = document.querySelector('.work-carousel');
-      document.getElementById('carousel-prev').addEventListener('click', function(){
-        carousel.scrollBy({ left: -490, behavior: 'smooth' });
-      });
-      document.getElementById('carousel-next').addEventListener('click', function(){
-        carousel.scrollBy({ left: 490, behavior: 'smooth' });
-      });
+      const prev = document.getElementById('carousel-prev');
+      const next = document.getElementById('carousel-next');
+      function step() {
+        const card = carousel.querySelector('.work-card');
+        const gap = parseFloat(getComputedStyle(carousel).columnGap) || 24;
+        return card.offsetWidth + gap;
+      }
+      /* Hide the arrows when every card already fits on screen */
+      function syncNav() {
+        const fits = carousel.scrollWidth <= carousel.clientWidth + 1;
+        prev.parentElement.style.display = fits ? 'none' : '';
+      }
+      prev.addEventListener('click', function(){ carousel.scrollBy({ left: -step(), behavior: 'smooth' }); });
+      next.addEventListener('click', function(){ carousel.scrollBy({ left: step(), behavior: 'smooth' }); });
+      window.addEventListener('resize', syncNav);
+      syncNav();
     })();
   </script>
 
@@ -882,8 +892,10 @@
       const carousel = document.getElementById('team-carousel');
       const track    = document.getElementById('team-track');
       const cards    = track.querySelectorAll('.team-card');
-      const VISIBLE  = 3;
-      const MAX      = cards.length - VISIBLE; // 2
+      const mobile   = window.matchMedia('(max-width: 640px)');
+      /* Desktop shows 3 cards and slides the track; mobile scrolls natively with the next card peeking */
+      const visible  = function(){ return mobile.matches ? 1 : 3; };
+      const maxIndex = function(){ return Math.max(0, cards.length - visible()); };
       let current    = 0;
       let wheelLock  = false;
 
@@ -893,11 +905,24 @@
       }
 
       function goTo(index) {
-        current = Math.max(0, Math.min(MAX, index));
-        track.style.transform = 'translateX(-' + (current * step()) + 'px)';
+        const max = maxIndex();
+        current = Math.max(0, Math.min(max, index));
+        if (mobile.matches) {
+          carousel.scrollTo({ left: current * step(), behavior: 'smooth' });
+        } else {
+          track.style.transform = 'translateX(-' + (current * step()) + 'px)';
+        }
         document.getElementById('team-prev').style.opacity = current === 0   ? '0.35' : '1';
-        document.getElementById('team-next').style.opacity = current === MAX ? '0.35' : '1';
+        document.getElementById('team-next').style.opacity = current === max ? '0.35' : '1';
       }
+
+      /* Keep the arrows in sync when the user swipes on mobile */
+      carousel.addEventListener('scroll', function(){
+        if (!mobile.matches) return;
+        current = Math.round(carousel.scrollLeft / step());
+        document.getElementById('team-prev').style.opacity = current === 0 ? '0.35' : '1';
+        document.getElementById('team-next').style.opacity = current >= maxIndex() ? '0.35' : '1';
+      }, { passive: true });
 
       document.getElementById('team-prev').addEventListener('click', function(){ goTo(current - 1); });
       document.getElementById('team-next').addEventListener('click', function(){ goTo(current + 1); });
@@ -917,6 +942,7 @@
       window.addEventListener('resize', function(){ goTo(current); });
 
       goTo(0);
+      if (!mobile.matches) track.style.transform = '';
     })();
   </script>
 
